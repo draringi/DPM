@@ -26,7 +26,8 @@ public class PController implements UltrasonicController {
 		
 		
 		// TODO: process a movement based on the us distance passed in (P style)
-		
+		this.distance = distance;
+		leftMotor.setSpeed(getSpeed());
 	}
 	
 	private boolean satisfactoryDistance(){
@@ -36,6 +37,10 @@ public class PController implements UltrasonicController {
 	@Override
 	public int readUSDistance() {
 		return this.distance;
+	}
+
+	private int getSpeed(){
+		return 25/4*this.distance - 65;
 	}
 
 }
