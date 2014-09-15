@@ -42,3 +42,30 @@ and `BangBangController`.
 To navigate around a sequence of cinderblocks, making up a 'wall' containing gaps and both concave and convex corners, without touching it or deviating too far from it.
 
 ##Method##
+See the attached code for a working example of how to do wall following. Modify it
+to:
+
+*	Avoid getting confused by gaps
+*	Turn concave corners (i.e. corners which the robot would run into were it to travel in a straight line)
+*	Turn convex corners sharper
+*	You need to implement both the bang-bang and P-type controllers, each is contained in their own .java files.
+
+##Data##
+All data for this lab is qualitative.
+
+##Data Analysis##
+1.	Did the bang-bang controller keep the robot at a distance `bandCentre` from the wall? Why is it expected that the robot will repeatedly oscillate from one 
+side of the band to the other with the bang-bang and p-type controllers?
+
+##Observations and Conclusion##
+What errors did the ultrasonic experience? Were these errors filterable? Does the
+ultrasonic sensor produce false positives (i.e. the detection of non-existent object),
+false negatives (i.e. the failure to detect objects), or both?
+
+##Further Improvements##
+What improvements could you make to both the physical or software designs to
+improve performance of the wall follower? (At least 3 are needed) Are there any
+other controller types that may have better outcomes than the bang-bang and p-type?
+
+##To Submit##
+*	One document in .pdf format containing the lab report
