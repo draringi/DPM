@@ -50,6 +50,8 @@ to:
 *	Turn convex corners sharper
 *	You need to implement both the bang-bang and P-type controllers, each is contained in their own .java files.
 
+Build the "Stronger with Rotating US" robot, whose LXF file is provided on WebCT.
+
 ##Data##
 All data for this lab is qualitative.
 
