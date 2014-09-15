@@ -40,6 +40,16 @@ public class BangBangController implements UltrasonicController{
 		}
 	}
 	
+	private void turnLeft() {
+		leftMotor.setSpeed(motorLow);
+		rightMotor.setSpeed(motorHigh);
+	}
+
+	private void turnRight() {
+		leftMotor.setSpeed(motorHigh+100);
+		rightMotor.setSpeed(motorLow-100);
+	}
+
 	private boolean satisfactoryDistance(){
 		return (Math.abs(this.distance - this.bandCenter) < this.bandwith/2);
 	}
