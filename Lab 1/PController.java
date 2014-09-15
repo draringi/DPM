@@ -1,4 +1,3 @@
-import lejos.nxt.NXTRegulatedMotor;
 import lejos.nxt.*;
 
 public class PController implements UltrasonicController {
@@ -40,7 +39,10 @@ public class PController implements UltrasonicController {
 		// TODO: process a movement based on the us distance passed in (P style)
 		
 	}
-
+	
+	private boolean satisfactoryDistance(){
+		return (Math.abs(this.distance - this.bandCenter) < this.bandwith/2);
+	}
 	
 	@Override
 	public int readUSDistance() {
