@@ -29,18 +29,14 @@ public class PController implements UltrasonicController {
 		this.distance = distance;
 		rightMotor.setSpeed(getSpeed());
 	}
-	
-	private boolean satisfactoryDistance(){
-		return (Math.abs(this.distance - this.bandCenter) < this.bandwith/2);
-	}
-	
+
 	@Override
 	public int readUSDistance() {
 		return this.distance;
 	}
 
 	private int getSpeed(){
-		return 25/4*this.distance - 65;
+		return 10*this.distance - 100;
 	}
 
 }
