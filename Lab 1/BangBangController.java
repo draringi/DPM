@@ -4,7 +4,7 @@ import lejos.nxt.*;
 public class BangBangController implements UltrasonicController{
 	private final int bandCenter, bandwith;
 	private final int motorLow, motorHigh;
-	private final int motorStraight = 250;
+	private final int motorStraight = 500;
 	private final NXTRegulatedMotor leftMotor = Motor.A, rightMotor = Motor.C;
 	private int distance;
 	private int currentLeftSpeed;
@@ -44,8 +44,8 @@ public class BangBangController implements UltrasonicController{
 	}
 
 	private void turnRight() {
-		leftMotor.setSpeed(motorHigh+100);
-		rightMotor.setSpeed(motorLow-150);
+		leftMotor.setSpeed(motorHigh+200);
+		rightMotor.setSpeed(motorLow-50);
 	}
 
 	private boolean satisfactoryDistance(){
