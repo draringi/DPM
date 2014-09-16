@@ -7,7 +7,6 @@ public class BangBangController implements UltrasonicController{
 	private final int motorStraight = 500;
 	private final NXTRegulatedMotor leftMotor = Motor.A, rightMotor = Motor.C;
 	private int distance;
-	private int currentLeftSpeed;
 	
 	public BangBangController(int bandCenter, int bandwith, int motorLow, int motorHigh) {
 		//Default Constructor
@@ -19,13 +18,11 @@ public class BangBangController implements UltrasonicController{
 		rightMotor.setSpeed(motorStraight);
 		leftMotor.forward();
 		rightMotor.forward();
-		currentLeftSpeed = 0;
 	}
 	
 	@Override
 	public void processUSData(int distance) {
 		this.distance = distance;
-		// TODO: process a movement based on the us distance passed in (BANG-BANG style)
 		if(!satisfactoryDistance()){
 			if ((this.distance - this.bandCenter) > 0){
 				this.turnLeft();
