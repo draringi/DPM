@@ -4,6 +4,7 @@ public class PController implements UltrasonicController {
 	
 	private final int bandCenter, bandwith;
 	private final int motorStraight = 300;
+	private final int panicZone = 3;
 	private final NXTRegulatedMotor leftMotor = Motor.A, rightMotor = Motor.C;	
 	private int distance;
 	private int currentLeftSpeed;
@@ -35,7 +36,8 @@ public class PController implements UltrasonicController {
 	}
 
 	private int getSpeed( int distance){
-		return Math.max((300/(this.bandCenter-this.bandwith)*distance - bandwith*10),1);
+		int magnitude = (motorStraight/(this.bandCenter-this.panicZone));
+		return Math.max((magnitude*(distance - panicZone)),1);
 	}
 
 }
