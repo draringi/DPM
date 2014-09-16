@@ -23,20 +23,19 @@ public class PController implements UltrasonicController {
 	
 	@Override
 	public void processUSData(int distance) {
-		
-		
+			
 		// TODO: process a movement based on the us distance passed in (P style)
 		this.distance = distance;
-		rightMotor.setSpeed(getSpeed());
+		rightMotor.setSpeed(this.getSpeed(this.distance));
 	}
-
+	
 	@Override
 	public int readUSDistance() {
 		return this.distance;
 	}
 
-	private int getSpeed(){
-		return 10*this.distance - 100;
+	private int getSpeed( int distance){
+		return Math.max(Math.min(200/(this.bandCenter)*distance - 60, 550),1);
 	}
 
 }
