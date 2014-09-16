@@ -14,3 +14,7 @@ hs_err_pid*
 #Eclipse Files
 .project
 .classpath
+
+#NAjos stuff
+*.nxd
+*.nxj
