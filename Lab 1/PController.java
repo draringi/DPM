@@ -4,11 +4,10 @@ public class PController implements UltrasonicController {
 	
 	private final int bandCenter, bandwith;
 	private final int motorStraight = 300;
-	private final int panicZone = 20;
+	private int panicZone;
 	private final int MAX_SPEED = 550;
 	private final NXTRegulatedMotor leftMotor = Motor.A, rightMotor = Motor.C;	
 	private int distance;
-	private int currentLeftSpeed;
 	
 	
 	public PController(int bandCenter, int bandwith) {
@@ -19,8 +18,7 @@ public class PController implements UltrasonicController {
 		rightMotor.setSpeed(motorStraight);
 		leftMotor.forward();
 		rightMotor.forward();
-		currentLeftSpeed = 0;
-		
+		this.panicZone = this.bandCenter - 5;
 	}
 	
 	@Override
@@ -36,6 +34,10 @@ public class PController implements UltrasonicController {
 
 	/**
 	 * Determines the speed at which the Right wheel
+	 * Determined by the formula speed = m*d-c
+	 * Where m = magnitude = left wheel speed / (bandCenter - panic zone)
+	 * and c = panic zone x magnitude
+	 * which results in the right wheel being equal to the left wheel at bandCenter
 	 * @param distance As reported by sensor
 	 * @return Right Wheel Speed
 	 */
