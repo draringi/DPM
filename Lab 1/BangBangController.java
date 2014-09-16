@@ -38,18 +38,28 @@ public class BangBangController implements UltrasonicController{
 		}
 	}
 	
+	/**
+	 * Sets the wheel for turning left. This occurs at a slower rate than right turns.
+	 */
 	private void turnLeft() {
 		leftMotor.setSpeed(motorLow-50);
 		rightMotor.setSpeed(motorHigh+50);
 	}
 
+	/**
+	 * Sets the wheels for turning right. This occurs at a faster rate than left turns.
+	 */
 	private void turnRight() {
 		leftMotor.setSpeed(motorHigh+200);
 		rightMotor.setSpeed(motorLow-250);
 	}
 
+	/**
+	 * 
+	 * @return whether the location is at an acceptable values
+	 */
 	private boolean satisfactoryDistance(){
-		return (Math.abs(this.distance - this.bandCenter) < this.bandwith/2);
+		return (Math.abs(this.distance - this.bandCenter) < this.bandwith);
 	}
 
 	@Override
