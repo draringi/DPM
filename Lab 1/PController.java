@@ -3,7 +3,7 @@ import lejos.nxt.*;
 public class PController implements UltrasonicController {
 	
 	private final int bandCenter, bandwith;
-	private final int motorStraight = 200;
+	private final int motorStraight = 300;
 	private final NXTRegulatedMotor leftMotor = Motor.A, rightMotor = Motor.C;	
 	private int distance;
 	private int currentLeftSpeed;
@@ -35,7 +35,7 @@ public class PController implements UltrasonicController {
 	}
 
 	private int getSpeed( int distance){
-		return Math.max(Math.min(200/(this.bandCenter)*distance - 60, 550),1);
+		return Math.max((300/(this.bandCenter-this.bandwith)*distance - bandwith*10),1);
 	}
 
 }

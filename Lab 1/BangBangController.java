@@ -28,11 +28,9 @@ public class BangBangController implements UltrasonicController{
 		// TODO: process a movement based on the us distance passed in (BANG-BANG style)
 		if(!satisfactoryDistance()){
 			if ((this.distance - this.bandCenter) > 0){
-				leftMotor.setSpeed(motorLow);
-				rightMotor.setSpeed(motorHigh);
+				this.turnLeft();
 			} else {
-				leftMotor.setSpeed(motorHigh);
-				rightMotor.setSpeed(motorLow);
+				this.turnRight();
 			}
 		} else {
 			leftMotor.setSpeed(motorStraight);
@@ -42,12 +40,12 @@ public class BangBangController implements UltrasonicController{
 	
 	private void turnLeft() {
 		leftMotor.setSpeed(motorLow);
-		rightMotor.setSpeed(motorHigh + 100);
+		rightMotor.setSpeed(motorHigh+50);
 	}
 
 	private void turnRight() {
 		leftMotor.setSpeed(motorHigh+100);
-		rightMotor.setSpeed(motorLow-100);
+		rightMotor.setSpeed(motorLow-150);
 	}
 
 	private boolean satisfactoryDistance(){
