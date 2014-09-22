@@ -12,6 +12,10 @@ public class Odometer extends Thread {
 	// lock object for mutual exclusion
 	private Object lock;
 
+	// necessary robot-dependant variables for calculations
+	private static final double RADIUS = 0;
+	private static final double WIDTH = 0;
+
 	// default constructor
 	public Odometer() {
 		x = 0.0;
@@ -26,11 +30,19 @@ public class Odometer extends Thread {
 
 		while (true) {
 			updateStart = System.currentTimeMillis();
-			// put (some of) your odometer code here
+			double deltaLeft = RADIUS * Motor.A.getTachoCount();
+			Motor.A.resetTachoCount()
+			double deltaRight = RADIUS * Motor.B.getTachoCount();
+			Motor.B.resetTachoCount()
+			double deltaC = (deltaRight + deltaLeft)/2;
+			double deltaTheta = (deltaRight - deltaLeft)/WIDTH;
+
 
 			synchronized (lock) {
 				// don't use the variables x, y, or theta anywhere but here!
-				theta = -0.7376;
+				x += deltaC * Math.cos( theta + deltaTheta/2 )
+				y += deltaC * Math.sin( theta + deltaTheta/2 )
+				theta = theta + newTheta;
 			}
 
 			// this ensures that the odometer only runs once every period

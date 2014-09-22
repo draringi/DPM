@@ -21,3 +21,6 @@ hs_err_pid*
 
 #Ignore Submission Zip Files
 *.zip
+
+#Ignore temp files
+*~
