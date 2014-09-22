@@ -5,9 +5,9 @@ import lejos.nxt.*;
 
 public class Lab2 {
 	// necessary robot-dependant variables for calculations
-	private static final double L_RADIUS = 2.05;
-	private static final double R_RADIUS = 2.05;
-	private static final double WIDTH = 15.15;
+	private static final double L_RADIUS = 2.11;
+	private static final double R_RADIUS = 2.11;
+	private static final double WIDTH = 14.25;
 	public static void main(String[] args) {
 		int buttonChoice;
 
@@ -45,7 +45,7 @@ public class Lab2 {
 			// odometry correction
 			odometer.start();
 			odometryDisplay.start();
-			// odometryCorrection.start();
+			odometryCorrection.start();
 
 			// spawn a new Thread to avoid SquareDriver.drive() from blocking
 			(new Thread() {
