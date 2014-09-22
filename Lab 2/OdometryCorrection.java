@@ -53,8 +53,8 @@ public class OdometryCorrection extends Thread {
 	}
 	
 	boolean isX(double theta){
-		double val = theta % Math.PI;
-		return val < Math.PI/4 || val > 3*Math.PI/4; 
+		theta = Math.abs(theta);
+		return theta < Math.PI/4 || theta > 3*Math.PI/4 && theta < 5*Math.PI/4 || theta > 7*Math.PI/4; 
 	}
 	
 	double nearestLine(double current){
