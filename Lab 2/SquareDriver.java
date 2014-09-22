@@ -12,7 +12,7 @@ public class SquareDriver {
 		// reset the motors
 		for (NXTRegulatedMotor motor : new NXTRegulatedMotor[] { leftMotor, rightMotor }) {
 			motor.stop();
-			motor.setAcceleration(3000);
+			motor.setAcceleration(2000);
 		}
 
 		// wait 5 seconds
