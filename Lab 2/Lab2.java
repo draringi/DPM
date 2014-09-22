@@ -4,11 +4,14 @@
 import lejos.nxt.*;
 
 public class Lab2 {
+	// necessary robot-dependant variables for calculations
+	private static final double RADIUS = 2.21;
+	private static final double WIDTH = 16.0;
 	public static void main(String[] args) {
 		int buttonChoice;
 
 		// some objects that need to be instantiated
-		Odometer odometer = new Odometer();
+		Odometer odometer = new Odometer(RADIUS, WIDTH);
 		OdometryDisplay odometryDisplay = new OdometryDisplay(odometer);
 		OdometryCorrection odometryCorrection = new OdometryCorrection(odometer);
 
@@ -46,7 +49,7 @@ public class Lab2 {
 			// spawn a new Thread to avoid SquareDriver.drive() from blocking
 			(new Thread() {
 				public void run() {
-					SquareDriver.drive(Motor.A, Motor.B, 2.8, 2.8, 15.24);
+					SquareDriver.drive(Motor.A, Motor.B, RADIUS, RADIUS, WIDTH);
 				}
 			}).start();
 		}

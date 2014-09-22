@@ -14,15 +14,17 @@ public class Odometer extends Thread {
 	private Object lock;
 
 	// necessary robot-dependant variables for calculations
-	private static final double RADIUS = 0;
-	private static final double WIDTH = 0;
+	private double radius;
+	private double width;
 
 	// default constructor
-	public Odometer() {
+	public Odometer(double radius, double width) {
 		x = 0.0;
 		y = 0.0;
 		theta = 0.0;
 		lock = new Object();
+		this.radius = radius;
+		this.width = width;
 	}
 
 	// run method (required for Thread)
@@ -31,12 +33,12 @@ public class Odometer extends Thread {
 
 		while (true) {
 			updateStart = System.currentTimeMillis();
-			double deltaLeft = RADIUS * Motor.A.getTachoCount();
+			double deltaLeft = radius * Motor.A.getTachoCount();
 			Motor.A.resetTachoCount();
-			double deltaRight = RADIUS * Motor.B.getTachoCount();
+			double deltaRight = radius * Motor.B.getTachoCount();
 			Motor.B.resetTachoCount();
 			double deltaC = (deltaRight + deltaLeft)/2;
-			double deltaTheta = (deltaRight - deltaLeft)/WIDTH;
+			double deltaTheta = (deltaRight - deltaLeft)/width;
 
 
 			synchronized (lock) {
