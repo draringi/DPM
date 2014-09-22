@@ -34,9 +34,9 @@ public class Odometer extends Thread {
 		
 		while (true) {
 			updateStart = System.currentTimeMillis();
-			deltaLeft = left_radius * Motor.A.getTachoCount();
+			deltaLeft = left_radius * Motor.A.getTachoCount() * Math.PI/180;
 			Motor.A.resetTachoCount();
-			deltaRight = right_radius * Motor.B.getTachoCount();
+			deltaRight = right_radius * Motor.B.getTachoCount() * Math.PI/180;
 			Motor.B.resetTachoCount();
 			deltaC = (deltaRight + deltaLeft)/2;
 			deltaTheta = (deltaRight - deltaLeft)/width;
