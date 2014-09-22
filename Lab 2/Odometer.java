@@ -30,15 +30,16 @@ public class Odometer extends Thread {
 	// run method (required for Thread)
 	public void run() {
 		long updateStart, updateEnd;
-
+		double deltaLeft, deltaRight, deltaC, deltaTheta;
+		
 		while (true) {
 			updateStart = System.currentTimeMillis();
-			double deltaLeft = radius * Motor.A.getTachoCount();
+			deltaLeft = radius * Motor.A.getTachoCount();
 			Motor.A.resetTachoCount();
-			double deltaRight = radius * Motor.B.getTachoCount();
+			deltaRight = radius * Motor.B.getTachoCount();
 			Motor.B.resetTachoCount();
-			double deltaC = (deltaRight + deltaLeft)/2;
-			double deltaTheta = (deltaRight - deltaLeft)/width;
+			deltaC = (deltaRight + deltaLeft)/2;
+			deltaTheta = (deltaRight - deltaLeft)/width;
 
 
 			synchronized (lock) {
