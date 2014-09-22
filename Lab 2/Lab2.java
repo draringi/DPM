@@ -23,7 +23,7 @@ public class Lab2 {
 			LCD.drawString("motors | in a   ", 0, 3);
 			LCD.drawString("       | square ", 0, 4);
 
-			buttonChoice = Button.waitForPress();
+			buttonChoice = Button.waitForAnyPress();
 		} while (buttonChoice != Button.ID_LEFT
 				&& buttonChoice != Button.ID_RIGHT);
 
@@ -51,7 +51,7 @@ public class Lab2 {
 			}).start();
 		}
 		
-		while (Button.waitForPress() != Button.ID_ESCAPE);
+		while (Button.waitForAnyPress() != Button.ID_ESCAPE);
 		System.exit(0);
 	}
 }

@@ -1,6 +1,7 @@
 /*
  * Odometer.java
  */
+import lejos.nxt.*;
 
 public class Odometer extends Thread {
 	// robot position
@@ -31,18 +32,18 @@ public class Odometer extends Thread {
 		while (true) {
 			updateStart = System.currentTimeMillis();
 			double deltaLeft = RADIUS * Motor.A.getTachoCount();
-			Motor.A.resetTachoCount()
+			Motor.A.resetTachoCount();
 			double deltaRight = RADIUS * Motor.B.getTachoCount();
-			Motor.B.resetTachoCount()
+			Motor.B.resetTachoCount();
 			double deltaC = (deltaRight + deltaLeft)/2;
 			double deltaTheta = (deltaRight - deltaLeft)/WIDTH;
 
 
 			synchronized (lock) {
 				// don't use the variables x, y, or theta anywhere but here!
-				x += deltaC * Math.cos( theta + deltaTheta/2 )
-				y += deltaC * Math.sin( theta + deltaTheta/2 )
-				theta = theta + newTheta;
+				x += deltaC * Math.cos( theta + deltaTheta/2 );
+				y += deltaC * Math.sin( theta + deltaTheta/2 );
+				theta = theta + deltaTheta;
 			}
 
 			// this ensures that the odometer only runs once every period
