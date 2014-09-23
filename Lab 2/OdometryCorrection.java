@@ -6,6 +6,7 @@ import lejos.nxt.*;
 public class OdometryCorrection extends Thread {
 	private static final long CORRECTION_PERIOD = 10;
 	private static final double SENSOR_OFFSET = 4.5;
+	private static final long SENSOR_THRESHOLD = 400;
 	private Odometer odometer;
 	private ColorSensor sensor;
 	
@@ -24,7 +25,7 @@ public class OdometryCorrection extends Thread {
 		while (true) {
 			correctionStart = System.currentTimeMillis();
 			value = sensor.getRawLightValue();
-			if(value < 400){
+			if(value < SENSOR_THRESHOLD){
 				Sound.beepSequence();
 				double theta = odometer.getTheta();
 				if(isX(theta)){
