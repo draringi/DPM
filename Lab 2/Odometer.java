@@ -27,24 +27,30 @@ public class Odometer extends Thread {
 		this.width = width;
 	}
 
-	// run method (required for Thread)
+	/**
+	 * run method (required for Thread)
+	 * determined by dTheta = (dL - dR)/width
+	 * and dC = (dL + dR)/2 
+	 */
 	public void run() {
 		long updateStart, updateEnd;
-		double deltaLeft, deltaRight, deltaC, deltaTheta;
+		double deltaC, deltaTheta;
 		int oldLeftTacho, oldRightTacho, diffLeftTacho, diffRightTacho, leftTacho, rightTacho;
 		oldLeftTacho = oldRightTacho = 0;
 		while (true) {
 			updateStart = System.currentTimeMillis();
+			
 			leftTacho = Motor.A.getTachoCount();
 			rightTacho = Motor.B.getTachoCount();
+			// Determine the change in degrees between for each tacho since last check
 			diffLeftTacho = leftTacho -  oldLeftTacho;
 			diffRightTacho = rightTacho - oldRightTacho;
+			// Update the old values with the new ones
 			oldLeftTacho = leftTacho;
 			oldRightTacho = rightTacho;
-			deltaLeft = left_radius * degToRadians(diffLeftTacho);
-			deltaRight = right_radius * degToRadians(diffRightTacho);
-			deltaC = (deltaRight + deltaLeft)/2;
-			deltaTheta = (deltaLeft - deltaRight)/width;
+			
+			deltaC = (getLeftDelta(diffLeftTacho) + getRightDelta(diffRightTacho))/2;
+			deltaTheta = (getLeftDelta(diffLeftTacho) - getRightDelta(diffRightTacho))/width;
 
 
 			synchronized (lock) {
@@ -77,6 +83,24 @@ public class Odometer extends Thread {
 		return degrees * Math.PI / 180;
 	}
 
+	/**
+	 * Determines the distance traveled by the left wheel
+	 * @param degreeDelta Change in Degrees
+	 * @return distance in cm
+	 */
+	private double getLeftDelta(int degreeDelta) {
+		return left_radius * degToRadians(degreeDelta);
+	}
+	
+	/**
+	 * Determines the distance traveled by the right wheel
+	 * @param degreeDelta Change in Degrees
+	 * @return distance in cm
+	 */
+	private double getRightDelta(int degreeDelta) {
+		return right_radius * degToRadians(degreeDelta);
+	}
+	
 	// accessors
 	public void getPosition(double[] position, boolean[] update) {
 		// ensure that the values don't change while the odometer is running

@@ -7,13 +7,11 @@ public class OdometryCorrection extends Thread {
 	private static final long CORRECTION_PERIOD = 10;
 	private Odometer odometer;
 	private ColorSensor sensor;
-    private int oldValue;
 	
 	// constructor
 	public OdometryCorrection(Odometer odometer) {
 		this.odometer = odometer;
 		sensor = new ColorSensor(SensorPort.S1);
-		oldValue = sensor.getNormalizedLightValue();
 		Sound.setVolume(100);
 	}
 
@@ -34,8 +32,6 @@ public class OdometryCorrection extends Thread {
 					odometer.setY(nearestLine(odometer.getY(), getDirectionalMultiplier(theta)));
 				}
 			}
-
-			// put your correction code here
 
 			// this ensure the odometry correction occurs only once every period
 			correctionEnd = System.currentTimeMillis();
