@@ -41,10 +41,10 @@ public class Odometer extends Thread {
 			diffRightTacho = rightTacho - oldRightTacho;
 			oldLeftTacho = leftTacho;
 			oldRightTacho = rightTacho;
-			deltaLeft = left_radius * diffLeftTacho * Math.PI/180;
-			deltaRight = right_radius * diffRightTacho * Math.PI/180;
+			deltaLeft = left_radius * degToRadians(diffLeftTacho);
+			deltaRight = right_radius * degToRadians(diffRightTacho);
 			deltaC = (deltaRight + deltaLeft)/2;
-			deltaTheta = (deltaRight - deltaLeft)/width;
+			deltaTheta = (deltaLeft - deltaRight)/width;
 
 
 			synchronized (lock) {
@@ -66,6 +66,15 @@ public class Odometer extends Thread {
 				}
 			}
 		}
+	}
+	
+	/**
+	 * Helper function to convert degrees to radians
+	 * @param degrees
+	 * @return radians
+	 */
+	private double degToRadians(int degrees){
+		return degrees * Math.PI / 180;
 	}
 
 	// accessors

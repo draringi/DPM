@@ -29,9 +29,9 @@ public class OdometryCorrection extends Thread {
 				Sound.beepSequence();
 				double theta = odometer.getTheta();
 				if(isX(theta)){
-					odometer.setX(nearestLine(odometer.getX()));
+					odometer.setX(nearestLine(odometer.getX(), getDirectionalMultiplier(theta)));
 				} else {
-					odometer.setY(nearestLine(odometer.getY()));
+					odometer.setY(nearestLine(odometer.getY(), getDirectionalMultiplier(theta)));
 				}
 			}
 
@@ -52,14 +52,38 @@ public class OdometryCorrection extends Thread {
 		}
 	}
 	
+	/**
+	 * Determines if the robot is pointing roughly in the positive or negative X direction.
+	 * If not, it is pointing in the Y direction
+	 * @param theta Directional angle of the robot
+	 * @return True if X-axis, False if Y-axis
+	 */
 	boolean isX(double theta){
 		theta = Math.abs(theta);
 		return theta < Math.PI/4 || theta > 3*Math.PI/4 && theta < 5*Math.PI/4 || theta > 7*Math.PI/4; 
 	}
 	
-	double nearestLine(double current){
+	/**
+	 * Determines the multiplier to use for directional purposes.
+	 * @param theta
+	 * @return 1 on positive X and Y , -1 on negative X and Y
+	 */
+	int getDirectionalMultiplier(double theta){
+		if(theta > -Math.PI/4 && theta < 3*Math.PI/4 || theta > 7*Math.PI/4){
+			return 1;
+		} else {
+			return -1;
+		}
+	}
+	
+	/**
+	 * Determine the nearest line, given a location.
+	 * @param current location on the given axis
+	 * @return corrected location
+	 */
+	double nearestLine(double current, int direction){
 		double roughCount = (current - 15)/30;
 		long count = Math.round(roughCount);
-		return (double) count * 30 + 15;
+		return (double) count * 30 + 13;
 	}
 }

@@ -5,9 +5,9 @@ import lejos.nxt.*;
 
 public class Lab2 {
 	// necessary robot-dependant variables for calculations
-	private static final double L_RADIUS = 2.11;
-	private static final double R_RADIUS = 2.11;
-	private static final double WIDTH = 14.25;
+	private static final double L_RADIUS = 2.15;
+	private static final double R_RADIUS = 2.15;
+	private static final double WIDTH = 14.00;
 	public static void main(String[] args) {
 		int buttonChoice;
 
