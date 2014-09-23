@@ -5,6 +5,7 @@ import lejos.nxt.*;
 
 public class OdometryCorrection extends Thread {
 	private static final long CORRECTION_PERIOD = 10;
+	private static final double SENSOR_OFFSET = 4.5;
 	private Odometer odometer;
 	private ColorSensor sensor;
 	
@@ -55,7 +56,7 @@ public class OdometryCorrection extends Thread {
 	 * @return True if X-axis, False if Y-axis
 	 */
 	boolean isX(double theta){
-		theta = Math.abs(theta);
+		theta = Math.abs(theta) % 360;
 		return theta < Math.PI/4 || theta > 3*Math.PI/4 && theta < 5*Math.PI/4 || theta > 7*Math.PI/4; 
 	}
 	
@@ -65,6 +66,7 @@ public class OdometryCorrection extends Thread {
 	 * @return 1 on positive X and Y , -1 on negative X and Y
 	 */
 	int getDirectionalMultiplier(double theta){
+		theta = theta % 360;
 		if(theta > -Math.PI/4 && theta < 3*Math.PI/4 || theta > 7*Math.PI/4){
 			return 1;
 		} else {
@@ -80,6 +82,6 @@ public class OdometryCorrection extends Thread {
 	double nearestLine(double current, int direction){
 		double roughCount = (current - 15)/30;
 		long count = Math.round(roughCount);
-		return (double) count * 30 + 13;
+		return (double) count * 30 + 15 - SENSOR_OFFSET * direction;
 	}
 }
