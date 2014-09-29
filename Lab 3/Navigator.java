@@ -1,31 +1,44 @@
 import lejos.util.*;
+import java.util.Queue;
 
 class Navigator implements TimerListener {
-    private Odometer odometer;
-    private Queue destinationQueue;
-    private Location destination;
-	public Navigator (Queue destinations) {
-		this.destinationQueue = destinations;
-		this.destination = destinationQueue.pop();
+	private Odometer odometer;
+	private boolean travelling;
+	private Object lock;
+	private double xTarget, yTarget;
+	
+	public Navigator () {
 		this.odometer = new Odometer();
-	}
-	public void timedOut() {
-	    
+		this.travelling = false;
 	}
 	
-	public class Location {
-		double x, y;
-		public Location(double x, double y){
-	 		this.x = x;
-	 		this.y = y;
-	 	}
-	 	
-	 	double getX() {
-	 		return this.x;
-	 	}
-	 	
-	 	double getY() {
-	 		return this.y;
-	 	}
+	public void timedOut() {
+	    synchronized (lock) {
+	    	if(this.travelling){
+	    		
+	    	}	
+	    }
+	}
+	
+	public void travelTo(double x, double y){
+		synchronized (lock) {
+			this.xTarget = x;
+			this.yTarget = y;
+			this.travelling = true;
+		}
+	}
+	
+	public void turnTo(double theta){
+		synchronized (lock) {
+			
+		}
+	}
+	
+	public boolean isNavigating(){
+		boolean result;
+		synchronized (lock) {
+			result = this.travelling;
+		}
+		return result;
 	}
 }
