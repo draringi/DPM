@@ -1,53 +1,79 @@
 import lejos.util.*;
-import java.util.Queue;
+import lejos.nxt.*;
 
 class Navigator implements TimerListener {
 	private Odometer odometer;
 	private boolean travelling;
 	private boolean turning;
-	static private final TOLERANCE = 0.1;
-	static private final MIN_ANGLE = Math.PI/16;
-	static private final FORWARD_SPEED = 250;
-	static private final TURNING_SPEED = 100;
-	private Object lock;
+	private static final double RADIUS = 2.15;
+	private static final double WIDTH = 14.00;
+	static private final double TOLERANCE = 0.1;
+	static private final double MIN_ANGLE = Math.PI/16;
+	static private final int FORWARD_SPEED = 250;
+	static private final int TURNING_SPEED = 100;
+	static private final int TURN_ANGLE = 5;
+	private Object travelLock;
+	private Object angleLock;
 	private double xTarget, yTarget, targetTheta;
 	private final NXTRegulatedMotor leftMotor = Motor.A, rightMotor = Motor.B;
 	
 	
 	public Navigator () {
-		this.odometer = new Odometer();
+		this.odometer = new Odometer(RADIUS, RADIUS, WIDTH);
+		odometer.start();
 		this.travelling = false;
 		this.turning = false;
+		this.travelLock = new Object();
+		this.angleLock = new Object();
 	}
 	
 	public void timedOut() {
-	    synchronized (lock) {
-	    	if(this.turning){
-	    		
-	    	}
-	    	if(this.travelling){
-	    		if(true) {
-	    			double xDiff = xTarget - odometer.getX();
-	    			double yDiff = yTarget - odometer.getY();
-	    			if (Math.abs(xDiff) < TOLERANCE && Math.abs(yDiff) < TOLERANCE){
-	    				this.traveling = false;
-	    				engineStop();
-	    				break;
-	    			}
-	    			targetTheta = Math.atan(yDiff/xDiff);
-	    			if (x < 0){
-	    				targetTheta += Math.PI;
-	    			}
-	    			if( targetTheta - odometer.getTheta() < MIN_ANGLE ){
-	    				engineStart();
-	    			}
-	    		}
-	    	}
-	    }
+		try{
+		    synchronized (angleLock) {
+		    	if(this.turning){
+		    		double deltaTheta = targetTheta - odometer.getTheta();
+					if (Math.abs(deltaTheta) < MIN_ANGLE){
+						this.turning = false;
+					} else {
+						if (deltaTheta > 0){
+							turnLeft();
+						} else {
+							turnRight();
+						}
+					}
+		    	}
+		    }
+		    synchronized (travelLock) {
+		    	if(this.travelling){
+		    		if(true) {
+		    			double xDiff = xTarget - odometer.getX();
+		    			double yDiff = yTarget - odometer.getY();
+		    			if (Math.abs(xDiff) < TOLERANCE && Math.abs(yDiff) < TOLERANCE){
+		    				this.travelling = false;
+		    				engineStop();
+		    			} else {
+							double theta = Math.atan(yDiff/xDiff);
+							if (xDiff < 0){
+								theta += Math.PI;
+							}
+							turnTo(theta);
+							if( targetTheta - odometer.getTheta() < MIN_ANGLE ){
+								engineStart();
+							}
+						}
+		    		}
+		    	}
+		    }
+		} catch (Exception e) {
+			LCD.clear();
+			LCD.drawString(e.getMessage(), 0, 1);
+			while (Button.waitForAnyPress() != Button.ID_ESCAPE);
+			System.exit(0);
+		}
 	}
 	
 	public void travelTo(double x, double y){
-		synchronized (lock) {
+		synchronized (travelLock) {
 			this.xTarget = x;
 			this.yTarget = y;
 			this.travelling = true;
@@ -55,7 +81,7 @@ class Navigator implements TimerListener {
 	}
 	
 	public void turnTo(double theta){
-		synchronized (lock) {
+		synchronized (angleLock) {
 			this.targetTheta = theta;
 			this.turning = true;
 		}
@@ -63,8 +89,11 @@ class Navigator implements TimerListener {
 	
 	public boolean isNavigating(){
 		boolean result;
-		synchronized (lock) {
+		synchronized (travelLock) {
 			result = this.travelling;
+		}
+		synchronized(angleLock){
+			result = result || this.turning;
 		}
 		return result;
 	}
@@ -77,25 +106,29 @@ class Navigator implements TimerListener {
 	private void engineStart(){
 		leftMotor.setSpeed(FORWARD_SPEED);
 		rightMotor.setSpeed(FORWARD_SPEED);
-		leftMotor.forward()
-		rightMotor.forward()
+		leftMotor.forward();
+		rightMotor.forward();
 	}
 	
-	private void turnLeft(int turnAngle){
+	private void turnLeft(){
 		leftMotor.setSpeed(TURNING_SPEED);
 		rightMotor.setSpeed(TURNING_SPEED);
-		leftMotor.rotate(-turnAngle, true);
-		rightMotor.rotate(turnAngle, false);
+		leftMotor.backward();
+		rightMotor.forward();
 	}
 	
-	private void turnRight(int turnAngle){
+	private void turnRight(){
 		leftMotor.setSpeed(TURNING_SPEED);
 		rightMotor.setSpeed(TURNING_SPEED);
-		leftMotor.rotate(turnAngle, true)
-		rightMotor.rotate(-turnAngle, false)
+		leftMotor.forward();
+		rightMotor.backward();
 	}
 	
 	private int convertAngle(double angle) {
-		return WIDTH * angle * 180/(2*Math.PI*RADIUS);
+		return radiansToDegrees(angle*WIDTH*2);
+	}
+	
+	private int radiansToDegrees(double rads) {
+		return (int) Math.round(rads/Math.PI * 180);
 	}
 }
