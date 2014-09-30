@@ -28,23 +28,22 @@ class Navigator implements TimerListener {
 	}
 	
 	public void timedOut() {
-		try{
-		    synchronized (angleLock) {
-		    	if(this.turning){
+		synchronized (angleLock) {
+			if(this.turning){
 		    		double deltaTheta = targetTheta - odometer.getTheta();
-					if (Math.abs(deltaTheta) < MIN_ANGLE){
-						this.turning = false;
+				if (Math.abs(deltaTheta) < MIN_ANGLE){
+					this.turning = false;
+				} else {
+					if (deltaTheta > 0){
+						turnLeft();
 					} else {
-						if (deltaTheta > 0){
-							turnLeft();
-						} else {
-							turnRight();
-						}
+						turnRight();
 					}
-		    	}
-		    }
-		    synchronized (travelLock) {
-		    	if(this.travelling){
+				}
+			}
+		}
+		synchronized (travelLock) {
+			if(this.travelling){
 		    		if(true) {
 		    			double xDiff = xTarget - odometer.getX();
 		    			double yDiff = yTarget - odometer.getY();
@@ -52,23 +51,17 @@ class Navigator implements TimerListener {
 		    				this.travelling = false;
 		    				engineStop();
 		    			} else {
-							double theta = Math.atan(yDiff/xDiff);
-							if (xDiff < 0){
-								theta += Math.PI;
-							}
-							turnTo(theta);
-							if( targetTheta - odometer.getTheta() < MIN_ANGLE ){
-								engineStart();
-							}
+						double theta = Math.atan(yDiff/xDiff);
+						if (xDiff < 0){
+							theta += Math.PI;
 						}
+						turnTo(theta);
+						if( targetTheta - odometer.getTheta() < MIN_ANGLE ){
+							engineStart();
+						}
+					}
 		    		}
-		    	}
-		    }
-		} catch (Exception e) {
-			LCD.clear();
-			LCD.drawString(e.getMessage(), 0, 1);
-			while (Button.waitForAnyPress() != Button.ID_ESCAPE);
-			System.exit(0);
+			}
 		}
 	}
 	

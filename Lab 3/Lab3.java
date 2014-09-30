@@ -30,27 +30,19 @@ public class Lab3 {
 			LCD.clear();
 			LCD.drawString("Starting Timer", 0, 0);
 			Sound.beep();
-			//try{
-				t.start();
-				Sound.beep();
-				nav.travelTo(60, 30);
-				Sound.beep();
-				while(nav.isNavigating());
-				nav.travelTo(30, 30);
-				while(nav.isNavigating());
-				nav.travelTo(30, 60);
-				while(nav.isNavigating());
-				nav.travelTo(60, 30);
-				while(nav.isNavigating());
-				t.stop();
-			//} catch (Exception e) {
-			//	LCD.drawString(e.getMessage(), 0, 1);
-			//	while (Button.waitForAnyPress() != Button.ID_ESCAPE);
-			//	System.exit(0);
-			//}
+			t.start();
+			Sound.beep();
+			nav.travelTo(60, 30);
+			Sound.beep();
+			while(nav.isNavigating());
+			nav.travelTo(30, 30);
+			while(nav.isNavigating());
+			nav.travelTo(30, 60);
+			while(nav.isNavigating());
+			nav.travelTo(60, 30);
+			while(nav.isNavigating());
+			t.stop();
 		}
-		
-		
 	}
 
 }
