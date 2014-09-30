@@ -10,6 +10,7 @@ public class Odometer extends Thread {
 
 	// odometer update period, in ms
 	private static final long ODOMETER_PERIOD = 25;
+	static private final double MODULUS = 2* Math.PI;
 
 	// lock object for mutual exclusion
 	private Object lock;
@@ -58,7 +59,7 @@ public class Odometer extends Thread {
 				// don't use the variables x, y, or theta anywhere but here!
 				x += deltaC * Math.cos( theta + deltaTheta/2 );
 				y += deltaC * Math.sin( theta + deltaTheta/2 );
-				theta = theta + deltaTheta;
+				theta = modulus(theta + deltaTheta);
 			}
 
 			// this ensures that the odometer only runs once every period
@@ -174,5 +175,15 @@ public class Odometer extends Thread {
 		synchronized (lock) {
 			this.theta = theta;
 		}
+	}
+	private static double modulus(double value){
+		value = value % MODULUS;
+		if (value < -Math.PI) {
+			value += MODULUS;
+		}
+		if (value > Math.PI){
+			value -= MODULUS;
+		}
+		return value;
 	}
 }

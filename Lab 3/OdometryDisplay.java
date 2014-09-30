@@ -6,10 +6,20 @@ import lejos.nxt.LCD;
 public class OdometryDisplay extends Thread {
 	private static final long DISPLAY_PERIOD = 250;
 	private Odometer odometer;
+	private double xTarget, yTarget;
+	private Object lock;
 
 	// constructor
 	public OdometryDisplay(Odometer odometer) {
 		this.odometer = odometer;
+		this.lock = new Object();
+	}
+	
+	public void setTarget(double x, double y) {
+		synchronized(lock){
+			this.xTarget = x;
+			this.yTarget = y;
+		}
 	}
 
 	// run method (required for Thread)
@@ -27,14 +37,23 @@ public class OdometryDisplay extends Thread {
 			LCD.drawString("X:              ", 0, 0);
 			LCD.drawString("Y:              ", 0, 1);
 			LCD.drawString("T:              ", 0, 2);
+			LCD.drawString("XT:             ", 0, 3);
+			LCD.drawString("YT:             ", 0, 4);
 
 			// get the odometry information
 			odometer.getPosition(position, new boolean[] { true, true, true });
-
+			double xt, yt;
+			synchronized(lock){
+				xt = this.xTarget;
+				yt = this.yTarget;
+			}
 			// display odometry information
 			for (int i = 0; i < 3; i++) {
 				LCD.drawString(formattedDoubleToString(position[i], 2), 3, i);
 			}
+			
+			LCD.drawString(formattedDoubleToString(xt, 2), 4, 3);
+			LCD.drawString(formattedDoubleToString(yt, 2), 4, 4);
 
 			// throttle the OdometryDisplay
 			displayEnd = System.currentTimeMillis();

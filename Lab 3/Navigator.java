@@ -9,10 +9,11 @@ class Navigator implements TimerListener {
 	private static final double RADIUS = 2.15;
 	private static final double WIDTH = 14.00;
 	static private final double TOLERANCE = 0.5;
+	static private final double MIN_DENOMINATOR = 0.1;
 	static private final double MIN_ANGLE = Math.PI/32;
+	static private final double MODULUS = 2* Math.PI;
 	static private final int FORWARD_SPEED = 250;
 	static private final int TURNING_SPEED = 100;
-	static private final int TURN_ANGLE = 5;
 	private Object travelLock;
 	private Object angleLock;
 	private double xTarget, yTarget, targetTheta;
@@ -33,7 +34,7 @@ class Navigator implements TimerListener {
 	public void timedOut() {
 		synchronized (angleLock) {
 			if(this.turning){
-		    		double deltaTheta = targetTheta - (odometer.getTheta() % (2 * Math.PI));
+		    	double deltaTheta = modulus(targetTheta - modulus(odometer.getTheta()));
 				if (Math.abs(deltaTheta) < MIN_ANGLE){
 					this.turning = false;
 				} else {
@@ -47,46 +48,49 @@ class Navigator implements TimerListener {
 		}
 		synchronized (travelLock) {
 			if(this.travelling){
-		    		if(true) {
-		    			double xDiff = xTarget - odometer.getX();
-		    			double yDiff = yTarget - odometer.getY();
-		    			if (Math.abs(xDiff) < TOLERANCE && Math.abs(yDiff) < TOLERANCE){
-		    				this.travelling = false;
-		    				engineStop();
-		    			} else {
-		    			if (Math.abs(xDiff) > TOLERANCE) {
-		    				double theta = Math.atan(yDiff/xDiff);
+		    	if(true) {
+		    		double xDiff = xTarget - odometer.getX();
+		    		double yDiff = yTarget - odometer.getY();
+		    		if (Math.abs(xDiff) < TOLERANCE && Math.abs(yDiff) < TOLERANCE){
+		    			engineStop();
+		    			this.travelling = false;
+		    		} else {
+		    			double theta;
+		    			if (Math.abs(xDiff) > MIN_DENOMINATOR) {
+		    			theta = Math.atan(yDiff/xDiff);
 		    				if (xDiff < 0){
 		    					theta += Math.PI;
 		    				}
-		    				turnTo(theta);
 		    			} else {
 		    				if (yDiff > 0) {
-		    					turnTo(Math.PI/2);
+		    					theta = Math.PI/2;
 		    				} else {
-		    					turnTo(-Math.PI/2);
+		    					theta = -Math.PI/2;
 		    				}
 		    			}
-						if( targetTheta - odometer.getTheta() < MIN_ANGLE ){
-							engineStart();
-						}
-					}
+		    			if(modulus(theta - modulus(odometer.getTheta())) < MIN_ANGLE ){
+		    				engineStart();
+		    			} else {
+		    				turnTo(theta);
+		    			}
 		    		}
+		    	}
 			}
 		}
 	}
 	
 	public void travelTo(double x, double y){
 		synchronized (travelLock) {
+			this.travelling = true;
 			this.xTarget = x;
 			this.yTarget = y;
-			this.travelling = true;
 		}
+		this.odometryDisplay.setTarget(x, y);
 	}
 	
 	public void turnTo(double theta){
 		synchronized (angleLock) {
-			this.targetTheta = theta % (2 * Math.PI); // Ensure that theta is between 0 and 2 pi
+			this.targetTheta = modulus(theta); 
 			this.turning = true;
 		}
 	}
@@ -128,11 +132,14 @@ class Navigator implements TimerListener {
 		rightMotor.backward();
 	}
 	
-	private int convertAngle(double angle) {
-		return radiansToDegrees(angle*WIDTH*2);
-	}
-	
-	private int radiansToDegrees(double rads) {
-		return (int) Math.round(rads/Math.PI * 180);
+	private static double modulus(double value){
+		value = value % MODULUS;
+		if (value < -Math.PI) {
+			value += MODULUS;
+		}
+		if (value > Math.PI){
+			value -= MODULUS;
+		}
+		return value;
 	}
 }
