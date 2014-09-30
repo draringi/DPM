@@ -3,12 +3,13 @@ import lejos.nxt.*;
 
 class Navigator implements TimerListener {
 	private Odometer odometer;
+	private OdometryDisplay odometryDisplay;
 	private boolean travelling;
 	private boolean turning;
 	private static final double RADIUS = 2.15;
 	private static final double WIDTH = 14.00;
-	static private final double TOLERANCE = 0.1;
-	static private final double MIN_ANGLE = Math.PI/16;
+	static private final double TOLERANCE = 0.5;
+	static private final double MIN_ANGLE = Math.PI/32;
 	static private final int FORWARD_SPEED = 250;
 	static private final int TURNING_SPEED = 100;
 	static private final int TURN_ANGLE = 5;
@@ -20,7 +21,9 @@ class Navigator implements TimerListener {
 	
 	public Navigator () {
 		this.odometer = new Odometer(RADIUS, RADIUS, WIDTH);
+		this.odometryDisplay = new OdometryDisplay(odometer);
 		odometer.start();
+		odometryDisplay.start();
 		this.travelling = false;
 		this.turning = false;
 		this.travelLock = new Object();
@@ -34,7 +37,7 @@ class Navigator implements TimerListener {
 				if (Math.abs(deltaTheta) < MIN_ANGLE){
 					this.turning = false;
 				} else {
-					if (deltaTheta > 0){
+					if (deltaTheta < 0){
 						turnLeft();
 					} else {
 						turnRight();
@@ -51,11 +54,19 @@ class Navigator implements TimerListener {
 		    				this.travelling = false;
 		    				engineStop();
 		    			} else {
-						double theta = Math.atan(yDiff/xDiff);
-						if (xDiff < 0){
-							theta += Math.PI;
-						}
-						turnTo(theta);
+		    			if (Math.abs(xDiff) > TOLERANCE) {
+		    				double theta = Math.atan(yDiff/xDiff);
+		    				if (xDiff < 0){
+		    					theta += Math.PI;
+		    				}
+		    				turnTo(theta);
+		    			} else {
+		    				if (yDiff > 0) {
+		    					turnTo(Math.PI/2);
+		    				} else {
+		    					turnTo(-Math.PI/2);
+		    				}
+		    			}
 						if( targetTheta - odometer.getTheta() < MIN_ANGLE ){
 							engineStart();
 						}
