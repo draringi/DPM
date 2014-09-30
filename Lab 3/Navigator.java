@@ -184,7 +184,7 @@ class Navigator implements TimerListener {
 	}
 	
 	private int ultrasonicFilter(int value) {
-		if (value < WALL_ALERT && filterControl >= FILTER_OUT) {
+		if (value <= WALL_ALERT && filterControl >= FILTER_OUT) {
 			filterControl = 0;
 		}
 		if (filterControl < FILTER_OUT) {
