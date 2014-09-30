@@ -2,7 +2,7 @@ import lejos.nxt.*;
 import lejos.util.*;
 
 public class Lab3 {
-	private static final int FREQ = 10;
+	private static final int FREQ = 15;
 
 	public static void main(String[] args) {
 		int buttonChoice;
@@ -17,8 +17,8 @@ public class Lab3 {
 			// ask the user whether the motors should drive in a square or float
 			LCD.drawString("< Left | Right >", 0, 0);
 			LCD.drawString("       |        ", 0, 1);
-			LCD.drawString(" Do    | Float  ", 0, 2);
-			LCD.drawString("Stuff  |    ", 0, 3);
+			LCD.drawString(" Part  | Part  ", 0, 2);
+			LCD.drawString(" One   | Two ", 0, 3);
 			LCD.drawString("       |  ", 0, 4);
 
 			buttonChoice = Button.waitForAnyPress();
@@ -39,7 +39,7 @@ public class Lab3 {
 			nav.travelTo(30, 60);
 			while(nav.isNavigating());
 			Sound.beep();
-			nav.travelTo(60, 30);
+			nav.travelTo(60, 0);
 			while(nav.isNavigating());
 			Sound.beep();
 			Sound.beep();
@@ -47,6 +47,17 @@ public class Lab3 {
 			t.stop();
 		} else {
 			Navigator nav = new Navigator();
+			Timer t = new Timer(FREQ, nav);
+			Sound.beep();
+			t.start();
+			nav.travelTo(60, 0);
+			while(nav.isNavigating());
+			Sound.beep();
+			nav.travelTo(0, 60);
+			while(nav.isNavigating());
+			Sound.beep();
+			Sound.beep();
+			Sound.beep();
 		}
 		while (Button.waitForAnyPress() != Button.ID_ESCAPE);
 		System.exit(0);

@@ -176,14 +176,13 @@ public class Odometer extends Thread {
 			this.theta = theta;
 		}
 	}
-	private static double modulus(double value){
-		value = value % MODULUS;
-		if (value < -Math.PI) {
+	
+	private double modulus(double value){
+		while (value < 0){
 			value += MODULUS;
 		}
-		if (value > Math.PI){
-			value -= MODULUS;
-		}
+		value = value % MODULUS;
 		return value;
 	}
+	
 }
