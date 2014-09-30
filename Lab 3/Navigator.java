@@ -30,7 +30,7 @@ class Navigator implements TimerListener {
 	public void timedOut() {
 		synchronized (angleLock) {
 			if(this.turning){
-		    		double deltaTheta = targetTheta - odometer.getTheta();
+		    		double deltaTheta = targetTheta - (odometer.getTheta() % (2 * Math.PI));
 				if (Math.abs(deltaTheta) < MIN_ANGLE){
 					this.turning = false;
 				} else {
@@ -75,7 +75,7 @@ class Navigator implements TimerListener {
 	
 	public void turnTo(double theta){
 		synchronized (angleLock) {
-			this.targetTheta = theta;
+			this.targetTheta = theta % (2 * Math.PI); // Ensure that theta is between 0 and 2 pi
 			this.turning = true;
 		}
 	}
