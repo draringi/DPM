@@ -1,9 +1,11 @@
-/* Michael Williams - 260369438
- * Leonardo Siracusa - 260585931
- * Odometer.java
- */
 import lejos.nxt.*;
 
+/**
+ * 
+ * @author Michael Williams (260369438)
+ * @author Leonardo Siracusa (260585931)
+ *
+ */
 public class Odometer extends Thread {
 	// robot position
 	private double x, y, theta;

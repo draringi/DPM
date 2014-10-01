@@ -1,26 +1,31 @@
 import lejos.util.*;
 import lejos.nxt.*;
 
+/**
+ * Navigational class. It takes in way-points or angles, and travels to, or turns to, the given value.
+ * @author Michael Williams (260369438)
+ * @author Leonardo Siracusa (260585931)
+ *
+ */
 class Navigator implements TimerListener {
 	private Odometer odometer;
 	private OdometryDisplay odometryDisplay;
 	private boolean travelling;
 	private boolean turning;
-	private static final double RADIUS = 2.15;
-	private static final double WIDTH = 14.52;
-	static private final double TOLERANCE = 0.2;
+	private static final double RADIUS = 2.14;
+	private static final double WIDTH = 14.6;
+	static private final double TOLERANCE = 0.5;
 	static private final double MIN_DENOMINATOR = 0.1;
-	static private final double MIN_ANGLE = Math.PI/16;
+	static private final double MIN_ANGLE = Math.PI/32;
 	static private final double MODULUS = 2* Math.PI;
 	static private final int FORWARD_SPEED = 250;
 	static private final int TURNING_SPEED = 100;
-	static private final int WALL_ALERT = 5;
+	static private final int WALL_ALERT = 8;
 	static private final UltrasonicSensor ultrasonic = new UltrasonicSensor(SensorPort.S2);
 	private Object travelLock;
 	private Object angleLock;
 	private double xTarget, yTarget, targetTheta;
 	static private final NXTRegulatedMotor leftMotor = Motor.A, rightMotor = Motor.B;
-	
 	
 	public Navigator () {
 		this.odometer = new Odometer(RADIUS, RADIUS, WIDTH);
@@ -37,6 +42,10 @@ class Navigator implements TimerListener {
 		}
 	}
 	
+	/**
+	 * Called everytime the timer reaches a set amount of time.
+	 * It then calls each logical sections respective container function.
+	 */
 	public void timedOut() {
 		boolean turningTemp;
 		this.turn();
@@ -124,7 +133,7 @@ class Navigator implements TimerListener {
 	private void dodge(){
 		leftMotor.flt();
 		rightMotor.flt();
-		rightMotor.rotate(-convertAngle(85));
+		rightMotor.rotate(-convertAngle(95));
 		rightMotor.flt();
 		leftMotor.rotate(convertDistance(40), true);
 		rightMotor.rotate(convertDistance(40));

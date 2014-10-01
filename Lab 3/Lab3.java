@@ -1,6 +1,12 @@
 import lejos.nxt.*;
 import lejos.util.*;
 
+/**
+ * 
+ * @author Michael Williams (260369438)
+ * @author Leonardo Siracusa (260585931)
+ *
+ */
 public class Lab3 {
 	private static final int FREQ = 15;
 
