@@ -12,8 +12,8 @@ class Navigator implements TimerListener {
 	private OdometryDisplay odometryDisplay;
 	private boolean travelling;
 	private boolean turning;
-	private static final double RADIUS = 2.14;
-	private static final double WIDTH = 14.6;
+	private static final double RADIUS = 2.123;
+	private static final double WIDTH = 14.645;
 	static private final double TOLERANCE = 0.5;
 	static private final double MIN_DENOMINATOR = 0.1;
 	static private final double MIN_ANGLE = Math.PI/32;
