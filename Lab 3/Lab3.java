@@ -25,27 +25,30 @@ public class Lab3 {
 		} while (buttonChoice != Button.ID_LEFT
 				&& buttonChoice != Button.ID_RIGHT);
 
+
 		if (buttonChoice == Button.ID_LEFT) {
+			// Run part 1
 			Navigator nav = new Navigator();
 			Timer t = new Timer(FREQ, nav);
 			Sound.beep();
 			t.start();
-			nav.travelTo(60, 30);
+			nav.travelTo(30, 60);
 			while(nav.isNavigating());
 			Sound.beep();
 			nav.travelTo(30, 30);
 			while(nav.isNavigating());
 			Sound.beep();
-			nav.travelTo(30, 60);
+			nav.travelTo(60, 30);
 			while(nav.isNavigating());
 			Sound.beep();
-			nav.travelTo(60, 0);
+			nav.travelTo(0, 60);
 			while(nav.isNavigating());
 			Sound.beep();
 			Sound.beep();
 			Sound.beep();
 			t.stop();
 		} else {
+			// Run part 2
 			Navigator nav = new Navigator();
 			Timer t = new Timer(FREQ, nav);
 			Sound.beep();
