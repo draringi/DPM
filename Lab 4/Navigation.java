@@ -3,7 +3,7 @@ import lejos.nxt.LCD;
 
 public class Navigation {
 	// put your navigation code here 
-	final static int FORWARD = 300, TURNING = 150;
+	final static int FORWARD = 300, TURNING = 150, STOP = 0;
 	static private final double TOLERANCE = 0.5, MIN_ANGLE = Math.PI/32;
 	private Odometer odometer;
 	private TwoWheeledRobot robot;
@@ -21,9 +21,9 @@ public class Navigation {
 			if (minAng < 0)
 				minAng += 360.0;
 			this.turnTo(minAng);
-			robot.setForwardSpeed(FORWARD, FORWARD);
+			robot.setForwardSpeed(FORWARD);
 		}
-		this.setSpeeds(0, 0);
+		robot.setForwardSpeed(STOP);
 	}
 	
 	public void turnTo(double angle) {
