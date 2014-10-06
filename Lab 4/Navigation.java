@@ -27,7 +27,15 @@ public class Navigation {
 	}
 	
 	public void turnTo(double angle) {
-		double turnAngle = odometer.minimumAngleFromTo(odometer.getAngle(), angle);
-		
+		double turnAngle;
+		while(Math.abs(turnAngle = Odometer.minimumAngleFromTo(odometer.getAngle(), angle)) > MIN_ANGLE){
+			if (turnAngle < 0){
+				robot.setForwardSpeed(TURNING);
+				robot.setRotationSpeed(FORWARD);
+			} else {
+				robot.setForwardSpeed(FORWARD);
+				robot.setRotationSpeed(TURNING);
+			}
+		}
 	}
 }
