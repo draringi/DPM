@@ -52,8 +52,16 @@ public class USLocalizer {
 			 * This is very similar to the FALLING_EDGE routine, but the robot
 			 * will face toward the wall for most of it.
 			 */
-			
-
+			robot.setRotationSpeed(ROTATION_SPEED);
+			while(getFilteredData() < D);
+			while(getFilteredData() > D);
+			angleA = odo.getAngle();
+			while(getFilteredData() < D);
+			angleB = odo.getAngle();
+			robot.setRotationSpeed(STOP);
+			double diagonalPoint = Odometer.fixDegAngle((angleA + angleB)/2);
+			double theta = Odometer.fixDegAngle(odo.getAngle() - diagonalPoint + 225);
+			odo.setPosition(new double [] {-15.0, -15.0, theta}, new boolean [] {true, true, true});
 		}
 	}
 	
