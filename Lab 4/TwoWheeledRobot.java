@@ -1,4 +1,4 @@
-import lejos.nxt.NXTRegulatedMotor;
+import lejos.nxt.*;
 
 public class TwoWheeledRobot {
 	public static final double DEFAULT_LEFT_RADIUS = 2.123;
@@ -96,5 +96,9 @@ public class TwoWheeledRobot {
 			rightMotor.setSpeed(900);
 		else
 			rightMotor.setSpeed((int)rightSpeed);
+	}
+	
+	public void beep(){
+		Sound.beepSequence();
 	}
 }

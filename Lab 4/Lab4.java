@@ -10,14 +10,14 @@ public class Lab4 {
 		UltrasonicSensor us = new UltrasonicSensor(SensorPort.S2);
 		LightSensor ls = new LightSensor(SensorPort.S1);
 		// perform the ultrasonic localization
-		USLocalizer usl = new USLocalizer(odo, us, USLocalizer.LocalizationType.FALLING_EDGE);
+		USLocalizer usl = new USLocalizer(odo, us, USLocalizer.LocalizationType.RISING_EDGE);
 		usl.doLocalization();
 		Navigation nav = new Navigation(odo);
 		nav.travelTo(0,0);
-		
+		nav.turnTo(0);
 		// perform the light sensor localization
 		LightLocalizer lsl = new LightLocalizer(odo, ls);
-		lsl.doLocalization();			
+		//lsl.doLocalization();			
 		
 		Button.waitForAnyPress();
 	}

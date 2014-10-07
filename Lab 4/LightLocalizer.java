@@ -4,7 +4,7 @@ public class LightLocalizer {
 	private Odometer odo;
 	private TwoWheeledRobot robot;
 	private LightSensor ls;
-	private static final double OFFSET = 5;
+	private static final double OFFSET = 5, ROTATION_SPEED = 30;
 	
 	public LightLocalizer(Odometer odo, LightSensor ls) {
 		this.odo = odo;
@@ -17,7 +17,9 @@ public class LightLocalizer {
 	
 	public void doLocalization() {
 		// drive to location listed in tutorial
+		robot.setRotationSpeed(ROTATION_SPEED);
 		// start rotating and clock all 4 gridlines
+		
 		// do trig to compute (0,0) and 0 degrees
 		// when done travel to (0,0) and turn to 0 degrees
 	}

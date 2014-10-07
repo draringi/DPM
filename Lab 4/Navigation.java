@@ -3,8 +3,8 @@ import lejos.nxt.LCD;
 
 public class Navigation {
 	// put your navigation code here 
-	final static int FORWARD = 50, TURNING = 30, STOP = 0;
-	static private final double TOLERANCE = 0.5, MIN_ANGLE = Math.PI/32;
+	final static int FORWARD = 10, TURNING = 15, STOP = 0;
+	static private final double TOLERANCE = 1, MIN_ANGLE = 2;
 	private Odometer odometer;
 	private TwoWheeledRobot robot;
 	
@@ -20,11 +20,16 @@ public class Navigation {
 			minAng = (Math.atan2(y - odometer.getY(), x - odometer.getX())) * (180.0 / Math.PI);
 			if (minAng < 0)
 				minAng += 360.0;
-			this.turnTo(minAng);
+			if(Odometer.minimumAngleFromTo(odometer.getAngle(), minAng) > MIN_ANGLE){
+				robot.setForwardSpeed(STOP);
+				this.turnTo(minAng);
+			}
 			robot.setForwardSpeed(FORWARD);
+			try { Thread.sleep(50); } catch (InterruptedException e) {}
 		}
 		robot.setForwardSpeed(STOP);
 		robot.setForwardSpeed(STOP);
+		robot.beep();
 	}
 	
 	public void turnTo(double angle) {
@@ -36,5 +41,6 @@ public class Navigation {
 				robot.setRotationSpeed(TURNING);
 			}
 		}
+		robot.setRotationSpeed(STOP);
 	}
 }
