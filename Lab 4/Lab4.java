@@ -12,6 +12,8 @@ public class Lab4 {
 		// perform the ultrasonic localization
 		USLocalizer usl = new USLocalizer(odo, us, USLocalizer.LocalizationType.FALLING_EDGE);
 		usl.doLocalization();
+		Navigation nav = new Navigation(odo);
+		nav.travelTo(0,0);
 		
 		// perform the light sensor localization
 		LightLocalizer lsl = new LightLocalizer(odo, ls);

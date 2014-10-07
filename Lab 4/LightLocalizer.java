@@ -4,6 +4,7 @@ public class LightLocalizer {
 	private Odometer odo;
 	private TwoWheeledRobot robot;
 	private LightSensor ls;
+	private static final double OFFSET = 5;
 	
 	public LightLocalizer(Odometer odo, LightSensor ls) {
 		this.odo = odo;
