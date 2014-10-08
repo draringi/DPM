@@ -14,6 +14,7 @@ public class Lab4 {
 		usl.doLocalization();
 		Navigation nav = new Navigation(odo);
 		nav.travelTo(0,0);
+		//nav.travelTo(-2,-2);
 		nav.turnTo(0);
 		// perform the light sensor localization
 		LightLocalizer lsl = new LightLocalizer(odo, ls);
