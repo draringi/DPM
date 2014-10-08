@@ -18,11 +18,15 @@ public class LightLocalizer {
 	}
 	
 	public void doLocalization() {
+		
 		// drive to location listed in tutorial
-		robot.setRotationSpeed(ROTATION_SPEED);
+		Navigation nav = new Navigation(odo);
+		nav.travelTo(-2, -2);
+		
 		// start rotating and clock all 4 gridlines
+		robot.setRotationSpeed(ROTATION_SPEED);
+		
 		double[][] positionList = new double[4][3];
-
 		for (int i = 0; i < 4; i++){
 			// Wait till line
 			while(ls.getNormalizedLightValue() > LINE_VALUE );
@@ -31,19 +35,24 @@ public class LightLocalizer {
 			// Wait till past line to continue
 			while(ls.getNormalizedLightValue() < LINE_VALUE );
 		}
+		
 		//Stop the robot while we do the calculations
 		robot.setRotationSpeed(STOP);
+		
 		// do trig to compute (0,0) and 0 degrees
-		double thetaX = Odometer.minimumAngleFromTo(positionList[0][Odometer.THETA], positionList[2][Odometer.THETA]);
-		double thetaY = Odometer.minimumAngleFromTo(positionList[1][Odometer.THETA], positionList[3][Odometer.THETA]);
-		odo.setPosition(new double[] {-OFFSET*Math.cos(thetaY/2), -OFFSET*Math.cos(thetaX/2), 0}, new boolean[] {true, true, false});
+		double thetaX = Math.abs(Odometer.minimumAngleFromTo(positionList[0][Odometer.THETA], positionList[2][Odometer.THETA]));
+		double thetaY = Math.abs(Odometer.minimumAngleFromTo(positionList[1][Odometer.THETA], positionList[3][Odometer.THETA]));
+		
 		// Sum up the calculated delta Thetas, and then divide by 4 to get the average
-		double deltaSum = 0;
-		for (int i = 0; i < 4; i++){
-			
-		}
+		double deltaSum = 180 - thetaX/2 - positionList[0][Odometer.THETA]; //delta theta @ x-
+		deltaSum += 270 - thetaY/2 - positionList[1][Odometer.THETA]; //delta theta @ y+
+		deltaSum += 180 + thetaX/2 - positionList[2][Odometer.THETA]; //delta theta @ x+
+		deltaSum += 270 + thetaY/2 - positionList[3][Odometer.THETA]; //delta theta @ y-
+		
+		//Update the odometer
+		odo.setPosition(new double[] {-OFFSET*Math.cos(thetaY/2), -OFFSET*Math.cos(thetaX/2), Odometer.fixDegAngle(odo.getAngle() + (deltaSum/4))}, new boolean[] {true, true, true});
+
 		// when done travel to (0,0) and turn to 0 degrees
-		Navigation nav = new Navigation(odo);
 		nav.travelTo(0, 0);
 		nav.turnTo(0);
 	}
