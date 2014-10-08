@@ -7,10 +7,14 @@ public class Navigation {
 	static private final double TOLERANCE = 1, MIN_ANGLE = 2;
 	private Odometer odometer;
 	private TwoWheeledRobot robot;
+	private Object lock;
+	private boolean turning;
 	
 	public Navigation(Odometer odo) {
 		this.odometer = odo;
 		this.robot = odo.getTwoWheeledRobot();
+		lock = new Object();
+		turning = false;
 	}
 	
 	public void travelTo(double x, double y) {
@@ -41,6 +45,34 @@ public class Navigation {
 			}
 		}
 		robot.setRotationSpeed(STOP);
+	}
+	
+	public void rotate(){
+		new Thread()
+		{
+		    public void run() {
+		    	synchronized(lock){
+		    		turning = true;
+		    	}
+		        while(isTurning()){
+		        	turnTo(odometer.getAngle()+90);
+		        }
+		    }
+		}.start();
+	}
+	
+	public void stopRotate(){
+		synchronized(lock){
+    		turning = false;
+    	}
+	}
+	
+	private boolean isTurning(){
+		boolean result;
+		synchronized(lock){
+			result = turning;
+		}
+		return result;
 	}
 	
 	public void forward(double dist){

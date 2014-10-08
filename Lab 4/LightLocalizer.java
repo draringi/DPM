@@ -20,12 +20,13 @@ public class LightLocalizer {
 	public void doLocalization() {
 		
 		// drive to location listed in tutorial
-		
-		//nav.travelTo(-2, -2);
+		Navigation nav = new Navigation(odo);
+		nav.travelTo(-2, -2);
 	
 		// start rotating and clock all 4 gridlines
 		
-		robot.setRotationSpeed(ROTATION_SPEED);
+		nav.rotate();
+		
 		//robot.rotate(true);
 		
 		double[][] positionList = new double[4][3];
@@ -40,7 +41,7 @@ public class LightLocalizer {
 		}
 		
 		//Stop the robot while we do the calculations
-		robot.setRotationSpeed(STOP);
+		nav.stopRotate();
 		//robot.stop();
 		ls.setFloodlight(false);
 		
@@ -58,7 +59,7 @@ public class LightLocalizer {
 		odo.setPosition(new double[] {-OFFSET*Math.cos(thetaY/2), -OFFSET*Math.cos(thetaX/2), Odometer.fixDegAngle(odo.getAngle() + (deltaSum/4))}, new boolean[] {true, true, true});
 
 		// when done travel to (0,0) and turn to 0 degrees
-		Navigation nav = new Navigation(odo);
+		
 		nav.travelTo(0, 0);
 		nav.turnTo(0);
 	}

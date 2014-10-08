@@ -1,5 +1,6 @@
 import lejos.util.Timer;
 import lejos.util.TimerListener;
+import lejos.nxt.*;
 
 public class Odometer implements TimerListener {
 	public static final int DEFAULT_PERIOD = 25, X = 0, Y = 1, THETA = 2;
@@ -10,6 +11,8 @@ public class Odometer implements TimerListener {
 	private Object lock;
 	private double x, y, theta;
 	private double [] oldDH, dDH;
+	private double right_radius, left_radius, width;
+	int oldLeftTacho, oldRightTacho, diffLeftTacho, diffRightTacho, leftTacho, rightTacho;
 	
 	public Odometer(TwoWheeledRobot robot, int period, boolean start) {
 		// initialise variables
@@ -19,9 +22,10 @@ public class Odometer implements TimerListener {
 		x = 0.0;
 		y = 0.0;
 		theta = 0.0;
-		oldDH = new double [2];
-		dDH = new double [2];
 		lock = new Object();
+		this.left_radius = robot.leftRadius();
+		this.right_radius = robot.rightRadius();
+		this.width = robot.width();
 		
 		// start the odometer immediately, if necessary
 		if (start)
@@ -41,21 +45,26 @@ public class Odometer implements TimerListener {
 	}
 	
 	public void timedOut() {
-		robot.getDisplacementAndHeading(dDH);
-		dDH[0] -= oldDH[0];
-		dDH[1] -= oldDH[1];
+		double deltaC, deltaTheta;
+		leftTacho = Motor.A.getTachoCount();
+		rightTacho = Motor.B.getTachoCount();
+		// Determine the change in degrees between for each tacho since last check
+		diffLeftTacho = leftTacho -  oldLeftTacho;
+		diffRightTacho = rightTacho - oldRightTacho;
+		// Update the old values with the new ones
+		oldLeftTacho = leftTacho;
+		oldRightTacho = rightTacho;
 		
-		// update the position in a critical region
+		deltaC = (getLeftDelta(diffLeftTacho) + getRightDelta(diffRightTacho))/2;
+		deltaTheta = (getLeftDelta(diffLeftTacho) - getRightDelta(diffRightTacho))/width;
+
+
 		synchronized (lock) {
-			theta += dDH[1];
-			theta = fixDegAngle(theta);
-			
-			x += dDH[0] * Math.sin(Math.toRadians(theta));
-			y += dDH[0] * Math.cos(Math.toRadians(theta));
+			// don't use the variables x, y, or theta anywhere but here!
+			x += deltaC * Math.cos( theta + deltaTheta/2 );
+			y += deltaC * Math.sin( theta + deltaTheta/2 );
+			theta = theta + deltaTheta;
 		}
-		
-		oldDH[0] += dDH[0];
-		oldDH[1] += dDH[1];
 	}
 	
 	// accessors
