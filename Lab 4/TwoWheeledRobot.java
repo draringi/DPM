@@ -7,6 +7,7 @@ public class TwoWheeledRobot {
 	private NXTRegulatedMotor leftMotor, rightMotor;
 	private double leftRadius, rightRadius, width;
 	private double forwardSpeed, rotationSpeed;
+	private static final int ROTATE_INT = 50;
 	
 	public TwoWheeledRobot(NXTRegulatedMotor leftMotor,
 						   NXTRegulatedMotor rightMotor,
@@ -97,6 +98,39 @@ public class TwoWheeledRobot {
 		else
 			rightMotor.setSpeed((int)rightSpeed);
 	}
+	
+	public void forward(double dist){
+		int motorDist = (int) Math.round(dist/DEFAULT_LEFT_RADIUS * 360);
+		leftMotor.setSpeed(270);
+		rightMotor.setSpeed(270);
+		leftMotor.rotate(motorDist, true);
+		rightMotor.rotate(motorDist, false);
+		setSpeeds(0,0);
+		
+	}
+	
+	/**
+	 * Makeshift workaround for broken rotate in robot
+	 */
+	/*public void rotate(boolean clockwise){
+		Motor.A.setSpeed(ROTATE_INT);
+		Motor.B.setSpeed(ROTATE_INT);
+		if (clockwise){
+			Motor.A.forward();
+			Motor.B.backward();
+		} else {
+			Motor.B.forward();
+			Motor.A.backward();
+		}
+	}*/
+	
+	/**
+	 * Stops makeshift rotate
+	 */
+	/*public void stop(){
+		Motor.A.flt();
+		Motor.B.flt();
+	}*/
 	
 	public void beep(){
 		Sound.beepSequence();

@@ -69,6 +69,7 @@ public class USLocalizer {
 		}
 		Navigation nav = new Navigation(odo);
 		nav.turnTo(0);
+		nav.travelTo(-3,-3);
 	}
 	
 	private int getFilteredData() {

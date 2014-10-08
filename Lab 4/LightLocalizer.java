@@ -1,14 +1,14 @@
-import lejos.nxt.LightSensor;
-import lejos.robotics.navigation.Navigator;
+import lejos.nxt.ColorSensor;
+import lejos.nxt.Motor;
 
 public class LightLocalizer {
 	private Odometer odo;
 	private TwoWheeledRobot robot;
-	private LightSensor ls;
-	private static final int LINE_VALUE = 400;
+	private ColorSensor ls;
+	private static final int LINE_VALUE = 250, ROTATE_INT = 100;
 	private static final double OFFSET = 11.9, ROTATION_SPEED = 30, STOP = 0;
 	
-	public LightLocalizer(Odometer odo, LightSensor ls) {
+	public LightLocalizer(Odometer odo, ColorSensor ls) {
 		this.odo = odo;
 		this.robot = odo.getTwoWheeledRobot();
 		this.ls = ls;
@@ -20,11 +20,13 @@ public class LightLocalizer {
 	public void doLocalization() {
 		
 		// drive to location listed in tutorial
-		Navigation nav = new Navigation(odo);
-		nav.travelTo(-2, -2);
 		
+		//nav.travelTo(-2, -2);
+	
 		// start rotating and clock all 4 gridlines
+		
 		robot.setRotationSpeed(ROTATION_SPEED);
+		//robot.rotate(true);
 		
 		double[][] positionList = new double[4][3];
 		for (int i = 0; i < 4; i++){
@@ -32,12 +34,15 @@ public class LightLocalizer {
 			while(ls.getNormalizedLightValue() > LINE_VALUE );
 			// Fill slot with position data
 			odo.getPosition(positionList[i]);
+			robot.beep();
 			// Wait till past line to continue
-			while(ls.getNormalizedLightValue() < LINE_VALUE );
+			while(ls.getNormalizedLightValue() < LINE_VALUE + 30 );
 		}
 		
 		//Stop the robot while we do the calculations
 		robot.setRotationSpeed(STOP);
+		//robot.stop();
+		ls.setFloodlight(false);
 		
 		// do trig to compute (0,0) and 0 degrees
 		double thetaX = Math.abs(Odometer.minimumAngleFromTo(positionList[0][Odometer.THETA], positionList[2][Odometer.THETA]));
@@ -53,6 +58,7 @@ public class LightLocalizer {
 		odo.setPosition(new double[] {-OFFSET*Math.cos(thetaY/2), -OFFSET*Math.cos(thetaX/2), Odometer.fixDegAngle(odo.getAngle() + (deltaSum/4))}, new boolean[] {true, true, true});
 
 		// when done travel to (0,0) and turn to 0 degrees
+		Navigation nav = new Navigation(odo);
 		nav.travelTo(0, 0);
 		nav.turnTo(0);
 	}

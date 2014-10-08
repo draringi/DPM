@@ -28,7 +28,6 @@ public class Navigation {
 			try { Thread.sleep(50); } catch (InterruptedException e) {}
 		}
 		robot.setForwardSpeed(STOP);
-		robot.setForwardSpeed(STOP);
 		robot.beep();
 	}
 	
@@ -42,5 +41,9 @@ public class Navigation {
 			}
 		}
 		robot.setRotationSpeed(STOP);
+	}
+	
+	public void forward(double dist){
+		robot.forward(dist);
 	}
 }
