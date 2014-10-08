@@ -37,6 +37,11 @@ public class LightLocalizer {
 		double thetaX = Odometer.minimumAngleFromTo(positionList[0][Odometer.THETA], positionList[2][Odometer.THETA]);
 		double thetaY = Odometer.minimumAngleFromTo(positionList[1][Odometer.THETA], positionList[3][Odometer.THETA]);
 		odo.setPosition(new double[] {-OFFSET*Math.cos(thetaY/2), -OFFSET*Math.cos(thetaX/2), 0}, new boolean[] {true, true, false});
+		// Sum up the calculated delta Thetas, and then divide by 4 to get the average
+		double deltaSum = 0;
+		for (int i = 0; i < 4; i++){
+			
+		}
 		// when done travel to (0,0) and turn to 0 degrees
 		Navigation nav = new Navigation(odo);
 		nav.travelTo(0, 0);
