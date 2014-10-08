@@ -6,7 +6,7 @@ public class LightLocalizer {
 	private TwoWheeledRobot robot;
 	private LightSensor ls;
 	private static final int LINE_VALUE = 400;
-	private static final double OFFSET = 5, ROTATION_SPEED = 30, STOP = 0;
+	private static final double OFFSET = 11.9, ROTATION_SPEED = 30, STOP = 0;
 	
 	public LightLocalizer(Odometer odo, LightSensor ls) {
 		this.odo = odo;

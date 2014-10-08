@@ -67,6 +67,8 @@ public class USLocalizer {
 			double theta = Odometer.fixDegAngle(odo.getAngle() - diagonalPoint + getModifier(angleA, angleB));
 			odo.setPosition(new double [] {-15.0, -15.0, theta}, new boolean [] {true, true, true});
 		}
+		Navigation nav = new Navigation(odo);
+		nav.turnTo(0);
 	}
 	
 	private int getFilteredData() {
