@@ -1,12 +1,11 @@
 import lejos.nxt.ColorSensor;
-import lejos.nxt.Motor;
 
 public class LightLocalizer {
 	private Odometer odo;
 	private TwoWheeledRobot robot;
 	private ColorSensor ls;
-	private static final int LINE_VALUE = 250, ROTATE_INT = 100;
-	private static final double OFFSET = 11.9, ROTATION_SPEED = 30, STOP = 0;
+	private static final int LINE_VALUE = 240, ROTATION_SPEED = 100, STOP = 0;;
+	private static final double OFFSET = 10.1;
 	
 	public LightLocalizer(Odometer odo, ColorSensor ls) {
 		this.odo = odo;
@@ -21,12 +20,11 @@ public class LightLocalizer {
 		
 		// drive to location listed in tutorial
 		Navigation nav = new Navigation(odo);
-		nav.travelTo(-2, -2);
+		nav.travelTo(-3, -3);
 	
 		// start rotating and clock all 4 gridlines
-		
-		nav.rotate();
-		
+		//nav.rotate();
+		robot.setRotationSpeed(ROTATION_SPEED);
 		//robot.rotate(true);
 		
 		double[][] positionList = new double[4][3];
@@ -41,13 +39,14 @@ public class LightLocalizer {
 		}
 		
 		//Stop the robot while we do the calculations
-		nav.stopRotate();
+		//nav.stopRotate();
+		robot.setRotationSpeed(STOP);
 		//robot.stop();
 		ls.setFloodlight(false);
 		
 		// do trig to compute (0,0) and 0 degrees
-		double thetaX = Math.abs(Odometer.minimumAngleFromTo(positionList[0][Odometer.THETA], positionList[2][Odometer.THETA]));
-		double thetaY = Math.abs(Odometer.minimumAngleFromTo(positionList[1][Odometer.THETA], positionList[3][Odometer.THETA]));
+		double thetaX = (Odometer.fixDegAngle(positionList[0][Odometer.THETA] - positionList[2][Odometer.THETA]));
+		double thetaY = (Odometer.fixDegAngle(positionList[1][Odometer.THETA] - positionList[3][Odometer.THETA]));
 		
 		// Sum up the calculated delta Thetas, and then divide by 4 to get the average
 		double deltaSum = 180 - thetaX/2 - positionList[0][Odometer.THETA]; //delta theta @ x-
@@ -56,12 +55,12 @@ public class LightLocalizer {
 		deltaSum += 270 + thetaY/2 - positionList[3][Odometer.THETA]; //delta theta @ y-
 		
 		//Update the odometer
-		odo.setPosition(new double[] {-OFFSET*Math.cos(thetaY/2), -OFFSET*Math.cos(thetaX/2), Odometer.fixDegAngle(odo.getAngle() + (deltaSum/4))}, new boolean[] {true, true, true});
+		odo.setPosition(new double[] {-OFFSET*Math.abs(Math.cos(thetaY/2)), -OFFSET*Math.abs(Math.cos(thetaX/2)), Odometer.fixDegAngle(odo.getAngle() + (deltaSum/4))}, new boolean[] {true, true, true});
 
 		// when done travel to (0,0) and turn to 0 degrees
 		
 		nav.travelTo(0, 0);
-		nav.turnTo(0);
+		nav.turnToABS(0);
 	}
 
 }

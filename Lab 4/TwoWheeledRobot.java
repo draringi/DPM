@@ -6,8 +6,6 @@ public class TwoWheeledRobot {
 	public static final double DEFAULT_WIDTH = 14.645;
 	private NXTRegulatedMotor leftMotor, rightMotor;
 	private double leftRadius, rightRadius, width;
-	private double forwardSpeed, rotationSpeed;
-	private static final int ROTATE_INT = 50;
 	
 	public TwoWheeledRobot(NXTRegulatedMotor leftMotor,
 						   NXTRegulatedMotor rightMotor,
@@ -19,6 +17,8 @@ public class TwoWheeledRobot {
 		this.leftRadius = leftRadius;
 		this.rightRadius = rightRadius;
 		this.width = width;
+		this.leftMotor.setAcceleration(1000);
+		this.rightMotor.setAcceleration(1000);
 	}
 	
 	public TwoWheeledRobot(NXTRegulatedMotor leftMotor, NXTRegulatedMotor rightMotor) {
@@ -51,86 +51,45 @@ public class TwoWheeledRobot {
 	}
 	
 	// mutators
-	public void setForwardSpeed(double speed) {
-		forwardSpeed = speed;
-		setSpeeds(forwardSpeed, rotationSpeed);
-	}
-	
-	public void setRotationSpeed(double speed) {
-		rotationSpeed = speed;
-		setSpeeds(forwardSpeed, rotationSpeed);
-	}
-	
-	public void setSpeeds(double forwardSpeed, double rotationalSpeed) {
-		double leftSpeed, rightSpeed;
-
-		this.forwardSpeed = forwardSpeed;
-		this.rotationSpeed = rotationalSpeed; 
-
-		leftSpeed = (forwardSpeed + rotationalSpeed * width * Math.PI / 360.0) *
-				180.0 / (leftRadius * Math.PI);
-		rightSpeed = (forwardSpeed - rotationalSpeed * width * Math.PI / 360.0) *
-				180.0 / (rightRadius * Math.PI);
-
-		// set motor directions
-		if (leftSpeed > 0.0)
+	public void setForwardSpeed(int speed) {
+		if (speed > 0){
+			leftMotor.setSpeed(speed);
+			rightMotor.setSpeed(speed);
 			leftMotor.forward();
-		else {
-			leftMotor.backward();
-			leftSpeed = -leftSpeed;
-		}
-		
-		if (rightSpeed > 0.0)
 			rightMotor.forward();
-		else {
-			rightMotor.backward();
-			rightSpeed = -rightSpeed;
-		}
-		
-		// set motor speeds
-		if (leftSpeed > 900.0)
-			leftMotor.setSpeed(900);
-		else
-			leftMotor.setSpeed((int)leftSpeed);
-		
-		if (rightSpeed > 900.0)
-			rightMotor.setSpeed(900);
-		else
-			rightMotor.setSpeed((int)rightSpeed);
-	}
-	
-	public void forward(double dist){
-		int motorDist = (int) Math.round(dist/DEFAULT_LEFT_RADIUS * 360);
-		leftMotor.setSpeed(270);
-		rightMotor.setSpeed(270);
-		leftMotor.rotate(motorDist, true);
-		rightMotor.rotate(motorDist, false);
-		setSpeeds(0,0);
-		
-	}
-	
-	/**
-	 * Makeshift workaround for broken rotate in robot
-	 */
-	/*public void rotate(boolean clockwise){
-		Motor.A.setSpeed(ROTATE_INT);
-		Motor.B.setSpeed(ROTATE_INT);
-		if (clockwise){
-			Motor.A.forward();
-			Motor.B.backward();
 		} else {
-			Motor.B.forward();
-			Motor.A.backward();
+			leftMotor.setSpeed(-speed);
+			rightMotor.setSpeed(-speed);
+			leftMotor.backward();
+			rightMotor.backward();
 		}
-	}*/
+	}
 	
-	/**
-	 * Stops makeshift rotate
-	 */
-	/*public void stop(){
-		Motor.A.flt();
-		Motor.B.flt();
-	}*/
+	public void setRotationSpeed(int speed) {
+		if (speed > 0){
+			leftMotor.setSpeed(speed);
+			rightMotor.setSpeed(speed);
+			leftMotor.forward();
+			rightMotor.backward();
+		} else {
+			leftMotor.setSpeed(-speed);
+			rightMotor.setSpeed(-speed);
+			leftMotor.backward();
+			rightMotor.forward();
+		}
+	}
+	
+	public double leftRadius(){
+		return DEFAULT_LEFT_RADIUS;
+	}
+	
+	public double rightRadius(){
+		return DEFAULT_RIGHT_RADIUS;
+	}
+	
+	public double width(){
+		return DEFAULT_WIDTH;
+	}
 	
 	public void beep(){
 		Sound.beepSequence();

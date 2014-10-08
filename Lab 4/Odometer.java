@@ -10,7 +10,6 @@ public class Odometer implements TimerListener {
 	// position data
 	private Object lock;
 	private double x, y, theta;
-	private double [] oldDH, dDH;
 	private double right_radius, left_radius, width;
 	int oldLeftTacho, oldRightTacho, diffLeftTacho, diffRightTacho, leftTacho, rightTacho;
 	
@@ -61,9 +60,9 @@ public class Odometer implements TimerListener {
 
 		synchronized (lock) {
 			// don't use the variables x, y, or theta anywhere but here!
-			x += deltaC * Math.cos( theta + deltaTheta/2 );
-			y += deltaC * Math.sin( theta + deltaTheta/2 );
-			theta = theta + deltaTheta;
+			x += deltaC * Math.cos( Math.PI*theta/180 + deltaTheta/2 );
+			y += deltaC * Math.sin( Math.PI*theta/180 + deltaTheta/2 );
+			theta = fixDegAngle(theta + deltaTheta/Math.PI * 180);
 		}
 	}
 	
@@ -106,6 +105,33 @@ public class Odometer implements TimerListener {
 	
 	public Navigation getNavigation() {
 		return this.nav;
+	}
+	
+	/**
+	 * Helper function to convert degrees to radians
+	 * @param degrees
+	 * @return radians
+	 */
+	private double degToRadians(int degrees){
+		return degrees * Math.PI / 180;
+	}
+
+	/**
+	 * Determines the distance traveled by the left wheel
+	 * @param degreeDelta Change in Degrees
+	 * @return distance in cm
+	 */
+	private double getLeftDelta(int degreeDelta) {
+		return left_radius * degToRadians(degreeDelta);
+	}
+	
+	/**
+	 * Determines the distance traveled by the right wheel
+	 * @param degreeDelta Change in Degrees
+	 * @return distance in cm
+	 */
+	private double getRightDelta(int degreeDelta) {
+		return right_radius * degToRadians(degreeDelta);
 	}
 	
 	// mutators

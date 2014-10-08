@@ -2,7 +2,7 @@ import lejos.nxt.UltrasonicSensor;
 
 public class USLocalizer {
 	public enum LocalizationType { FALLING_EDGE, RISING_EDGE };
-	public static final double ROTATION_SPEED = 30, STOP = 0;
+	public static final int ROTATION_SPEED = 150, STOP = 0;
 
 	private Odometer odo;
 	private TwoWheeledRobot robot;
@@ -26,7 +26,6 @@ public class USLocalizer {
 	}
 	
 	public void doLocalization() {
-		double [] pos = new double [3];
 		double angleA, angleB;
 		
 		if (locType == LocalizationType.FALLING_EDGE) {
@@ -69,7 +68,6 @@ public class USLocalizer {
 		}
 		Navigation nav = new Navigation(odo);
 		nav.turnTo(0);
-		nav.travelTo(-3,-3);
 	}
 	
 	private int getFilteredData() {
