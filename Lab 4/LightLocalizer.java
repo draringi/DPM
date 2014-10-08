@@ -5,7 +5,7 @@ public class LightLocalizer {
 	private TwoWheeledRobot robot;
 	private ColorSensor ls;
 	private static final int LINE_VALUE = 240, ROTATION_SPEED = 100, STOP = 0;;
-	private static final double OFFSET = 10.1;
+	private static final double OFFSET = 11.5;
 	
 	public LightLocalizer(Odometer odo, ColorSensor ls) {
 		this.odo = odo;
@@ -55,7 +55,7 @@ public class LightLocalizer {
 		deltaSum += 270 + thetaY/2 - positionList[3][Odometer.THETA]; //delta theta @ y-
 		
 		//Update the odometer
-		odo.setPosition(new double[] {-OFFSET*Math.abs(Math.cos(thetaY/2)), -OFFSET*Math.abs(Math.cos(thetaX/2)), Odometer.fixDegAngle(odo.getAngle() + (deltaSum/4))}, new boolean[] {true, true, true});
+		odo.setPosition(new double[] {-OFFSET*Math.abs(Math.cos(thetaY*Math.PI/360)), -OFFSET*Math.abs(Math.cos(thetaX*Math.PI/360)), Odometer.fixDegAngle(odo.getAngle() + (deltaSum/4))}, new boolean[] {true, true, true});
 
 		// when done travel to (0,0) and turn to 0 degrees
 		
