@@ -7,7 +7,7 @@ the four cardinal directions (north, east, south, or west, that is to say, in th
 negative-y, or negative-x directions, respectively) at the centre of an unobstructed tile. Once the robot 
 has determined its position, it is to travel to the tile in the northeast corner of the area and face north 
 (i.e. if the southwest gridline intersection is considered to be the origin, it is to travel to (75, 75) and face 
-in the positive-y direction). _Note that both the starting tile and starting orientation of the robot are picked arbitrarily by the TA at the start of __each__ demo._
+in the positive-y direction). _Note that both the starting tile and starting orientation of the robot are picked arbitrarily by the TA at the start of **each** demo._
 #Algorithm#
 There are many possible approaches to this problem, but one is to exclude impossible starting locations 
 by consideration of the _relative_ path of the robot from its (arbitrary) starting location, as well as 
