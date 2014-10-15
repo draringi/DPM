@@ -32,7 +32,7 @@ public class Map {
 	}
 	
 	public boolean blocked(int x, int y){
-		if(x < 0||x >= width || y < 0 || y >= height){
+		if(!(valid(x,y))){
 			return true;
 		}
 		return bitset.get(getIndex(x,y));
@@ -52,5 +52,9 @@ public class Map {
 	
 	public int getGrid(double val){
 		return (int) Math.round(Math.ceil(val));
+	}
+	
+	public boolean valid(int x, int y){
+		return (x >= 0 && x < width && y >= 0 && y < height);
 	}
 }
