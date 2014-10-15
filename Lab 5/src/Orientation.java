@@ -7,6 +7,7 @@ public abstract class Orientation {
 	public static final int NORTH = 0, EAST = 1, SOUTH = 2, WEST = 3;
 	public static final int FORWARD = 0, LEFT = 1, BACKWARDS = 2, RIGHT = 3;
 	private int width, height;
+	private static final double ANGLE_TOLERANCE = 10;
 	
 	private int getOptionIndex(int x, int y, int direction){
 		return (y*map.getWidth()+x)*4+direction;
@@ -34,7 +35,8 @@ public abstract class Orientation {
 	
 	public void orienteer(){
 		while(options.cardinality() != 1){
-			//TODO: Add orienteering code
+			double [] pos = new double[3];
+			odo.getPosition(pos);
 		}
 	}
 	
@@ -51,12 +53,49 @@ public abstract class Orientation {
 	}
 	
 	public int getOffsetDist(int grid, int offset){
-		return grid - offset;
+		return grid + offset;
 	}
 	
 	public int getOffsetDist(int grid, double offset){
-		return grid - map.getGrid(offset);
+		return grid + map.getGrid(offset);
 	}
 	
+	public int getOrientation(double angle){
+		angle = Odometer.fixDegAngle(angle);
+		double offset = Math.abs(Odometer.minimumAngleFromTo(angle, 0));
+		if (offset < ANGLE_TOLERANCE){
+			return FORWARD;
+		}
+		offset = Math.abs(Odometer.minimumAngleFromTo(angle, 90));
+		if (offset < ANGLE_TOLERANCE){
+			return RIGHT;
+		}
+		offset = Math.abs(Odometer.minimumAngleFromTo(angle, 180));
+		if (offset < ANGLE_TOLERANCE){
+			return BACKWARDS;
+		}
+		offset = Math.abs(Odometer.minimumAngleFromTo(angle, 270));
+		if (offset < ANGLE_TOLERANCE){
+			return LEFT;
+		}
+		return -1;
+	}
 	
+	public int getOffsetDirection(int initial, int offset){
+		return (initial + offset)%4;
+	}
+	
+	public int getOffsetDirection(int initial, double angle){
+		return (initial + getOrientation(angle))%4;
+	}
+	
+	public boolean validOption(int x, int y, int direction, int xOffset, int yOffset, int dOffset, boolean wall){
+		x = getOffsetDist(x, xOffset);
+		y = getOffsetDist(y, yOffset);
+		if(!map.valid(x, y)){
+			return false;
+		}
+		direction = getOffsetDirection(direction, dOffset);
+		return match(x, y, direction, wall);
+	}
 }
