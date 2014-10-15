@@ -1,4 +1,5 @@
 import java.util.BitSet;
+
 public class Map {
 	private BitSet bitset; 
 	private int width, height;
@@ -31,10 +32,25 @@ public class Map {
 	}
 	
 	public boolean blocked(int x, int y){
+		if(x < 0||x >= width || y < 0 || y >= height){
+			return true;
+		}
 		return bitset.get(getIndex(x,y));
 	}
 	
 	private int getIndex(int x, int y){
 		return y*width+x;
+	}
+	
+	public int getHeight(){
+		return this.height;
+	}
+	
+	public int getWidth(){
+		return this.width;
+	}
+	
+	public int getGrid(double val){
+		return (int) Math.round(Math.ceil(val));
 	}
 }
