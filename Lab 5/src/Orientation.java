@@ -4,8 +4,10 @@ public abstract class Orientation {
 	private Map map;
 	private BitSet options;
 	private Odometer odo;
+	private UltraSonic us;
 	public static final int NORTH = 0, EAST = 1, SOUTH = 2, WEST = 3;
 	public static final int FORWARD = 0, LEFT = 1, BACKWARDS = 2, RIGHT = 3;
+	public static final int X = 0, Y = 1, THETA = 3;
 	private int width, height;
 	private static final double ANGLE_TOLERANCE = 10;
 	
@@ -16,6 +18,7 @@ public abstract class Orientation {
 	public Orientation(Map map, Odometer odo){
 		this.map = map;
 		this.odo = odo;
+		this.us = new UltraSonic();
 		this.width = map.getWidth();
 		this.height = map.getHeight();
 		int x, y;
@@ -37,6 +40,10 @@ public abstract class Orientation {
 		while(options.cardinality() != 1){
 			double [] pos = new double[3];
 			odo.getPosition(pos);
+			int [] offset = new int[3];
+			offset[X] = map.getGrid(pos[X]);
+			offset[Y] = map.getGrid(pos[Y]);
+			offset[THETA] =  getOrientation(pos[THETA]);
 		}
 	}
 	
