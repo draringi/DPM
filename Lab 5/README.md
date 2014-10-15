@@ -121,8 +121,11 @@ the centre of any unobstructed grid tile (not necessarily one of the three you u
 facing one of the four cardinal directions. For a successful demonstration, your robot should:
 
     a. Follow the steps of the deterministic algorithm as specified in 1a
+    
     b. After completing its orienteering, move to the position and orientation specified in 4
+    
     c. Finally, display the position the robot thought it started in on the screen (e.g. ’-15, -15, E’ would be the southwest corner, facing east as a starting location)
+    
     d. Complete parts (a), (b) and (c) in less than 4 minutes
 
 ##Data##
