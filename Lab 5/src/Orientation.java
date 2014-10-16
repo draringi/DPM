@@ -1,3 +1,4 @@
+import java.util.Arrays;
 import java.util.BitSet;
 
 public abstract class Orientation {
@@ -10,8 +11,9 @@ public abstract class Orientation {
 	public static final int X = 0, Y = 1, THETA = 3;
 	public static final int THRESHOLD = 25;
 	private int width, height;
-	private static final double ANGLE_TOLERANCE = 10;
+	private static final double ANGLE_TOLERANCE = 10, TILE_SIZE = 30, TILE_OFFSET = 15;
 	private int count;
+	private static final boolean [] UPDATE_ALL = {true, true, true};
 	
 	private int getOptionIndex(int x, int y, int direction){
 		return (y*map.getWidth()+x)*4+direction;
@@ -91,7 +93,24 @@ public abstract class Orientation {
 		}
 		pos = new double[3];
 		odo.getPosition(pos);
-		
+		getCorrectedOffset(pos, option[THETA]);
+		double [] start = new double [3];
+		convertTilePosition(option, start);
+		odo.setPosition(addPositions(pos, start), UPDATE_ALL);
+	}
+	
+	private static double [] addPositions(double [] posOne, double [] posTwo){
+		double [] result = new double [3];
+		result[X] = posOne[X] + posTwo[X];
+		result[Y] = posOne[Y] + posTwo[Y];
+		result[THETA] = Odometer.fixDegAngle(posOne[THETA] + posTwo[THETA]);
+		return result;
+	}
+	
+	private static void convertTilePosition(int [] tile, double [] pos){
+		pos[X] = tile[X]*TILE_SIZE - TILE_OFFSET;
+		pos[Y] = tile[Y]*TILE_SIZE - TILE_OFFSET;
+		pos[THETA] = 90*tile[THETA];
 	}
 	
 	public boolean isOption(int x, int y, int direction){
@@ -165,6 +184,31 @@ public abstract class Orientation {
 			break;
 		}
 		return correctedOffset;	
+	}
+	
+	public void getCorrectedOffset(double [] offset, int orientation){
+		double [] correctedOffset = new double[2];
+		offset[THETA] = orientation * 90;
+		switch(orientation){
+		case NORTH:
+			correctedOffset[Y] = offset[Y];
+			correctedOffset[X] = offset[X];
+			break;
+		case EAST:
+			correctedOffset[X] = offset[Y];
+			correctedOffset[Y] = -offset[X];
+			break;
+		case SOUTH:
+			correctedOffset[Y] = -offset[Y];
+			correctedOffset[X] = -offset[X];
+			break;
+		case WEST:
+			correctedOffset[X] = -offset[Y];
+			correctedOffset[Y] = offset[X];
+			break;
+		}
+		offset[X] = correctedOffset[X];
+		offset[Y] = correctedOffset[Y];
 	}
 	
 	public boolean validOption(int x, int y, int direction, int xOffset, int yOffset, int dOffset, boolean wall){
