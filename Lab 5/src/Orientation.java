@@ -7,7 +7,7 @@ public abstract class Orientation {
 	private UltraSonic us;
 	public static final int NORTH = 0, EAST = 1, SOUTH = 2, WEST = 3;
 	public static final int FORWARD = 0, LEFT = 1, BACKWARDS = 2, RIGHT = 3;
-	public static final int X = 0, Y = 1, THETA = 3;
+	public static final int X = 0, Y = 1, THETA = 2;
 	public static final int THRESHOLD = 25;
 	private int width, height;
 	private static final double ANGLE_TOLERANCE = 10, TILE_SIZE = 30, TILE_OFFSET = 15;
