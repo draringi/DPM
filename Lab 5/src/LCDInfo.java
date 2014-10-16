@@ -6,14 +6,15 @@ public class LCDInfo implements TimerListener{
 	public static final int LCD_REFRESH = 100;
 	private Odometer odo;
 	private Timer lcdTimer;
+	private Orientation orienteer;
 	
 	// arrays for displaying data
 	private double [] pos;
 	
-	public LCDInfo(Odometer odo) {
+	public LCDInfo(Odometer odo, Orientation orienteer) {
 		this.odo = odo;
 		this.lcdTimer = new Timer(LCD_REFRESH, this);
-		
+		this.orienteer = orienteer;
 		// initialise the arrays for displaying data
 		pos = new double [3];
 		
@@ -27,8 +28,10 @@ public class LCDInfo implements TimerListener{
 		LCD.drawString("X: ", 0, 0);
 		LCD.drawString("Y: ", 0, 1);
 		LCD.drawString("H: ", 0, 2);
+		LCD.drawString("C: ", 0, 3);
 		LCD.drawInt((int)(pos[0] * 10), 3, 0);
 		LCD.drawInt((int)(pos[1] * 10), 3, 1);
 		LCD.drawInt((int)pos[2], 3, 2);
+		LCD.drawInt((int)orienteer.getCount(), 3, 3);
 	}
 }

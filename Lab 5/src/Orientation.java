@@ -1,4 +1,3 @@
-import java.util.Arrays;
 import java.util.BitSet;
 
 public abstract class Orientation {
@@ -13,6 +12,7 @@ public abstract class Orientation {
 	private int width, height;
 	private static final double ANGLE_TOLERANCE = 10, TILE_SIZE = 30, TILE_OFFSET = 15;
 	private int count;
+	private Object lock;
 	private static final boolean [] UPDATE_ALL = {true, true, true};
 	
 	private int getOptionIndex(int x, int y, int direction){
@@ -34,6 +34,7 @@ public abstract class Orientation {
 		int x, y;
 		this.options = new BitSet(height*width*4);
 		this.count = 0;
+		this.lock = new Object();
 		
 		for (x=0;x < width; x++){
 			for(y=0;y < height; y++){
@@ -78,7 +79,9 @@ public abstract class Orientation {
 					}
 				}
 			}
-			count++;
+			synchronized(lock){
+				count++;
+			}
 			if(options.cardinality() == 1){
 				break;
 			}
@@ -97,6 +100,14 @@ public abstract class Orientation {
 		double [] start = new double [3];
 		convertTilePosition(option, start);
 		odo.setPosition(addPositions(pos, start), UPDATE_ALL);
+	}
+	
+	public int getCount(){
+		int result;
+		synchronized(lock){
+			result = this.count;
+		}
+		return result;
 	}
 	
 	private static double [] addPositions(double [] posOne, double [] posTwo){
