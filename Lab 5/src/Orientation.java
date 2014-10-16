@@ -11,6 +11,7 @@ public abstract class Orientation {
 	public static final int THRESHOLD = 25;
 	private int width, height;
 	private static final double ANGLE_TOLERANCE = 10;
+	private int count;
 	
 	private int getOptionIndex(int x, int y, int direction){
 		return (y*map.getWidth()+x)*4+direction;
@@ -30,6 +31,7 @@ public abstract class Orientation {
 		this.height = map.getHeight();
 		int x, y;
 		this.options = new BitSet(height*width*4);
+		this.count = 0;
 		
 		for (x=0;x < width; x++){
 			for(y=0;y < height; y++){
@@ -51,18 +53,22 @@ public abstract class Orientation {
 	abstract public void move(boolean wall, int direction);
 	
 	public void orienteer(){
+		int i;
+		int [] option;
+		int [] offset;
+		double [] pos;
 		while(options.cardinality() != 1){
-			double [] pos = new double[3];
+			pos = new double[3];
 			odo.getPosition(pos);
-			int [] offset = new int[3];
+			offset = new int[3];
 			offset[X] = map.getGrid(pos[X]);
 			offset[Y] = map.getGrid(pos[Y]);
 			offset[THETA] =  getOrientation(pos[THETA]);
 			boolean wall = (us.poll() < THRESHOLD );
-			int i;
+			
 			for(i=0; i < options.length(); i++){
 				if(options.get(i)){
-					int [] option = new int[3];
+					option = new int[3];
 					getIndexOption(i, option);
 					int [] correctedOffset = getCorrectedOffset(offset, option[THETA]);
 					if(!validOption(option[X], option[Y], option[THETA], correctedOffset[X], correctedOffset[Y], correctedOffset[THETA], wall)){
@@ -70,8 +76,22 @@ public abstract class Orientation {
 					}
 				}
 			}
+			count++;
+			if(options.cardinality() == 1){
+				break;
+			}
 			move(wall, offset[THETA]);
 		}
+		option = new int[3];
+		for(i=0; i < options.length(); i++){
+			if(options.get(i)){
+				getIndexOption(i, option);
+				break;
+			}
+		}
+		pos = new double[3];
+		odo.getPosition(pos);
+		
 	}
 	
 	public boolean isOption(int x, int y, int direction){
