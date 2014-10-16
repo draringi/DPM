@@ -60,8 +60,8 @@ public class Odometer implements TimerListener {
 
 		synchronized (lock) {
 			// don't use the variables x, y, or theta anywhere but here!
-			x += deltaC * Math.cos( Math.PI*theta/180 + deltaTheta/2 );
-			y += deltaC * Math.sin( Math.PI*theta/180 + deltaTheta/2 );
+			x += deltaC * Math.sin( Math.PI*theta/180 + deltaTheta/2 );
+			y += deltaC * Math.cos( Math.PI*theta/180 + deltaTheta/2 );
 			theta = fixDegAngle(theta + deltaTheta/Math.PI * 180);
 		}
 	}

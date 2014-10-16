@@ -17,7 +17,7 @@ public class Navigation {
 		// USE THE FUNCTIONS setForwardSpeed and setRotationalSpeed from TwoWheeledRobot!
 		double minAng;
 		while (Math.abs(x - odometer.getX()) > TOLERANCE || Math.abs(y - odometer.getY()) > TOLERANCE) {
-			minAng = Odometer.fixDegAngle((Math.atan2(y - odometer.getY(), x - odometer.getX())) * (180.0 / Math.PI));
+			minAng = Odometer.fixDegAngle((Math.atan2(x - odometer.getX(), y - odometer.getY())) * (180.0 / Math.PI));
 			if(Math.abs(Odometer.minimumAngleFromTo(odometer.getAngle(), minAng)) > MIN_ANGLE){
 				this.turnTo(minAng);
 			}

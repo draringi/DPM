@@ -10,7 +10,7 @@ public abstract class Orientation {
 	public static final int X = 0, Y = 1, THETA = 2;
 	public static final int THRESHOLD = 25;
 	private int width, height;
-	private static final double ANGLE_TOLERANCE = 10, TILE_SIZE = 30, TILE_OFFSET = 15;
+	private static final double ANGLE_TOLERANCE = 45, TILE_SIZE = 30, TILE_OFFSET = 15;
 	private int count;
 	private Object lock;
 	private static final boolean [] UPDATE_ALL = {true, true, true};
@@ -20,7 +20,7 @@ public abstract class Orientation {
 	}
 	private void getIndexOption(int index, int [] option){
 		option[THETA] = index % 4;
-		index /= 4;
+		index = index/4;
 		option[X] = index % width;
 		option[Y] = index / width;
 	}
@@ -55,6 +55,22 @@ public abstract class Orientation {
 	 */
 	abstract public void move(boolean wall, int direction);
 	
+	public int optionsLeft(){
+		return options.cardinality();
+	}
+	
+	public void getOption(int [] start){
+		if(options.cardinality() == 1){
+			for(int i=0; i < options.length(); i++){
+				if(options.get(i)){
+					getIndexOption(i, start);
+					break;
+				}
+			}
+		}
+	}
+	
+	
 	public void orienteer(){
 		int i;
 		int [] option;
@@ -64,8 +80,8 @@ public abstract class Orientation {
 			pos = new double[3];
 			odo.getPosition(pos);
 			offset = new int[3];
-			offset[X] = map.getGrid(pos[X]);
-			offset[Y] = map.getGrid(pos[Y]);
+			offset[X] = map.getGrid(pos[X], true);
+			offset[Y] = map.getGrid(pos[Y], true);
 			offset[THETA] =  getOrientation(pos[THETA]);
 			boolean wall = (us.poll() < THRESHOLD );
 			
@@ -74,7 +90,7 @@ public abstract class Orientation {
 					option = new int[3];
 					getIndexOption(i, option);
 					int [] correctedOffset = getCorrectedOffset(offset, option[THETA]);
-					if(!validOption(option[X], option[Y], option[THETA], correctedOffset[X], correctedOffset[Y], correctedOffset[THETA], wall)){
+					if(!validOption(option, correctedOffset, wall)){
 						options.clear(i);
 					}
 				}
@@ -133,7 +149,21 @@ public abstract class Orientation {
 	}
 	
 	public boolean match(int x, int y, int direction, boolean blocked){
-		return options.get(this.getOptionIndex(x, y, direction))==blocked;
+		boolean result = false;
+		switch(direction){
+		case NORTH:
+			result = map.blocked(x, y+1);
+			break;
+		case EAST:
+			result = map.blocked(x+1, y);
+			break;
+		case SOUTH:
+			result = map.blocked(x, y-1);
+			break;
+		case WEST:
+			result = map.blocked(x-1, y);
+		}
+		return result==blocked;
 	}
 	
 	public int getOffsetDist(int grid, int offset){
@@ -146,23 +176,7 @@ public abstract class Orientation {
 	
 	public int getOrientation(double angle){
 		angle = Odometer.fixDegAngle(angle);
-		double offset = Math.abs(Odometer.minimumAngleFromTo(angle, 0));
-		if (offset < ANGLE_TOLERANCE){
-			return FORWARD;
-		}
-		offset = Math.abs(Odometer.minimumAngleFromTo(angle, 90));
-		if (offset < ANGLE_TOLERANCE){
-			return RIGHT;
-		}
-		offset = Math.abs(Odometer.minimumAngleFromTo(angle, 180));
-		if (offset < ANGLE_TOLERANCE){
-			return BACKWARDS;
-		}
-		offset = Math.abs(Odometer.minimumAngleFromTo(angle, 270));
-		if (offset < ANGLE_TOLERANCE){
-			return LEFT;
-		}
-		return -1;
+		return (int) ( Math.round(angle / 90.0) ) % 4;
 	}
 	
 	public int getOffsetDirection(int initial, int offset){
@@ -220,6 +234,10 @@ public abstract class Orientation {
 		}
 		offset[X] = correctedOffset[X];
 		offset[Y] = correctedOffset[Y];
+	}
+	
+	public boolean validOption(int [] pos, int [] offset, boolean wall){
+		return validOption(pos[X], pos[Y], pos[THETA], offset[X], offset[Y], offset[THETA], wall);
 	}
 	
 	public boolean validOption(int x, int y, int direction, int xOffset, int yOffset, int dOffset, boolean wall){

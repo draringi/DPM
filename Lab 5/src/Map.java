@@ -51,7 +51,15 @@ public class Map {
 	}
 	
 	public int getGrid(double val){
-		return (int) Math.round(Math.ceil(val));
+		return getGrid(val, false);
+	}
+	
+	public int getGrid(double val, boolean orienteering){
+		val /=30;
+		if(!orienteering){
+			val = Math.ceil(val);
+		}
+		return (int) Math.round(val);
 	}
 	
 	public boolean valid(int x, int y){
