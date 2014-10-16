@@ -43,7 +43,12 @@ public abstract class Orientation {
 		}
 	}
 	
-	abstract public void move(boolean wall);
+	/**
+	 * Moves the robot to a new orientation, dependent on implementation
+	 * @param wall If there is a wall in front of the robot or not
+	 * @param direction Current travel direction relative to starting point
+	 */
+	abstract public void move(boolean wall, int direction);
 	
 	public void orienteer(){
 		while(options.cardinality() != 1){
@@ -65,7 +70,7 @@ public abstract class Orientation {
 					}
 				}
 			}
-			move(wall);
+			move(wall, offset[THETA]);
 		}
 	}
 	

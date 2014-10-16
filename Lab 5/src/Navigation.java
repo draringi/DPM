@@ -4,7 +4,7 @@ import lejos.nxt.Motor;
 public class Navigation {
 	// put your navigation code here 
 	final static int FORWARD = 175, TURNING = 150, STOP = 0;
-	static private final double TOLERANCE = 1.5, MIN_ANGLE = 5, MIN_ANGLE_ABS = 1;
+	static private final double TOLERANCE = 1.5, MIN_ANGLE = 5, MIN_ANGLE_ABS = 1, TILE_DISTANCE = 30;;
 	private Odometer odometer;
 	private TwoWheeledRobot robot;
 	
@@ -50,6 +50,33 @@ public class Navigation {
 			}
 		}
 		robot.setRotationSpeed(STOP);
+	}
+	
+	public void turn(double angle) {
+		turnTo(Odometer.fixDegAngle(odometer.getAngle() + angle));
+	}
+	
+	public void travelTile(int direction){
+		double xMod = 0, yMod = 0;
+		switch(direction){
+		case Orientation.FORWARD:
+			xMod = 0;
+			yMod = TILE_DISTANCE;
+			break;
+		case Orientation.RIGHT:
+			xMod = TILE_DISTANCE;
+			yMod = 0;
+			break;
+		case Orientation.BACKWARDS:
+			xMod = 0;
+			yMod = -TILE_DISTANCE;
+			break;
+		case Orientation.LEFT:
+			xMod = -TILE_DISTANCE;
+			yMod = 0;
+			break;
+		}
+		travelTo(odometer.getX() + xMod, odometer.getY() + yMod);
 	}
 	
 	public void rotate(){
