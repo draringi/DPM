@@ -110,7 +110,7 @@ public abstract class Orientation {
 		return result;
 	}
 	
-	private static double [] addPositions(double [] posOne, double [] posTwo){
+	public static double [] addPositions(double [] posOne, double [] posTwo){
 		double [] result = new double [3];
 		result[X] = posOne[X] + posTwo[X];
 		result[Y] = posOne[Y] + posTwo[Y];
@@ -118,7 +118,7 @@ public abstract class Orientation {
 		return result;
 	}
 	
-	private static void convertTilePosition(int [] tile, double [] pos){
+	public static void convertTilePosition(int [] tile, double [] pos){
 		pos[X] = tile[X]*TILE_SIZE - TILE_OFFSET;
 		pos[Y] = tile[Y]*TILE_SIZE - TILE_OFFSET;
 		pos[THETA] = 90*tile[THETA];
