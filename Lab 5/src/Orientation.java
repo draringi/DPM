@@ -8,11 +8,18 @@ public abstract class Orientation {
 	public static final int NORTH = 0, EAST = 1, SOUTH = 2, WEST = 3;
 	public static final int FORWARD = 0, LEFT = 1, BACKWARDS = 2, RIGHT = 3;
 	public static final int X = 0, Y = 1, THETA = 3;
+	public static final int THRESHOLD = 25;
 	private int width, height;
 	private static final double ANGLE_TOLERANCE = 10;
 	
 	private int getOptionIndex(int x, int y, int direction){
 		return (y*map.getWidth()+x)*4+direction;
+	}
+	private void getIndexOption(int index, int [] option){
+		option[THETA] = index % 4;
+		index /= 4;
+		option[X] = index % width;
+		option[Y] = index / width;
 	}
 	
 	public Orientation(Map map, Odometer odo){
@@ -36,6 +43,8 @@ public abstract class Orientation {
 		}
 	}
 	
+	abstract public void move(boolean wall);
+	
 	public void orienteer(){
 		while(options.cardinality() != 1){
 			double [] pos = new double[3];
@@ -44,6 +53,19 @@ public abstract class Orientation {
 			offset[X] = map.getGrid(pos[X]);
 			offset[Y] = map.getGrid(pos[Y]);
 			offset[THETA] =  getOrientation(pos[THETA]);
+			boolean wall = (us.poll() < THRESHOLD );
+			int i;
+			for(i=0; i < options.length(); i++){
+				if(options.get(i)){
+					int [] option = new int[3];
+					getIndexOption(i, option);
+					int [] correctedOffset = getCorrectedOffset(offset, option[THETA]);
+					if(!validOption(option[X], option[Y], option[THETA], correctedOffset[X], correctedOffset[Y], correctedOffset[THETA], wall)){
+						options.clear(i);
+					}
+				}
+			}
+			move(wall);
 		}
 	}
 	
@@ -94,6 +116,30 @@ public abstract class Orientation {
 	
 	public int getOffsetDirection(int initial, double angle){
 		return (initial + getOrientation(angle))%4;
+	}
+	
+	public int [] getCorrectedOffset(int [] offset, int orientation){
+		int [] correctedOffset = new int[3];
+		correctedOffset[THETA] = orientation;
+		switch(orientation){
+		case NORTH:
+			correctedOffset[Y] = offset[Y];
+			correctedOffset[X] = offset[X];
+			break;
+		case EAST:
+			correctedOffset[X] = offset[Y];
+			correctedOffset[Y] = -offset[X];
+			break;
+		case SOUTH:
+			correctedOffset[Y] = -offset[Y];
+			correctedOffset[X] = -offset[X];
+			break;
+		case WEST:
+			correctedOffset[X] = -offset[Y];
+			correctedOffset[Y] = offset[X];
+			break;
+		}
+		return correctedOffset;	
 	}
 	
 	public boolean validOption(int x, int y, int direction, int xOffset, int yOffset, int dOffset, boolean wall){
