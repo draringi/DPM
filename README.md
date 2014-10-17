@@ -23,7 +23,7 @@
 * Lab Report = ?/40
 
 ###Lab 5###
-* Lab Demo Pt. 1 = ?/10
-* Lab Demo Pt. 2 = ?/20
+* Lab Demo Pt. 1 = 10/10
+* Lab Demo Pt. 2 = 20/20
 * Lab Code = ?/10
 * Lab Report = ?/40
