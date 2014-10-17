@@ -1,6 +1,12 @@
 import java.util.Queue;
 
-
+/**
+ * Pathfinding class, taking advantage of knowing the map to
+ * avoid having to read from the ultrasonic to dodge walls.
+ * @author Michael Williams (260369438)
+ * @author Leonardo Siracusa (260585931)
+ *
+ */
 public class Pathfinder {
 	private Map map;
 	private Queue<Pos> path;
