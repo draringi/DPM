@@ -1,5 +1,11 @@
 import java.util.BitSet;
 
+/**
+ * 
+ * @author Michael Williams (260369438)
+ * @author Leonardo Siracusa (260585931)
+ *
+ */
 public abstract class Orientation {
 	private Map map;
 	private BitSet options;
@@ -17,30 +23,18 @@ public abstract class Orientation {
 	
 	
 	/**
-	 * 
+	 * Converts an x, y, heading triplet into an index value
 	 * @param x
 	 * @param y
 	 * @param direction
-	 * @return
+	 * @return Internal index value
 	 */
 	private int getOptionIndex(int x, int y, int direction){
 		return (y*map.getWidth()+x)*4+direction;
 	}
 	
 	/**
-	 * 
-	 * @param index
-	 * @param option
-	 */
-	private void getIndexOption(int index, int [] option){
-		option[THETA] = index % 4;
-		index = index/4;
-		option[X] = index % width;
-		option[Y] = index / width;
-	}
-	
-	/**
-	 * 
+	 * Default constructor 
 	 * @param map
 	 * @param odo
 	 */
@@ -75,7 +69,7 @@ public abstract class Orientation {
 	abstract public void move(boolean wall, int direction, Navigation nav);
 	
 	/**
-	 * 
+	 * Returns the number of options left
 	 * @return
 	 */
 	public int optionsLeft(){
@@ -83,8 +77,8 @@ public abstract class Orientation {
 	}
 	
 	/**
-	 * 
-	 * @param start
+	 * Returns the start point, if only 1 option remains. 
+	 * @param start Start Point
 	 */
 	public void getOption(int [] start){
 		if(options.cardinality() == 1){
@@ -108,7 +102,9 @@ public abstract class Orientation {
 	}
 	
 	/**
-	 * 
+	 * Navigate the map, until the start point is concluded
+	 * Then, update the odometer
+	 * @param nav
 	 */
 	public void orienteer(Navigation nav){
 		int [] option;
@@ -159,7 +155,7 @@ public abstract class Orientation {
 	
 	/**
 	 * 
-	 * @return
+	 * @return number of checks occured
 	 */
 	public int getCount(){
 		int result;
@@ -170,7 +166,7 @@ public abstract class Orientation {
 	}
 	
 	/**
-	 * 
+	 * Adds 2 Odometer system co-ordinates together in a sane manner
 	 * @param posOne
 	 * @param posTwo
 	 * @return
@@ -184,7 +180,7 @@ public abstract class Orientation {
 	}
 	
 	/**
-	 * 
+	 * Converts map tiles into odometer co-ords
 	 * @param tile
 	 * @param pos
 	 */
@@ -195,7 +191,7 @@ public abstract class Orientation {
 	}
 	
 	/**
-	 * 
+	 * checks if a triplet is a valid option
 	 * @param x
 	 * @param y
 	 * @param direction
@@ -206,7 +202,7 @@ public abstract class Orientation {
 	}
 	
 	/**
-	 * 
+	 * removes an option from the option matrix
 	 * @param x
 	 * @param y
 	 * @param direction
@@ -216,12 +212,13 @@ public abstract class Orientation {
 	}
 	
 	/**
-	 * 
+	 * Checks if the map status at a given location and heading matches the ultrasonic
+	 * reading.
 	 * @param x
 	 * @param y
 	 * @param direction
 	 * @param blocked
-	 * @return
+	 * @return true, if matching, false otherwise.
 	 */
 	public boolean match(int x, int y, int direction, boolean blocked){
 		double angle = orientationToRads(direction);
@@ -284,7 +281,7 @@ public abstract class Orientation {
 	}
 	
 	/**
-	 * 
+	 * corrects an offset for a given starting orientation in the grid system
 	 * @param offset
 	 * @param orientation
 	 * @return
@@ -299,7 +296,7 @@ public abstract class Orientation {
 	}
 	
 	/**
-	 * 
+	 * corrects an offset for a given starting orientation in the odometer system
 	 * @param offset
 	 * @param orientation
 	 */
@@ -328,7 +325,7 @@ public abstract class Orientation {
 	}
 	
 	/**
-	 * 
+	 * Reports if an option is potentially valid, given an offset and Ultrasonic reading
 	 * @param pos
 	 * @param offset
 	 * @param wall
@@ -339,7 +336,7 @@ public abstract class Orientation {
 	}
 	
 	/**
-	 * 
+	 * Reports if an option is potentially valid, given an offset and Ultrasonic reading
 	 * @param x
 	 * @param y
 	 * @param direction
