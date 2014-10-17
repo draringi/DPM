@@ -2,6 +2,12 @@ import lejos.util.Timer;
 import lejos.util.TimerListener;
 import lejos.nxt.*;
 
+/**
+ * Odometer system, reporting values in doubles from 0, 0 (grid point between (0,0), (1,0), (1,1), (0,1))
+ * @author Michael Williams (260369438)
+ * @author Leonardo Siracusa (260585931)
+ *
+ */
 public class Odometer implements TimerListener {
 	public static final int DEFAULT_PERIOD = 25, X = 0, Y = 1, THETA = 2;
 	private TwoWheeledRobot robot;
