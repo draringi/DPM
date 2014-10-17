@@ -72,7 +72,7 @@ public abstract class Orientation {
 	 * @param wall If there is a wall in front of the robot or not
 	 * @param direction Current travel direction relative to starting point
 	 */
-	abstract public void move(boolean wall, int direction);
+	abstract public void move(boolean wall, int direction, Navigation nav);
 	
 	/**
 	 * 
@@ -110,7 +110,7 @@ public abstract class Orientation {
 	/**
 	 * 
 	 */
-	public void orienteer(){
+	public void orienteer(Navigation nav){
 		int [] option;
 		int [] offset;
 		double [] pos;
@@ -145,7 +145,7 @@ public abstract class Orientation {
 			if(options.cardinality() <= 1){
 				break;
 			}
-			move(wall, getOrientation(pos[THETA]));
+			move(wall, getOrientation(pos[THETA]), nav);
 		}
 		option = new int[3];
 		getOption(option);
@@ -260,7 +260,7 @@ public abstract class Orientation {
 	}
 	
 	/**
-	 * 
+	 * Adds 2 directions, and returns a valid direction
 	 * @param initial
 	 * @param offset
 	 * @return
@@ -270,7 +270,7 @@ public abstract class Orientation {
 	}
 	
 	/**
-	 * 
+	 * Adds 2 directions, and returns a valid direction
 	 * @param initial
 	 * @param angle
 	 * @return
@@ -305,7 +305,6 @@ public abstract class Orientation {
 	 */
 	public void getCorrectedOffset(double [] offset, int orientation){
 		double [] correctedOffset = new double[2];
-		offset[THETA] = orientation * 90;
 		switch(orientation){
 		case NORTH:
 			correctedOffset[Y] = offset[Y];

@@ -19,7 +19,8 @@ public class Lab5 {
 		Orientation orienteer;
 		Map map = Map.DefaultMap();
 		LCDInfo lcd;
-
+		Navigation nav = new Navigation(odo);
+		
 		do {
 			// clear the display
 			LCD.clear();
@@ -35,14 +36,16 @@ public class Lab5 {
 		} while (buttonChoice != Button.ID_LEFT
 				&& buttonChoice != Button.ID_RIGHT);
 
-
+		
 		if (buttonChoice == Button.ID_LEFT) {
 			orienteer = new DeterministicOrientation(map, odo);
 		} else {
 			orienteer = new DeterministicOrientation(map, odo);
 		}
-		 lcd = new LCDInfo(odo, orienteer);
-		 orienteer.orienteer();
+		lcd = new LCDInfo(odo, orienteer);
+		orienteer.orienteer(nav);
+		nav.travelToTile(new int [] {3, 3}, map);
+		nav.turnTo(0);
 		while (Button.waitForAnyPress() != Button.ID_ESCAPE);
 		System.exit(0);
 	}

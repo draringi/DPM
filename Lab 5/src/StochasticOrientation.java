@@ -1,7 +1,6 @@
 import java.util.Random;
 
 public class StochasticOrientation extends Orientation {
-	private Navigation nav;
 	private Random rng;
 	private static final int LEFT = 0, FORWARD = 1;
 	/**
@@ -10,12 +9,11 @@ public class StochasticOrientation extends Orientation {
 	 */
 	public StochasticOrientation(Map map, Odometer odo) {
 		super(map, odo);
-		nav = new Navigation(odo);
 		rng = new Random();
 	}
 
 	@Override
-	public void move(boolean wall, int direction) {
+	public void move(boolean wall, int direction, Navigation nav) {
 		if(wall){
 			nav.turn(-90);
 		} else {

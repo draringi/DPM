@@ -39,7 +39,7 @@ public class Map {
 		return bitset.get(getIndex(x, y));
 	}
 	
-	private int getIndex(int x, int y){
+	public int getIndex(int x, int y){
 		return y*width+x;
 	}
 	
@@ -53,6 +53,17 @@ public class Map {
 	
 	public int getGrid(double val){
 		return getGrid(val, false);
+	}
+	
+	public double getPos(int val){
+		return (double) val*30.0 - 15;
+	}
+	
+	public double [] getPos(int [] val){
+		double [] pos = new double [2];
+		pos[Odometer.X] = getPos(val[Odometer.X]);
+		pos[Odometer.Y] = getPos(val[Odometer.Y]);
+		return pos;
 	}
 	
 	public int getGrid(double val, boolean orienteering){

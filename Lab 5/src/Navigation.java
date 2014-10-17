@@ -66,6 +66,19 @@ public class Navigation {
 		robot.travel(TILE_DISTANCE);
 	}
 	
+	public void travelToTile(int [] target, Map map){
+		int [] start = new int [2];
+		start[Odometer.X] = map.getGrid(odometer.getX());
+		start[Odometer.Y] = map.getGrid(odometer.getY());
+		Pathfinder pathfinder = new Pathfinder(map);
+		pathfinder.findPath(start, target);
+		while(pathfinder.isPath()){
+			int [] step = pathfinder.getNext();
+			double [] pos = map.getPos(step);
+			travelTo(pos[Odometer.X], pos[Odometer.Y]);
+		}
+	}
+	
 	public void rotate(){
 		Motor.A.setSpeed(100);
 		Motor.B.setSpeed(100);

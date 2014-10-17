@@ -4,11 +4,11 @@ public class DeterministicOrientation extends Orientation {
 	
 	public DeterministicOrientation(Map map, Odometer odo) {
 		super(map, odo);
-		nav = new Navigation(odo);
+		
 	}
 
 	@Override
-	public void move(boolean wall, int direction) {
+	public void move(boolean wall, int direction, Navigation nav) {
 		if(wall){
 			nav.turn(-90);
 		} else {
