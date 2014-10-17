@@ -91,6 +91,14 @@ public class TwoWheeledRobot {
 		return DEFAULT_WIDTH;
 	}
 	
+	public void travel(double dist){
+		leftMotor.setSpeed(100);
+		rightMotor.setSpeed(100);
+		int rotateDist = (int) Math.round(dist/(2*Math.PI*DEFAULT_LEFT_RADIUS));
+		leftMotor.rotate(rotateDist, true);
+		rightMotor.rotate(rotateDist, false);
+	}
+	
 	public void beep(){
 		Sound.beepSequence();
 	}

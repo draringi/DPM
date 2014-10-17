@@ -57,26 +57,13 @@ public class Navigation {
 	}
 	
 	public void travelTile(int direction){
-		double xMod = 0, yMod = 0;
-		switch(direction){
-		case Orientation.FORWARD:
-			xMod = 0;
-			yMod = TILE_DISTANCE;
-			break;
-		case Orientation.RIGHT:
-			xMod = TILE_DISTANCE;
-			yMod = 0;
-			break;
-		case Orientation.BACKWARDS:
-			xMod = 0;
-			yMod = -TILE_DISTANCE;
-			break;
-		case Orientation.LEFT:
-			xMod = -TILE_DISTANCE;
-			yMod = 0;
-			break;
-		}
+		double xMod = TILE_DISTANCE*Math.sin(direction*Math.PI/2);
+		double yMod = TILE_DISTANCE*Math.cos(direction*Math.PI/2);
 		travelTo(odometer.getX() + xMod, odometer.getY() + yMod);
+	}
+	
+	public void travelTile() {
+		robot.travel(TILE_DISTANCE);
 	}
 	
 	public void rotate(){

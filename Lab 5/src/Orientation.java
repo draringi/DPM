@@ -54,9 +54,9 @@ public abstract class Orientation {
 		this.options = new BitSet(height*width*4);
 		this.count = 0;
 		this.lock = new Object();
-		
-		for (x=0;x < width; x++){
-			for(y=0;y < height; y++){
+		this.options.clear();
+		for (y=0;y < height; y++){
+			for(x=0;x < width; x++){
 				if(!map.blocked(x, y)){
 					options.set(this.getOptionIndex(x, y, NORTH));
 					options.set(this.getOptionIndex(x, y, EAST));
@@ -88,24 +88,33 @@ public abstract class Orientation {
 	 */
 	public void getOption(int [] start){
 		if(options.cardinality() == 1){
-			for(int i=0; i < options.length(); i++){
-				if(options.get(i)){
-					getIndexOption(i, start);
-					break;
+			for(int y=0; y < height; y++){
+				for(int x=0; x < width; x++){
+					for(int d=0; d < 4; d++){
+						if(isOption(x, y, d)){
+							start[X] = x;
+							start[Y] = y;
+							start[THETA] = d;
+							return;
+						}
+					}
 				}
 			}
+			start[THETA] = -1;
+		} else {
+			start[THETA] = -2;
 		}
+		
 	}
 	
 	/**
 	 * 
 	 */
 	public void orienteer(){
-		int i;
 		int [] option;
 		int [] offset;
 		double [] pos;
-		while(options.cardinality() != 1){
+		while(options.cardinality() > 1){
 			pos = new double[3];
 			odo.getPosition(pos);
 			offset = new int[3];
@@ -114,31 +123,32 @@ public abstract class Orientation {
 			offset[THETA] =  getOrientation(pos[THETA]);
 			boolean wall = (us.poll() < THRESHOLD );
 			
-			for(i=0; i < options.length(); i++){
-				if(options.get(i)){
-					option = new int[3];
-					getIndexOption(i, option);
-					int [] correctedOffset = getCorrectedOffset(offset, option[THETA]);
-					if(!validOption(option, correctedOffset, wall)){
-						options.clear(i);
+			for(int y=0; y < height; y++){
+				for(int x=0; x < width; x++){
+					for(int d=0; d < 4; d++){
+						if(isOption(x, y, d)){
+							option = new int[3];
+							option[X] = x;
+							option[Y] = y;
+							option[THETA] = d;
+							int [] correctedOffset = getCorrectedOffset(offset, option[THETA]);
+							if(!validOption(option, correctedOffset, wall)){
+								options.clear(getOptionIndex(x, y, d));
+							}
+						}
 					}
 				}
 			}
 			synchronized(lock){
 				count++;
 			}
-			if(options.cardinality() == 1){
+			if(options.cardinality() <= 1){
 				break;
 			}
-			move(wall, offset[THETA]);
+			move(wall, getOrientation(pos[THETA]));
 		}
 		option = new int[3];
-		for(i=0; i < options.length(); i++){
-			if(options.get(i)){
-				getIndexOption(i, option);
-				break;
-			}
-		}
+		getOption(option);
 		pos = new double[3];
 		odo.getPosition(pos);
 		getCorrectedOffset(pos, option[THETA]);
@@ -214,21 +224,10 @@ public abstract class Orientation {
 	 * @return
 	 */
 	public boolean match(int x, int y, int direction, boolean blocked){
-		boolean result = false;
-		switch(direction){
-		case NORTH:
-			result = map.blocked(x, y+1);
-			break;
-		case EAST:
-			result = map.blocked(x+1, y);
-			break;
-		case SOUTH:
-			result = map.blocked(x, y-1);
-			break;
-		case WEST:
-			result = map.blocked(x-1, y);
-		}
-		return result==blocked;
+		double angle = orientationToRads(direction);
+		x += (int) Math.sin(angle);
+		y += (int) Math.cos(angle);
+		return map.blocked(x, y)==blocked;
 	}
 	
 	/**
@@ -257,8 +256,7 @@ public abstract class Orientation {
 	 * @return
 	 */
 	public int getOrientation(double angle){
-		angle = Odometer.fixDegAngle(angle);
-		return (int) ( Math.round(angle / 90.0) ) % 4;
+		return (int) ( Math.round(Odometer.fixDegAngle(angle) / 90.0) ) % 4;
 	}
 	
 	/**
@@ -281,6 +279,10 @@ public abstract class Orientation {
 		return (initial + getOrientation(angle))%4;
 	}
 	
+	public static double orientationToRads(int orientation){
+		return orientation*Math.PI/2;
+	}
+	
 	/**
 	 * 
 	 * @param offset
@@ -289,25 +291,10 @@ public abstract class Orientation {
 	 */
 	public int [] getCorrectedOffset(int [] offset, int orientation){
 		int [] correctedOffset = new int[3];
-		correctedOffset[THETA] = orientation;
-		switch(orientation){
-		case NORTH:
-			correctedOffset[Y] = offset[Y];
-			correctedOffset[X] = offset[X];
-			break;
-		case EAST:
-			correctedOffset[X] = offset[Y];
-			correctedOffset[Y] = -offset[X];
-			break;
-		case SOUTH:
-			correctedOffset[Y] = -offset[Y];
-			correctedOffset[X] = -offset[X];
-			break;
-		case WEST:
-			correctedOffset[X] = -offset[Y];
-			correctedOffset[Y] = offset[X];
-			break;
-		}
+		double angle = orientationToRads(orientation);
+		correctedOffset[THETA] = offset[THETA];
+		correctedOffset[X] = (int) (offset[X]*Math.cos(angle) + offset[Y]*Math.sin(angle));
+		correctedOffset[Y] = (int) (offset[Y]*Math.cos(angle) - offset[X]*Math.sin(angle));
 		return correctedOffset;	
 	}
 	
