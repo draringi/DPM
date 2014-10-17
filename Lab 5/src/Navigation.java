@@ -1,6 +1,11 @@
 import lejos.nxt.Motor;
 
-
+/**
+ * Navigation class, dealing with both odometer and grid based systems
+ * @author Michael Williams (260369438)
+ * @author Leonardo Siracusa (260585931)
+ *
+ */
 public class Navigation {
 	// put your navigation code here 
 	final static int FORWARD = 175, TURNING = 150, STOP = 0;
