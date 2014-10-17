@@ -16,7 +16,7 @@ public abstract class Orientation {
 	public static final int X = 0, Y = 1, THETA = 2;
 	public static final int THRESHOLD = 25;
 	private int width, height;
-	private static final double ANGLE_TOLERANCE = 45, TILE_SIZE = 30, TILE_OFFSET = 15;
+	private static final double TILE_SIZE = 30, TILE_OFFSET = 15;
 	private int count;
 	private Object lock;
 	private static final boolean [] UPDATE_ALL = {true, true, true};

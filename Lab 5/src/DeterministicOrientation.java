@@ -4,9 +4,6 @@
  * @author Leonardo Siracusa (260585931)
  */
 public class DeterministicOrientation extends Orientation {
-	private Navigation nav;
-	
-	
 	public DeterministicOrientation(Map map, Odometer odo) {
 		super(map, odo);
 		
