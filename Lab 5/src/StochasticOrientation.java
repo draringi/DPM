@@ -2,7 +2,7 @@
  * Stochastic move algorithm for the Orientation 
  * @author Michael Williams (260369438)
  * @author Leonardo Siracusa (260585931)
- * /
+ */
 import java.util.Random;
 
 public class StochasticOrientation extends Orientation {
