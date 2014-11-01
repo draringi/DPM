@@ -29,11 +29,10 @@ public class NavigationController {
         public NavigationController(GridMap map){
         this.pilot= new DifferentialPilot(WHEEL_RADIUS,TRACK_WIDTH,LEFT_MOTOR,RIGHT_MOTOR);
         this.navigator= new Navigator(pilot);
-      
         this.map=map;
         }
         
-	
+	// Returns shortest path to destination 
         public Path getPath(int x, int y){
         Waypoint destination= new Waypoint(x,y);  //Destination point
         Pose currentLocation = getPose();
@@ -41,23 +40,20 @@ public class NavigationController {
         ShortestPathFinder pathAlgo = new ShortestPathFinder(map);
         Path route=null;
         try{
-        route = pathAlgo.findRoute(currentLocation, destination);
-        }
+        route = pathAlgo.findRoute(currentLocation, destination);}
         catch(Exception e){}
         return route;
         }
         
         public void followPath(Path route){
-        
         this.navigator.followPath(route);
         }
+        
 	public void driveToGrid(int x, int y) {
             followPath(getPath(x,y));
 	}
 
 	public void driveToGrid(int x, int y, Direction direction) {
-            followPath(getPath(x,y));
-            pilot.rotate(TRACK_WIDTH);
 	}
 
 	public void setDropZonet(int x, int y, int width, int height) {
