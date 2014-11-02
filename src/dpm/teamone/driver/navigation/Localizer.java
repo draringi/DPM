@@ -13,7 +13,12 @@ import lejos.robotics.navigation.DifferentialPilot;
 import lejos.robotics.navigation.Pose;
 import lejos.robotics.pathfinding.FourWayGridMesh;
 
-
+/**
+ * Localizer is a Navigation local class for ease of use of the Localization system
+ * @author Mehdi Benguerrah
+ * @author Michael Williams
+ *
+ */
 public class Localizer{
     
      private static final double WHEEL_RADIUS=2.5;
@@ -30,16 +35,21 @@ public class Localizer{
      private static final int particles =25, borders =50;
      private MCLPoseProvider localisationAlgo;
      
-     //Constructor
-     public Localizer(GridMap map){
+     /**
+      * Sets up the Localization Algorithm to use for localizing
+      * @param map Map to be used to Localize against.
+      */
+     protected Localizer(GridMap map){
          LineMap lMap = this.map.getLineMap();
          this.localisationAlgo= new MCLPoseProvider(pilot,scanner,lMap,particles,borders);
-}
-     
-     // Return robot's current position and heading using Monte Carlo 
-     // Localisation Algorithm
+     }
+     /**
+      * Calculates robot's current position and heading using the Monte Carlo 
+      * Localisation Algorithm
+      * @return Robot's current position and heading
+      */
      public Pose performLocalisation(){
-     return this.localisationAlgo.getPose();
+    	 return this.localisationAlgo.getPose();
      }
     
 }

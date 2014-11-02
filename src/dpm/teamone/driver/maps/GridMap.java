@@ -8,6 +8,13 @@ import lejos.robotics.pathfinding.FourWayGridMesh;
 import lejos.geom.Rectangle;
 import lejos.geom.Line;
 
+/**
+ * The GridMap provides an easy way to create maps for the robot,
+ * working on a grid structure, unlike the LineMap.
+ * It is used to generate LineMaps and GridMeshes
+ * @author Michael Williams
+ *
+ */
 public class GridMap {
 
 	private BitSet bitset;
@@ -20,29 +27,56 @@ public class GridMap {
 	private static final float TILE_SIZE = 30;
 	private static final float CLEARANCE = 1;
 
+	/**
+	 * Create an empty map with the provided height and width
+	 * @param width Width of the new GridMap
+	 * @param height Height of the new GridMap
+	 */
 	public GridMap(int width, int height){
 		this.width = width;
 		this.height = height;
 		this.bitset = new BitSet(width*height);
 	}
 	
+	/**
+	 * Returns the internal index in the BitSet for a given position
+	 * @param x x-axis location
+	 * @param y y-axis location
+	 * @return Internal Index
+	 */
 	private int getIndex(int x, int y){
 		return width*y+x;
 	}
 	
+	/**
+	 * Sets the provided location as a wall
+	 * @param x x-axis location
+	 * @param y y-axis location
+	 */
 	protected void set(int x, int y){
 		this.bitset.set(getIndex(x, y));
 	}
 	
+	/**
+	 * 
+	 * @return Height of the GridMap
+	 */
 	public int getHeight(){
 		return this.height;
 	}
 	
+	/**
+	 * 
+	 * @return Width of the GridMap
+	 */
 	public int getWidth(){
 		return this.width;
 	}
 	
-	
+	/**
+	 * Lazy Constructor of the GridMesh
+	 * @return GridMesh representing the GridMap
+	 */
 	public FourWayGridMesh getGridMesh() {
 		if(mesh == null){
 			mesh = generateGridMesh();
@@ -50,10 +84,18 @@ public class GridMap {
 		return mesh;
 	}
 	
+	/**
+	 * Actual Constructor of the GridMesh
+	 * @return GridMesh representing the GridMap
+	 */
 	private FourWayGridMesh generateGridMesh(){
 		return new FourWayGridMesh(this.getLineMap(), TILE_SIZE, CLEARANCE);
 	}
 
+	/**
+	 * Lazy Constructor of the LineMap
+	 * @return LineMap equivalent of the GridMap
+	 */
 	public LineMap getLineMap(){
 		if(linemap == null){
 			linemap = generateLineMap();
@@ -61,6 +103,10 @@ public class GridMap {
 		return linemap;
 	}
 	
+	/**
+	 * Actual Constructor of the LineMap
+	 * @return LineMap equivalent of the GridMap
+	 */
 	private LineMap generateLineMap() {
 		Rectangle rect = new Rectangle(-TILE_SIZE, -TILE_SIZE, width*TILE_SIZE, height*TILE_SIZE);
 		ArrayList<Line> lines = new ArrayList<Line>();

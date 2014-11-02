@@ -25,3 +25,4 @@ hs_err_pid*
 #Ignore temp files
 *~
 /bin/
+/doc/
