@@ -33,7 +33,7 @@ public class Localizer{
      //Constructor
      public Localizer(GridMap map){
          LineMap lMap = this.map.getLineMap();
-         this.localisationAlgo= new MCLPoseProvider(pilot,scanner,lMap,particles,borders)
+         this.localisationAlgo= new MCLPoseProvider(pilot,scanner,lMap,particles,borders);
 }
      
      // Return robot's current position and heading using Monte Carlo 

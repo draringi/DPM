@@ -10,10 +10,10 @@ public class DriverRobot {
 	public static void main(String[] args) {
 	}
 
-	public EventManager myEventManager;
-	public NavigationController myNavigationController;
-	public GridMap myGridMap;
+	private EventManager myEventManager;
+	private NavigationController myNavigationController;
+	private GridMap myGridMap;
 
-	public CommunicationsManager myCommunicationsManager;
+	private CommunicationsManager myCommunicationsManager;
 
 }

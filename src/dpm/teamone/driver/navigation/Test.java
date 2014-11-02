@@ -5,15 +5,11 @@
 
 package dpm.teamone.driver.navigation;
 
-=
-package dpm.teamone.driver.navigation;
-
 import dpm.teamone.driver.maps.GridMap;
 import lejos.nxt.Button;
 import lejos.nxt.LCD;
 import lejos.robotics.navigation.Pose;
 
-=
 public class Test {
     
     public static void main(String[] args){
