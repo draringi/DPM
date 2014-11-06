@@ -8,14 +8,15 @@ package dpm.teamone.driver.communications;
  */
 public class CommunicationsManager {
 
-	private ControlComms myControlComms;
-	private TruckComms myTruckComms;
+	private ControlComms cnc;
+	private TruckComms truck;
 
 	/**
 	 * Standard Constructor,
 	 * Creates the individual communication modules and sets them up.
 	 */
 	public CommunicationsManager(){
+		this.cnc = new ControlComms(); 
 		
 	}
 	
@@ -24,6 +25,8 @@ public class CommunicationsManager {
 	 * @param mapData array of data containing map number, block location and drop off location
 	 */
 	public void waitForMap(int[] mapData) {
+		cnc.setup();
+		cnc.getMapData(mapData);
 	}
 
 }
