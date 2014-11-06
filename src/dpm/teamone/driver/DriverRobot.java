@@ -17,6 +17,59 @@ public class DriverRobot {
 	 * Length of a map data array. Has a value of {@value} 
 	 */
 	public static final int MAP_DATA_LENGTH = 9;
+	
+	/**
+	 * Index of map data array for the map number. Has a value of {@value}
+	 */
+	public static final int MAP_DATA_MAP = 0;
+	
+	/**
+	 * Index of map data array for the location of the pick-up zone in the x-axis.
+	 * Has a value of {@value}
+	 */
+	public static final int MAP_DATA_PICKUP_X = 1;
+	
+	/**
+	 * Index of map data array for the location of the pick-up zone in the y-axis.
+	 * Has a value of {@value}
+	 */
+	public static final int MAP_DATA_PICKUP_Y = 2;
+	
+	/**
+	 * Index of map data array for the width of the pickup zone.
+	 * Has a value of {@value}
+	 */
+	public static final int MAP_DATA_PICKUP_W = 3;
+	
+	/**
+	 * Index of map data array for the height of the pickup zone.
+	 * Has a value of {@value}
+	 */
+	public static final int MAP_DATA_PICKUP_H = 4;
+	
+	/**
+	 * Index of map data array for the location of the drop zone in the x-axis.
+	 * Has a value of {@value}
+	 */
+	public static final int MAP_DATA_DROP_X = 5;
+	
+	/**
+	 * Index of map data array for the location of the drop zone in the y-axis.
+	 * Has a value of {@value}
+	 */
+	public static final int MAP_DATA_DROP_Y = 6;
+	
+	/**
+	 * Index of map data array for the width of the drop zone.
+	 * Has a value of {@value}
+	 */
+	public static final int MAP_DATA_DROP_W = 7;
+	
+	/**
+	 * Index of map data array for the height of the drop zone.
+	 * Has a value of {@value}
+	 */
+	public static final int MAP_DATA_DROP_H = 8;
 
 	/**
 	 * Main thread of the driver block.

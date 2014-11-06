@@ -1,5 +1,7 @@
 package dpm.teamone.driver.communications;
 
+import java.io.InputStream;
+import java.util.Arrays;
 import java.util.BitSet;
 
 import dpm.teamone.driver.DriverRobot;
@@ -15,15 +17,21 @@ import lejos.nxt.comm.NXTConnection;
  */
 public class ControlComms {
 
+	private static final int BUFFER_SIZE = 64;
+	
 	private int mapBuffer[];
 	private Object lock;
+	private Object runLock;
 	private BitSet mapSet;
 	BTConnection connection;
+	boolean parse;
 	
 	protected ControlComms() {
 		this.mapBuffer = new int[DriverRobot.MAP_DATA_LENGTH];
 		this.mapSet = new BitSet(DriverRobot.MAP_DATA_LENGTH);
 		this.lock = new Object();
+		this.runLock = new Object();
+		this.parse = true;
 	}
 
 	/**
@@ -39,11 +47,16 @@ public class ControlComms {
 				
 			}
 		}
+		// We have the map details. No longer any need to wait on data from the C&C server 
+		synchronized(runLock){
+			this.parse = false;
+		}
 		synchronized(lock){
 			for(int i = 0; i < DriverRobot.MAP_DATA_LENGTH; i++){
 				mapData[i] = mapBuffer[i];
 			}
 		}
+		
 	}
 	
 	protected boolean mapReady(){
@@ -52,6 +65,171 @@ public class ControlComms {
 			result = (mapSet.cardinality() == DriverRobot.MAP_DATA_LENGTH);
 		}
 		return result;
+	}
+	
+	private void setKeyValue(String key, String value){
+		boolean check;
+		int val;
+		if(key.equals("map")){
+			synchronized(lock){
+				check = mapSet.get(DriverRobot.MAP_DATA_MAP);
+			}
+			if(!check){
+				val = Integer.parseInt(value); 
+				synchronized(lock){
+					mapBuffer[DriverRobot.MAP_DATA_MAP] = val;
+					mapSet.set(DriverRobot.MAP_DATA_MAP);
+				}
+			}
+			return;
+		}
+		if(key.equals("pick_x")){
+			synchronized(lock){
+				check = mapSet.get(DriverRobot.MAP_DATA_PICKUP_X);
+			}
+			if(!check){
+				val = Integer.parseInt(value); 
+				synchronized(lock){
+					mapBuffer[DriverRobot.MAP_DATA_PICKUP_X] = val;
+					mapSet.set(DriverRobot.MAP_DATA_PICKUP_X);
+				}
+			}
+			return;
+		}
+		if(key.equals("pick_y")){
+			synchronized(lock){
+				check = mapSet.get(DriverRobot.MAP_DATA_PICKUP_Y);
+			}
+			if(!check){
+				val = Integer.parseInt(value); 
+				synchronized(lock){
+					mapBuffer[DriverRobot.MAP_DATA_PICKUP_Y] = val;
+					mapSet.set(DriverRobot.MAP_DATA_PICKUP_Y);
+				}
+			}
+			return;
+		}
+		if(key.equals("pick_w")){
+			synchronized(lock){
+				check = mapSet.get(DriverRobot.MAP_DATA_PICKUP_W);
+			}
+			if(!check){
+				val = Integer.parseInt(value); 
+				synchronized(lock){
+					mapBuffer[DriverRobot.MAP_DATA_PICKUP_W] = val;
+					mapSet.set(DriverRobot.MAP_DATA_PICKUP_W);
+				}
+			}
+			return;
+		}
+		if(key.equals("pick_h")){
+			synchronized(lock){
+				check = mapSet.get(DriverRobot.MAP_DATA_PICKUP_H);
+			}
+			if(!check){
+				val = Integer.parseInt(value); 
+				synchronized(lock){
+					mapBuffer[DriverRobot.MAP_DATA_PICKUP_H] = val;
+					mapSet.set(DriverRobot.MAP_DATA_PICKUP_H);
+				}
+			}
+			return;
+		}
+		if(key.equals("drop_x")){
+			synchronized(lock){
+				check = mapSet.get(DriverRobot.MAP_DATA_DROP_X);
+			}
+			if(!check){
+				val = Integer.parseInt(value); 
+				synchronized(lock){
+					mapBuffer[DriverRobot.MAP_DATA_DROP_X] = val;
+					mapSet.set(DriverRobot.MAP_DATA_DROP_X);
+				}
+			}
+			return;
+		}
+		if(key.equals("drop_y")){
+			synchronized(lock){
+				check = mapSet.get(DriverRobot.MAP_DATA_DROP_Y);
+			}
+			if(!check){
+				val = Integer.parseInt(value); 
+				synchronized(lock){
+					mapBuffer[DriverRobot.MAP_DATA_DROP_Y] = val;
+					mapSet.set(DriverRobot.MAP_DATA_DROP_Y);
+				}
+			}
+			return;
+		}
+		if(key.equals("drop_w")){
+			synchronized(lock){
+				check = mapSet.get(DriverRobot.MAP_DATA_DROP_W);
+			}
+			if(!check){
+				val = Integer.parseInt(value); 
+				synchronized(lock){
+					mapBuffer[DriverRobot.MAP_DATA_DROP_W] = val;
+					mapSet.set(DriverRobot.MAP_DATA_DROP_W);
+				}
+			}
+			return;
+		}
+		if(key.equals("drop_h")){
+			synchronized(lock){
+				check = mapSet.get(DriverRobot.MAP_DATA_DROP_H);
+			}
+			if(!check){
+				val = Integer.parseInt(value); 
+				synchronized(lock){
+					mapBuffer[DriverRobot.MAP_DATA_DROP_H] = val;
+					mapSet.set(DriverRobot.MAP_DATA_DROP_H);
+				}
+			}
+			return;
+		}
+	}
+	
+	private void startInputParser(){
+		InputStream input = connection.openInputStream();
+		boolean run = true;
+		while(run){
+			char buffer[] = new char[BUFFER_SIZE];
+			try{
+				buffer[0] = (char) input.read();
+				if(buffer[0]=='{'){
+					int i;
+					for(i=1;i>BUFFER_SIZE;i++){
+						buffer[i] = (char) input.read();
+						if(buffer[i]=='}'){
+							break;
+						}
+					}
+					if( i == BUFFER_SIZE && buffer[i]!='}'){ // buffer overflow
+						continue;
+					}
+					int j;
+					for(j=1; j > i; j++){
+						if(buffer[j]==':'){
+							break;
+						}
+					}
+					if(j==i||j==1){ // Syntax error
+						continue;
+					}
+					String key = Arrays.toString(Arrays.copyOfRange(buffer, 1, j)).trim();
+					String value = Arrays.toString(Arrays.copyOfRange(buffer, j+1, i)).trim();
+					setKeyValue(key, value);
+				}
+			} catch (Exception e){
+			}
+			try{
+				Thread.sleep(50);
+			} catch (InterruptedException e) {
+			}
+			synchronized(runLock){
+				run = this.parse;
+			}
+		}
 	}
 
 	/**
@@ -70,6 +248,12 @@ public class ControlComms {
 			Bluetooth.setPower(true);
 		}
 		connection = Bluetooth.waitForConnection(0, NXTConnection.RAW);
+		new Thread()
+        {
+            public void run() {
+            	startInputParser();
+            }
+        }.start();
 	}
 
 }
