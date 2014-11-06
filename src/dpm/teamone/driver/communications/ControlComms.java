@@ -1,5 +1,12 @@
 package dpm.teamone.driver.communications;
 
+import java.util.BitSet;
+
+import dpm.teamone.driver.DriverRobot;
+import lejos.nxt.comm.Bluetooth;
+import lejos.nxt.comm.BTConnection;
+import lejos.nxt.comm.NXTConnection;
+
 /**
  * The ControlComms module talks with the C&C server,
  * Receiving map data, and sending positional data
@@ -8,8 +15,16 @@ package dpm.teamone.driver.communications;
  */
 public class ControlComms {
 
-	private int[] mapBuffer;
+	private int mapBuffer[];
+	private Object lock;
+	private BitSet mapSet;
+	BTConnection connection;
 	
+	protected ControlComms() {
+		this.mapBuffer = new int[DriverRobot.MAP_DATA_LENGTH];
+		this.mapSet = new BitSet(DriverRobot.MAP_DATA_LENGTH);
+		this.lock = new Object();
+	}
 
 	/**
 	 * Provides the map data received from the C&C server
@@ -17,6 +32,26 @@ public class ControlComms {
 	 * @see dpm.teamone.driver.DriverRobot#MAP_DATA_LENGTH
 	 */
 	protected void getMapData(int[] mapData) {
+		while(!mapReady()){
+			try{
+				Thread.sleep(50);
+			} catch (Exception e) {
+				
+			}
+		}
+		synchronized(lock){
+			for(int i = 0; i < DriverRobot.MAP_DATA_LENGTH; i++){
+				mapData[i] = mapBuffer[i];
+			}
+		}
+	}
+	
+	protected boolean mapReady(){
+		boolean result;
+		synchronized(lock){
+			result = (mapSet.cardinality() == DriverRobot.MAP_DATA_LENGTH);
+		}
+		return result;
 	}
 
 	/**
@@ -31,6 +66,10 @@ public class ControlComms {
 	 * Starts the connection with the C&C server 
 	 */
 	protected void setup() {
+		if(!Bluetooth.getPower()){
+			Bluetooth.setPower(true);
+		}
+		connection = Bluetooth.waitForConnection(0, NXTConnection.RAW);
 	}
 
 }
