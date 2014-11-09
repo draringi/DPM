@@ -22,12 +22,16 @@ public class Test_Localisation {
         GridMap map = lab5Map();
 
         Localisation loc = new Localisation(map);
-
-        int [] initialLocation = setArray(0,0,30,90);
+        
+        int [] initialLocation = setArray(0,0,30,90); //What the values read by the sensor would be if
+                                                     //the robot is at (3,1) facing North (Lab5) - TEST
         Pose result = loc.localize(initialLocation);
-        System.out.println("X: "+result.getX()+", Y: "+result.getY()+" Angle "+result.getHeading());
+       
+        System.out.println("X: "+result.getX()+", Y: "+result.getY()+" Angle "+result.getHeading()); // Result
      
     }
+    
+    // Outputs an array with the specified values 
    private static int[] setArray(int x1,int x2,int x3,int x4){
    int[] temp = new int[4];
    temp[0]=x1;temp[1]=x2;temp[2]=x3;temp[3]=x4;
