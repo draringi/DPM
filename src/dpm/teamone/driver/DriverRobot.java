@@ -15,6 +15,15 @@ import dpm.teamone.driver.navigation.NavigationController;
 public class DriverRobot {
 
 	/**
+	 * Main thread of the driver block. This block handles navigation, and
+	 * communication with the C&C server.
+	 * 
+	 * @param args
+	 */
+	public static void main(String[] args) {
+	}
+
+	/**
 	 * Length of a map data array. Has a value of {@value}
 	 */
 	public static final int MAP_DATA_LENGTH = 9;
@@ -38,13 +47,13 @@ public class DriverRobot {
 
 	/**
 	 * Index of map data array for the width of the pickup zone. Has a value of
-	 * {@value}
+	 * * {@value}
 	 */
 	public static final int MAP_DATA_PICKUP_W = 3;
 
 	/**
 	 * Index of map data array for the height of the pickup zone. Has a value of
-	 * {@value}
+	 * * {@value}
 	 */
 	public static final int MAP_DATA_PICKUP_H = 4;
 
@@ -61,31 +70,22 @@ public class DriverRobot {
 	public static final int MAP_DATA_DROP_Y = 6;
 
 	/**
-	 * Index of map data array for the width of the drop zone. Has a value of
+	 * Index of map data array for the width of the drop zone. Has a value of *
 	 * {@value}
 	 */
 	public static final int MAP_DATA_DROP_W = 7;
 
 	/**
-	 * Index of map data array for the height of the drop zone. Has a value of
+	 * Index of map data array for the height of the drop zone. Has a value of *
 	 * {@value}
 	 */
 	public static final int MAP_DATA_DROP_H = 8;
-	
-	public static final int POS_X = 0;
-	
-	public static final int POS_Y = 1;
-	
-	public static final int POS_THETA = 2;
 
-	/**
-	 * Main thread of the driver block. This block handles navigation, and
-	 * communication with the C&C server.
-	 * 
-	 * @param args
-	 */
-	public static void main(String[] args) {
-	}
+	public static final int POS_X = 0;
+
+	public static final int POS_Y = 1;
+
+	public static final int POS_THETA = 2;
 
 	private EventManager myEventManager;
 	private NavigationController myNavigationController;

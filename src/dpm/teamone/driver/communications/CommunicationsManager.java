@@ -29,8 +29,8 @@ public class CommunicationsManager {
 	 *            off location
 	 */
 	public void waitForMap(int[] mapData) {
-		cnc.setup();
-		cnc.getMapData(mapData);
+		this.cnc.setup();
+		this.cnc.getMapData(mapData);
 	}
 
 }

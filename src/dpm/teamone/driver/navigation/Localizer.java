@@ -1,6 +1,5 @@
 package dpm.teamone.driver.navigation;
 
-import dpm.teamone.driver.maps.GridMap;
 import lejos.nxt.Motor;
 import lejos.nxt.NXTRegulatedMotor;
 import lejos.nxt.SensorPort;
@@ -10,7 +9,7 @@ import lejos.robotics.localization.MCLPoseProvider;
 import lejos.robotics.mapping.LineMap;
 import lejos.robotics.navigation.DifferentialPilot;
 import lejos.robotics.navigation.Pose;
-import lejos.robotics.pathfinding.FourWayGridMesh;
+import dpm.teamone.driver.maps.GridMap;
 
 /**
  * Localizer is a Navigation local class for ease of use of the Localization
@@ -33,7 +32,7 @@ public class Localizer {
 	// The Ultrasonic sensor is not-mounted on a motor so instead of
 	// only the sensor rotating, the whole robot will turn
 
-	private FixedRangeScanner scanner = new FixedRangeScanner(pilot,
+	private FixedRangeScanner scanner = new FixedRangeScanner(this.pilot,
 			new UltrasonicSensor(SensorPort.S3));
 	private GridMap map;
 	private static final int particles = 25, borders = 50;
@@ -47,8 +46,8 @@ public class Localizer {
 	 */
 	protected Localizer(GridMap map) {
 		LineMap lMap = this.map.getLineMap();
-		this.localisationAlgo = new MCLPoseProvider(pilot, scanner, lMap,
-				particles, borders);
+		this.localisationAlgo = new MCLPoseProvider(this.pilot, this.scanner,
+				lMap, particles, borders);
 	}
 
 	/**

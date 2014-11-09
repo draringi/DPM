@@ -8,46 +8,18 @@ package dpm.teamone.driver.navigation;
  */
 enum Direction {
 
-	NORTH (0, "North"),
+	NORTH(0, "North"),
 
-	EAST (1, "East"),
+	EAST(1, "East"),
 
-	SOUTH (2, "South"),
+	SOUTH(2, "South"),
 
-	WEST (3, "West");
+	WEST(3, "West");
 
-	/**
-	 * Adds Cardinal directions together, to correct for offsets
-	 * 
-	 * @param dir
-	 *            Direction offset to add
-	 * @return Corrected Direction
-	 */
-	
-	private int val;
-	private String name;
-	
-	Direction(int i, String name){
-		this.val = i;
-		this.name = name;
-	}
-	
-	public String toString(){
-		return this.name;
-	}
-	
-	public Direction add(Direction dir) {
-		return toDirection(this.val + dir.val);
-	}
-	
-	public static int toInt(Direction dir){
-		return dir.val;
-	}
-	
-	public static Direction toDirection(int i){
+	public static Direction toDirection(int i) {
 		Direction result = NORTH;
 		i = i % 4;
-		switch(i){
+		switch (i) {
 		case 0:
 			result = NORTH;
 			break;
@@ -62,6 +34,36 @@ enum Direction {
 			break;
 		}
 		return result;
+	}
+
+	public static int toInt(Direction dir) {
+		return dir.val;
+	}
+
+	/**
+	 * Adds Cardinal directions together, to correct for offsets
+	 * 
+	 * @param dir
+	 *            Direction offset to add
+	 * @return Corrected Direction
+	 */
+
+	private int val;
+
+	private String name;
+
+	Direction(int i, String name) {
+		this.val = i;
+		this.name = name;
+	}
+
+	public Direction add(Direction dir) {
+		return toDirection(this.val + dir.val);
+	}
+
+	@Override
+	public String toString() {
+		return this.name;
 	}
 
 }

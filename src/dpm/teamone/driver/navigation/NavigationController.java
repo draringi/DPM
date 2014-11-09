@@ -114,6 +114,13 @@ public class NavigationController {
 		return this.navigator.getPoseProvider().getPose();
 	}
 
+	public void getPosition(double[] pos) {
+		Pose pose = this.navigator.getPoseProvider().getPose();
+		pos[DriverRobot.POS_X] = pose.getX();
+		pos[DriverRobot.POS_Y] = pose.getY();
+		pos[DriverRobot.POS_THETA] = pose.getHeading();
+	}
+
 	/**
 	 * Sets the Drop Zone
 	 * 
@@ -154,6 +161,13 @@ public class NavigationController {
 		this.navigator.getPoseProvider().setPose(p);
 	}
 
+	protected void setPosition(double[] pos) {
+		Pose pose = new Pose((float) pos[DriverRobot.POS_X],
+				(float) pos[DriverRobot.POS_Y],
+				(float) pos[DriverRobot.POS_THETA]);
+		this.navigator.getPoseProvider().setPose(pose);
+	}
+
 	/**
 	 * Turns to requested direction
 	 * 
@@ -171,17 +185,5 @@ public class NavigationController {
 	 */
 	public void turnTo(double angle) {
 		this.pilot.rotate(angle);
-	}
-	
-	public void getPosition(double [] pos) {
-		Pose pose = this.navigator.getPoseProvider().getPose();
-		pos[DriverRobot.POS_X] = pose.getX();
-		pos[DriverRobot.POS_Y] = pose.getY();
-		pos[DriverRobot.POS_THETA] = pose.getHeading();
-	}
-	
-	protected void setPosition(double [] pos){
-		Pose pose = new Pose((float)pos[DriverRobot.POS_X], (float)pos[DriverRobot.POS_Y], (float)pos[DriverRobot.POS_THETA]);
-		this.navigator.getPoseProvider().setPose(pose);
 	}
 }

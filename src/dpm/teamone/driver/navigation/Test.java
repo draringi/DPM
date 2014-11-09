@@ -4,10 +4,10 @@
 
 package dpm.teamone.driver.navigation;
 
-import dpm.teamone.driver.maps.GridMap;
 import lejos.nxt.Button;
 import lejos.nxt.LCD;
 import lejos.robotics.navigation.Pose;
+import dpm.teamone.driver.maps.GridMap;
 
 public class Test {
 
@@ -25,14 +25,14 @@ public class Test {
 			LCD.drawString("navig  | localisation   ", 0, 3);
 
 			buttonChoice = Button.waitForAnyPress();
-		} while (buttonChoice != Button.ID_LEFT
-				&& buttonChoice != Button.ID_RIGHT);
+		} while ((buttonChoice != Button.ID_LEFT)
+				&& (buttonChoice != Button.ID_RIGHT));
 
 		if (buttonChoice == Button.ID_LEFT) {
 			GridMap grid = new GridMap(4, 4);
 			NavigationController nav = new NavigationController(grid);
 			Pose initialLocation = new Pose(0, 0, 90); // Replace by
-														// localisation after
+			// localisation after
 			nav.setPose(initialLocation);
 			nav.driveToGrid(50, 50);
 		} else {
@@ -40,8 +40,9 @@ public class Test {
 			// Requires a test lineMap
 		}
 
-		while (Button.waitForAnyPress() != Button.ID_ESCAPE)
+		while (Button.waitForAnyPress() != Button.ID_ESCAPE) {
 			;
+		}
 		System.exit(0);
 	}
 }

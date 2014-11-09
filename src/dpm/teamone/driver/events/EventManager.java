@@ -1,6 +1,7 @@
 package dpm.teamone.driver.events;
 
-import lejos.robotics.subsumption.*;
+import lejos.robotics.subsumption.Arbitrator;
+import lejos.robotics.subsumption.Behavior;
 import dpm.teamone.driver.DriverRobot;
 
 /**

@@ -9,8 +9,6 @@ package dpm.teamone.armcontrol;
  */
 public class ArmControl {
 
-	private DriverComms communications;
-
 	/**
 	 * Main thread of the truck block. This block handles picking up and
 	 * dropping blocks, and displaying stuff on the LCD screen.
@@ -19,5 +17,7 @@ public class ArmControl {
 	 */
 	public static void main() {
 	}
+
+	private DriverComms communications;
 
 }

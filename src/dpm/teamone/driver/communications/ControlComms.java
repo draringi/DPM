@@ -4,10 +4,10 @@ import java.io.InputStream;
 import java.util.Arrays;
 import java.util.BitSet;
 
-import dpm.teamone.driver.DriverRobot;
-import lejos.nxt.comm.Bluetooth;
 import lejos.nxt.comm.BTConnection;
+import lejos.nxt.comm.Bluetooth;
 import lejos.nxt.comm.NXTConnection;
+import dpm.teamone.driver.DriverRobot;
 
 /**
  * The ControlComms module talks with the C&C server, Receiving map data, and
@@ -44,7 +44,7 @@ public class ControlComms {
 	 * @see dpm.teamone.driver.DriverRobot#MAP_DATA_LENGTH
 	 */
 	protected void getMapData(int[] mapData) {
-		while (!mapReady()) {
+		while (!this.mapReady()) {
 			try {
 				Thread.sleep(50);
 			} catch (Exception e) {
@@ -53,12 +53,12 @@ public class ControlComms {
 		}
 		// We have the map details. No longer any need to wait on data from the
 		// C&C server
-		synchronized (runLock) {
+		synchronized (this.runLock) {
 			this.parse = false;
 		}
-		synchronized (lock) {
+		synchronized (this.lock) {
 			for (int i = 0; i < DriverRobot.MAP_DATA_LENGTH; i++) {
-				mapData[i] = mapBuffer[i];
+				mapData[i] = this.mapBuffer[i];
 			}
 		}
 
@@ -66,178 +66,10 @@ public class ControlComms {
 
 	protected boolean mapReady() {
 		boolean result;
-		synchronized (lock) {
-			result = (mapSet.cardinality() == DriverRobot.MAP_DATA_LENGTH);
+		synchronized (this.lock) {
+			result = (this.mapSet.cardinality() == DriverRobot.MAP_DATA_LENGTH);
 		}
 		return result;
-	}
-
-	private void setKeyValue(String key, String value) {
-		boolean check;
-		int val;
-		if (key.equals("map")) {
-			synchronized (lock) {
-				check = mapSet.get(DriverRobot.MAP_DATA_MAP);
-			}
-			if (!check) {
-				val = Integer.parseInt(value);
-				synchronized (lock) {
-					mapBuffer[DriverRobot.MAP_DATA_MAP] = val;
-					mapSet.set(DriverRobot.MAP_DATA_MAP);
-				}
-			}
-			return;
-		}
-		if (key.equals("pick_x")) {
-			synchronized (lock) {
-				check = mapSet.get(DriverRobot.MAP_DATA_PICKUP_X);
-			}
-			if (!check) {
-				val = Integer.parseInt(value);
-				synchronized (lock) {
-					mapBuffer[DriverRobot.MAP_DATA_PICKUP_X] = val;
-					mapSet.set(DriverRobot.MAP_DATA_PICKUP_X);
-				}
-			}
-			return;
-		}
-		if (key.equals("pick_y")) {
-			synchronized (lock) {
-				check = mapSet.get(DriverRobot.MAP_DATA_PICKUP_Y);
-			}
-			if (!check) {
-				val = Integer.parseInt(value);
-				synchronized (lock) {
-					mapBuffer[DriverRobot.MAP_DATA_PICKUP_Y] = val;
-					mapSet.set(DriverRobot.MAP_DATA_PICKUP_Y);
-				}
-			}
-			return;
-		}
-		if (key.equals("pick_w")) {
-			synchronized (lock) {
-				check = mapSet.get(DriverRobot.MAP_DATA_PICKUP_W);
-			}
-			if (!check) {
-				val = Integer.parseInt(value);
-				synchronized (lock) {
-					mapBuffer[DriverRobot.MAP_DATA_PICKUP_W] = val;
-					mapSet.set(DriverRobot.MAP_DATA_PICKUP_W);
-				}
-			}
-			return;
-		}
-		if (key.equals("pick_h")) {
-			synchronized (lock) {
-				check = mapSet.get(DriverRobot.MAP_DATA_PICKUP_H);
-			}
-			if (!check) {
-				val = Integer.parseInt(value);
-				synchronized (lock) {
-					mapBuffer[DriverRobot.MAP_DATA_PICKUP_H] = val;
-					mapSet.set(DriverRobot.MAP_DATA_PICKUP_H);
-				}
-			}
-			return;
-		}
-		if (key.equals("drop_x")) {
-			synchronized (lock) {
-				check = mapSet.get(DriverRobot.MAP_DATA_DROP_X);
-			}
-			if (!check) {
-				val = Integer.parseInt(value);
-				synchronized (lock) {
-					mapBuffer[DriverRobot.MAP_DATA_DROP_X] = val;
-					mapSet.set(DriverRobot.MAP_DATA_DROP_X);
-				}
-			}
-			return;
-		}
-		if (key.equals("drop_y")) {
-			synchronized (lock) {
-				check = mapSet.get(DriverRobot.MAP_DATA_DROP_Y);
-			}
-			if (!check) {
-				val = Integer.parseInt(value);
-				synchronized (lock) {
-					mapBuffer[DriverRobot.MAP_DATA_DROP_Y] = val;
-					mapSet.set(DriverRobot.MAP_DATA_DROP_Y);
-				}
-			}
-			return;
-		}
-		if (key.equals("drop_w")) {
-			synchronized (lock) {
-				check = mapSet.get(DriverRobot.MAP_DATA_DROP_W);
-			}
-			if (!check) {
-				val = Integer.parseInt(value);
-				synchronized (lock) {
-					mapBuffer[DriverRobot.MAP_DATA_DROP_W] = val;
-					mapSet.set(DriverRobot.MAP_DATA_DROP_W);
-				}
-			}
-			return;
-		}
-		if (key.equals("drop_h")) {
-			synchronized (lock) {
-				check = mapSet.get(DriverRobot.MAP_DATA_DROP_H);
-			}
-			if (!check) {
-				val = Integer.parseInt(value);
-				synchronized (lock) {
-					mapBuffer[DriverRobot.MAP_DATA_DROP_H] = val;
-					mapSet.set(DriverRobot.MAP_DATA_DROP_H);
-				}
-			}
-			return;
-		}
-	}
-
-	private void startInputParser() {
-		InputStream input = connection.openInputStream();
-		boolean run = true;
-		while (run) {
-			char buffer[] = new char[BUFFER_SIZE];
-			try {
-				buffer[0] = (char) input.read();
-				if (buffer[0] == '{') {
-					int i;
-					for (i = 1; i > BUFFER_SIZE; i++) {
-						buffer[i] = (char) input.read();
-						if (buffer[i] == '}') {
-							break;
-						}
-					}
-					if (i == BUFFER_SIZE && buffer[i] != '}') { // buffer
-																// overflow
-						continue;
-					}
-					int j;
-					for (j = 1; j > i; j++) {
-						if (buffer[j] == ':') {
-							break;
-						}
-					}
-					if (j == i || j == 1) { // Syntax error
-						continue;
-					}
-					String key = Arrays.toString(
-							Arrays.copyOfRange(buffer, 1, j)).trim();
-					String value = Arrays.toString(
-							Arrays.copyOfRange(buffer, j + 1, i)).trim();
-					setKeyValue(key, value);
-				}
-			} catch (Exception e) {
-			}
-			try {
-				Thread.sleep(50);
-			} catch (InterruptedException e) {
-			}
-			synchronized (runLock) {
-				run = this.parse;
-			}
-		}
 	}
 
 	/**
@@ -251,6 +83,128 @@ public class ControlComms {
 	protected void sendPos(int x, int y) {
 	}
 
+	private void setKeyValue(String key, String value) {
+		boolean check;
+		int val;
+		if (key.equals("map")) {
+			synchronized (this.lock) {
+				check = this.mapSet.get(DriverRobot.MAP_DATA_MAP);
+			}
+			if (!check) {
+				val = Integer.parseInt(value);
+				synchronized (this.lock) {
+					this.mapBuffer[DriverRobot.MAP_DATA_MAP] = val;
+					this.mapSet.set(DriverRobot.MAP_DATA_MAP);
+				}
+			}
+			return;
+		}
+		if (key.equals("pick_x")) {
+			synchronized (this.lock) {
+				check = this.mapSet.get(DriverRobot.MAP_DATA_PICKUP_X);
+			}
+			if (!check) {
+				val = Integer.parseInt(value);
+				synchronized (this.lock) {
+					this.mapBuffer[DriverRobot.MAP_DATA_PICKUP_X] = val;
+					this.mapSet.set(DriverRobot.MAP_DATA_PICKUP_X);
+				}
+			}
+			return;
+		}
+		if (key.equals("pick_y")) {
+			synchronized (this.lock) {
+				check = this.mapSet.get(DriverRobot.MAP_DATA_PICKUP_Y);
+			}
+			if (!check) {
+				val = Integer.parseInt(value);
+				synchronized (this.lock) {
+					this.mapBuffer[DriverRobot.MAP_DATA_PICKUP_Y] = val;
+					this.mapSet.set(DriverRobot.MAP_DATA_PICKUP_Y);
+				}
+			}
+			return;
+		}
+		if (key.equals("pick_w")) {
+			synchronized (this.lock) {
+				check = this.mapSet.get(DriverRobot.MAP_DATA_PICKUP_W);
+			}
+			if (!check) {
+				val = Integer.parseInt(value);
+				synchronized (this.lock) {
+					this.mapBuffer[DriverRobot.MAP_DATA_PICKUP_W] = val;
+					this.mapSet.set(DriverRobot.MAP_DATA_PICKUP_W);
+				}
+			}
+			return;
+		}
+		if (key.equals("pick_h")) {
+			synchronized (this.lock) {
+				check = this.mapSet.get(DriverRobot.MAP_DATA_PICKUP_H);
+			}
+			if (!check) {
+				val = Integer.parseInt(value);
+				synchronized (this.lock) {
+					this.mapBuffer[DriverRobot.MAP_DATA_PICKUP_H] = val;
+					this.mapSet.set(DriverRobot.MAP_DATA_PICKUP_H);
+				}
+			}
+			return;
+		}
+		if (key.equals("drop_x")) {
+			synchronized (this.lock) {
+				check = this.mapSet.get(DriverRobot.MAP_DATA_DROP_X);
+			}
+			if (!check) {
+				val = Integer.parseInt(value);
+				synchronized (this.lock) {
+					this.mapBuffer[DriverRobot.MAP_DATA_DROP_X] = val;
+					this.mapSet.set(DriverRobot.MAP_DATA_DROP_X);
+				}
+			}
+			return;
+		}
+		if (key.equals("drop_y")) {
+			synchronized (this.lock) {
+				check = this.mapSet.get(DriverRobot.MAP_DATA_DROP_Y);
+			}
+			if (!check) {
+				val = Integer.parseInt(value);
+				synchronized (this.lock) {
+					this.mapBuffer[DriverRobot.MAP_DATA_DROP_Y] = val;
+					this.mapSet.set(DriverRobot.MAP_DATA_DROP_Y);
+				}
+			}
+			return;
+		}
+		if (key.equals("drop_w")) {
+			synchronized (this.lock) {
+				check = this.mapSet.get(DriverRobot.MAP_DATA_DROP_W);
+			}
+			if (!check) {
+				val = Integer.parseInt(value);
+				synchronized (this.lock) {
+					this.mapBuffer[DriverRobot.MAP_DATA_DROP_W] = val;
+					this.mapSet.set(DriverRobot.MAP_DATA_DROP_W);
+				}
+			}
+			return;
+		}
+		if (key.equals("drop_h")) {
+			synchronized (this.lock) {
+				check = this.mapSet.get(DriverRobot.MAP_DATA_DROP_H);
+			}
+			if (!check) {
+				val = Integer.parseInt(value);
+				synchronized (this.lock) {
+					this.mapBuffer[DriverRobot.MAP_DATA_DROP_H] = val;
+					this.mapSet.set(DriverRobot.MAP_DATA_DROP_H);
+				}
+			}
+			return;
+		}
+	}
+
 	/**
 	 * Starts the connection with the C&C server
 	 */
@@ -258,12 +212,59 @@ public class ControlComms {
 		if (!Bluetooth.getPower()) {
 			Bluetooth.setPower(true);
 		}
-		connection = Bluetooth.waitForConnection(0, NXTConnection.RAW);
+		this.connection = Bluetooth.waitForConnection(0, NXTConnection.RAW);
 		new Thread() {
+			@Override
 			public void run() {
-				startInputParser();
+				ControlComms.this.startInputParser();
 			}
 		}.start();
+	}
+
+	private void startInputParser() {
+		InputStream input = this.connection.openInputStream();
+		boolean run = true;
+		while (run) {
+			char buffer[] = new char[BUFFER_SIZE];
+			try {
+				buffer[0] = (char) input.read();
+				if (buffer[0] == '{') {
+					int i;
+					for (i = 1; i > BUFFER_SIZE; i++) {
+						buffer[i] = (char) input.read();
+						if (buffer[i] == '}') {
+							break;
+						}
+					}
+					if ((i == BUFFER_SIZE) && (buffer[i] != '}')) { // buffer
+						// overflow
+						continue;
+					}
+					int j;
+					for (j = 1; j > i; j++) {
+						if (buffer[j] == ':') {
+							break;
+						}
+					}
+					if ((j == i) || (j == 1)) { // Syntax error
+						continue;
+					}
+					String key = Arrays.toString(
+							Arrays.copyOfRange(buffer, 1, j)).trim();
+					String value = Arrays.toString(
+							Arrays.copyOfRange(buffer, j + 1, i)).trim();
+					this.setKeyValue(key, value);
+				}
+			} catch (Exception e) {
+			}
+			try {
+				Thread.sleep(50);
+			} catch (InterruptedException e) {
+			}
+			synchronized (this.runLock) {
+				run = this.parse;
+			}
+		}
 	}
 
 }

@@ -17,19 +17,19 @@ public class TruckComms {
 
 	RS485Connection connection;
 	Object lock;
-	
-	protected TruckComms(){
-		lock = new Object();
+
+	protected TruckComms() {
+		this.lock = new Object();
 	}
-	
+
 	/**
 	 * Tells the truck brick to drop what it is holding
 	 */
 	public void drop() {
 		byte buffer[] = "d".getBytes();
-		connection.sendPacket(buffer, buffer.length);
-		connection.readPacket(buffer, buffer.length);
-		if(buffer.equals("k")){
+		this.connection.sendPacket(buffer, buffer.length);
+		this.connection.readPacket(buffer, buffer.length);
+		if (buffer.equals("k")) {
 			return;
 		}
 	}
@@ -39,9 +39,9 @@ public class TruckComms {
 	 */
 	public void pickUp() {
 		byte buffer[] = "p".getBytes();
-		connection.sendPacket(buffer, buffer.length);
-		connection.readPacket(buffer, buffer.length);
-		if(buffer.equals("k")){
+		this.connection.sendPacket(buffer, buffer.length);
+		this.connection.readPacket(buffer, buffer.length);
+		if (buffer.equals("k")) {
 			return;
 		}
 	}
@@ -50,7 +50,7 @@ public class TruckComms {
 	 * Starts communication with the Truck Brick
 	 */
 	public void setup() {
-		connection = RS485.connect("NXT", NXTConnection.PACKET);
+		this.connection = RS485.connect("NXT", NXTConnection.PACKET);
 	}
 
 }
