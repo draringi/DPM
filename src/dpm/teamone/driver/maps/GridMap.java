@@ -126,13 +126,18 @@ public class GridMap {
 	private LineMap generateLineMap() {
 		Rectangle rect = new Rectangle(-TILE_SIZE, -TILE_SIZE, width*TILE_SIZE, height*TILE_SIZE);
 		ArrayList<Line> lines = new ArrayList<Line>();
+		//Add surrounding wall
+		lines.add(new Line((width - 1)*TILE_SIZE, -TILE_SIZE, -TILE_SIZE, -TILE_SIZE));
+		lines.add(new Line((width - 1)*TILE_SIZE, (height - 1)*TILE_SIZE, -TILE_SIZE, (height - 1)*TILE_SIZE));
+		lines.add(new Line((width - 1)*TILE_SIZE, (height - 1)*TILE_SIZE, (width - 1)*TILE_SIZE, -TILE_SIZE));
+		lines.add(new Line(-TILE_SIZE, (height - 1)*TILE_SIZE, -TILE_SIZE, -TILE_SIZE));
 		for(int x=0; x < width; x++){
 			for(int y=0; y < height; y++){
 				if(bitset.get(getIndex(x, y))){
-					lines.add(new Line((x-1)*TILE_SIZE, x*TILE_SIZE, y*TILE_SIZE, y*TILE_SIZE));
-					lines.add(new Line((x-1)*TILE_SIZE, x*TILE_SIZE, (y-1)*TILE_SIZE, (y-1)*TILE_SIZE));
-					lines.add(new Line((x-1)*TILE_SIZE, (x-1)*TILE_SIZE, (y-1)*TILE_SIZE, y*TILE_SIZE));
-					lines.add(new Line(x*TILE_SIZE, x*TILE_SIZE, (y-1)*TILE_SIZE, y*TILE_SIZE));
+					lines.add(new Line((x-1)*TILE_SIZE, y*TILE_SIZE, x*TILE_SIZE, y*TILE_SIZE));
+					lines.add(new Line((x-1)*TILE_SIZE, (y-1)*TILE_SIZE, x*TILE_SIZE, (y-1)*TILE_SIZE));
+					lines.add(new Line((x-1)*TILE_SIZE, (y-1)*TILE_SIZE, (x-1)*TILE_SIZE, y*TILE_SIZE));
+					lines.add(new Line(x*TILE_SIZE, (y-1)*TILE_SIZE, x*TILE_SIZE, y*TILE_SIZE));
 				}
 			}
 		}
