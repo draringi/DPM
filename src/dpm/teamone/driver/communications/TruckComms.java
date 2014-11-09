@@ -1,5 +1,9 @@
 package dpm.teamone.driver.communications;
 
+import lejos.nxt.comm.NXTConnection;
+import lejos.nxt.comm.RS485;
+import lejos.nxt.comm.RS485Connection;
+
 /**
  * The TruckComms module handles communication with the truck brick, telling it
  * to pickup or drop the brick, while receiving any move commands needed to
@@ -11,34 +15,42 @@ package dpm.teamone.driver.communications;
  */
 public class TruckComms {
 
+	RS485Connection connection;
+	Object lock;
+	
+	protected TruckComms(){
+		lock = new Object();
+	}
+	
 	/**
 	 * Tells the truck brick to drop what it is holding
 	 */
 	public void drop() {
-
+		byte buffer[] = "d".getBytes();
+		connection.sendPacket(buffer, buffer.length);
+		connection.readPacket(buffer, buffer.length);
+		if(buffer.equals("k")){
+			return;
+		}
 	}
 
 	/**
 	 * Tells the truck brick to pick up what is in front of it
 	 */
 	public void pickUp() {
-
-	}
-
-	/**
-	 * Sets the LCD to show the starting location of the bot
-	 * 
-	 * @param pos
-	 *            Array containing the x, y, and heading for the starting
-	 *            position
-	 */
-	public void setStartingPos(int pos[]) {
+		byte buffer[] = "p".getBytes();
+		connection.sendPacket(buffer, buffer.length);
+		connection.readPacket(buffer, buffer.length);
+		if(buffer.equals("k")){
+			return;
+		}
 	}
 
 	/**
 	 * Starts communication with the Truck Brick
 	 */
 	public void setup() {
+		connection = RS485.connect("NXT", NXTConnection.PACKET);
 	}
 
 }

@@ -18,7 +18,7 @@ public class CommunicationsManager {
 	 */
 	public CommunicationsManager() {
 		this.cnc = new ControlComms();
-
+		this.truck = new TruckComms();
 	}
 
 	/**

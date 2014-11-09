@@ -9,7 +9,6 @@ package dpm.teamone.armcontrol;
 public class DriverComms {
 
 	private Arm arm;
-	private LCD screen;
 
 	/**
 	 * Tells the Drive Brick to correct its orientation to allow better ability
