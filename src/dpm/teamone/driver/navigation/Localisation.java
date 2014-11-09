@@ -15,12 +15,22 @@ public class Localisation {
 //        navigation = new NavigationController(map);
     }
 
+/**
+	 * Performs a quick and accurate localisation by using 4 readings (at 0,90,180,-90 degrees) and then computing what
+	 *  the theoritical readings would be for every possible starting point and heading. Returns the best match.
+	 *
+	 * @return Initial position and heading of the robot 
+	 */
     public Pose performLocalisation() {
         int[] surroundings = getSurroundings();
         return localize(surroundings);
 
     }
-
+/**
+	 *  Reads distances at 0,90,180 and -90 degrees of the robot (relative to the robot's initial heading)
+	 * 
+	 * @return Values read by the sensor 
+	 */
     private int[] getSurroundings() {
         int[] inp = new int[4];
         for (int x = 0; x < 4; x++) {
@@ -29,7 +39,14 @@ public class Localisation {
         }
         return inp;
     }
-
+/**
+	 * Helper method that finds best match
+	 * 
+	 * @param inp 
+	 *          Distances at 0,90,180 and -90 degrees of the robot (relative to the robot's initial heading)
+	 * 
+	 * @return Robot's initial position and heading
+	 */
     public Pose localize(int[] inp) {
         Pose initialLocation = null;
         for (int x = 0; x < this.map.getWidth(); x++) {
@@ -47,7 +64,14 @@ public class Localisation {
         }
         return initialLocation;
     }
-
+/**
+	 *  Converts angle system used to actual degrees angle
+	 * 
+	 * @param i
+	 *          0= NORTH  1=EAST  2=SOUTH 3=WEST
+	 * 
+	 * @return Angle in degrees
+	 */
     private int getAngle(int i) {
 
         int angle = 0;
@@ -70,6 +94,16 @@ public class Localisation {
 
     }
 
+/**
+	 * Helper method that finds best match
+	 * 
+	 * @param A1
+	 *          Array containing distances read by robot
+	 * @param A2
+	 *          Array containing theoritical values for a specified Pose
+	 * 
+	 * @return True if the arrays contain the same distances in the same order
+	 */
     private boolean isMatch(int[] A1, int[] A2) {
         boolean temp = true;
         for (int x = 0; x < A1.length; x++) {
@@ -79,7 +113,18 @@ public class Localisation {
         }
         return temp;
     }
-
+/**
+	 * Processing method. Computes the theoritical distances for a specified Pose
+	 * 
+	 * @param x
+	 *          x-Coordinate in the grid
+	 * @param y
+	 *          y-Coordinate in the grid
+	 * @param ori
+	 *          Orientation (heading)
+	 * 
+	 * @return Array of theoritical distances
+	 */
     public int[] computeSur(int x, int y, int ori) {
         // 0 = North    1=East      2=South     3=West
         int[] surr = new int[4];
@@ -139,7 +184,7 @@ public class Localisation {
             temp = incrementOrientation(temp);
             
         }
-        System.out.println("For ("+x+","+y+","+ori+") Result:"+arrayToString(surr));
+       System.out.println("For ("+x+","+y+","+ori+") Result:"+arrayToString(surr)); // For testing
         return surr;
     }
 private String arrayToString(int[] x){
@@ -149,6 +194,14 @@ ret +=x[y]+" ";
 }
 return ret;
 }
+/**
+	 * Finds next angle after a 90degrees incrementation
+	 * 
+	 * @param ori
+	 *          Orientation
+	  
+	 * @return Next angle
+	 */
     private int incrementOrientation(int ori) {
 int temp = ori;
         if (temp < 3) {
@@ -159,9 +212,16 @@ int temp = ori;
         }
         return temp;
     }
-
+/**
+	 * Normalizes sensor's reading to make it match the theoritical readings (i.e if robot reads a value between 25-35)
+	 * 
+	 * @param inp
+	 *          Distance read by the ultrasonic sensor in cm
+	 * 
+	 * @return Array of theoritical distances
+	 */
     private int normalize(int inp) {
 
-        return ((inp / this.map.TILE_SIZE) * this.map.TILE_SIZE);
+        return (((inp+(int)this.navigation.TRACK_WIDTH) / this.map.TILE_SIZE) * this.map.TILE_SIZE);
     }
 }
