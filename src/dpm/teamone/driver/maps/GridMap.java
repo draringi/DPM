@@ -18,7 +18,7 @@ import lejos.geom.Line;
  */
 public class GridMap {
 
-	private boolean[][] bitset;
+	private BitSet bitset;
 
 	private int width, height;
 
@@ -39,7 +39,7 @@ public class GridMap {
 	public GridMap(int width, int height) {
 		this.width = width;
 		this.height = height;
-		this.bitset = new boolean[width][height];
+		this.bitset = new BitSet(width*height);
 	}
 
 	/**
@@ -63,8 +63,9 @@ public class GridMap {
 	 * @param y
 	 *            y-axis location
 	 */
-	protected void set(int x, int y) {
-		this.bitset[x][y] = true;
+
+	protected void set(int x, int y){
+		this.bitset.set(getIndex(x, y));
 	}
 
 	/**
@@ -122,29 +123,15 @@ public class GridMap {
 	 * @return LineMap equivalent of the GridMap
 	 */
 	private LineMap generateLineMap() {
-		Rectangle rect = new Rectangle(0, 0, width * TILE_SIZE, height
-				* TILE_SIZE);
+		Rectangle rect = new Rectangle(-TILE_SIZE, -TILE_SIZE, width*TILE_SIZE, height*TILE_SIZE);
 		ArrayList<Line> lines = new ArrayList<Line>();
-		lines.add(new Line(width * TILE_SIZE, 0, 0, 0));
-		lines.add(new Line(width * TILE_SIZE, 0, height * TILE_SIZE, height
-				* TILE_SIZE));
-		lines.add(new Line(0, 0, height * TILE_SIZE, 0));
-		lines.add(new Line(width * TILE_SIZE, width * TILE_SIZE, 0, height
-				* TILE_SIZE));
-		for (int x = 0; x < width; x++) {
-			for (int y = 0; y < height; y++) {
-
-				if (bitset[x][y] == true) {
-					System.out.println(x + "  " + y);
-					lines.add(new Line((x) * TILE_SIZE, (y + 1) * TILE_SIZE,
-							(x + 1) * TILE_SIZE, (y + 1) * TILE_SIZE));
-					lines.add(new Line((x + 1) * TILE_SIZE, (y) * TILE_SIZE, x
-							* TILE_SIZE, (y) * TILE_SIZE));
-					lines.add(new Line((x) * TILE_SIZE, (y) * TILE_SIZE, (x)
-							* TILE_SIZE, (y + 1) * TILE_SIZE));
-					lines.add(new Line((x + 1) * TILE_SIZE,
-							(y + 1) * TILE_SIZE, (x + 1) * TILE_SIZE, y
-									* TILE_SIZE));
+		for(int x=0; x < width; x++){
+			for(int y=0; y < height; y++){
+				if(bitset.get(getIndex(x, y))){
+					lines.add(new Line((x-1)*TILE_SIZE, x*TILE_SIZE, y*TILE_SIZE, y*TILE_SIZE));
+					lines.add(new Line((x-1)*TILE_SIZE, x*TILE_SIZE, (y-1)*TILE_SIZE, (y-1)*TILE_SIZE));
+					lines.add(new Line((x-1)*TILE_SIZE, (x-1)*TILE_SIZE, (y-1)*TILE_SIZE, y*TILE_SIZE));
+					lines.add(new Line(x*TILE_SIZE, x*TILE_SIZE, (y-1)*TILE_SIZE, y*TILE_SIZE));
 				}
 			}
 		}
@@ -182,4 +169,10 @@ public class GridMap {
 		return bitset.get(getIndex(x, y));
 	}
 
+	/**
+	 * Reports if a co-ordinate set is a valid spot on the map
+	 */
+	public boolean valid(int x, int y){
+		return (x >= 0 && x < width && y >= 0 && y < height);
+	}
 }
