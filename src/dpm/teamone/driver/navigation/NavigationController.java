@@ -23,7 +23,7 @@ import dpm.teamone.driver.maps.GridMap;
 public class NavigationController {
 
 	private static final double WHEEL_RADIUS = 2.5;
-	private static final double TRACK_WIDTH = 15.5;
+	public static final double TRACK_WIDTH = 15.5;
 	private static NXTRegulatedMotor LEFT_MOTOR = Motor.A,
 			RIGHT_MOTOR = Motor.B;
 	private DifferentialPilot pilot;
