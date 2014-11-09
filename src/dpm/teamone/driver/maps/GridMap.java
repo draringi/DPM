@@ -174,5 +174,12 @@ public class GridMap {
 	public int getGrid(double val) {
 		return getGrid(val, false);
 	}
+	
+	public boolean blocked(int x, int y){
+		if(!(valid(x, y))){
+			return true;
+		}
+		return bitset.get(getIndex(x, y));
+	}
 
 }
