@@ -4,25 +4,28 @@ import lejos.robotics.subsumption.*;
 import dpm.teamone.driver.DriverRobot;
 
 /**
- * The EventManager handles all the Event driven programming of the robot.
- * At the moment this only includes updating the position based off of lines
- * crossed. 
+ * The EventManager handles all the Event driven programming of the robot. At
+ * the moment this only includes updating the position based off of lines
+ * crossed.
+ * 
  * @author Michael Williams
  *
  */
-public class EventManager{
+public class EventManager {
 
 	private Arbitrator arbitrator;
 	public DriverRobot robot;
 
 	/**
-	 * Constructor creates an underlying arbitrator while
-	 * providing access to the robot to any events
-	 * @param robot Main Driver Robot control
+	 * Constructor creates an underlying arbitrator while providing access to
+	 * the robot to any events
+	 * 
+	 * @param robot
+	 *            Main Driver Robot control
 	 */
 	public EventManager(DriverRobot robot) {
 		this.robot = robot;
-		Behavior behaviors[] = {new LineCorrecter()}; 
+		Behavior behaviors[] = { new LineCorrecter() };
 		this.arbitrator = new Arbitrator(behaviors);
 	}
 

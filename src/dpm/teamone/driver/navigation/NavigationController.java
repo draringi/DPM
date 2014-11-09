@@ -12,8 +12,9 @@ import lejos.robotics.pathfinding.ShortestPathFinder;
 import dpm.teamone.driver.maps.GridMap;
 
 /**
- * The NavigationController provides a easy to use wrapper for the LeJos Navigation API
- * It handles Movement, Localization and Pathfinding
+ * The NavigationController provides a easy to use wrapper for the LeJos
+ * Navigation API It handles Movement, Localization and Pathfinding
+ * 
  * @author Mehdi Benguerrah
  * @author Michael Williams
  *
@@ -36,7 +37,9 @@ public class NavigationController {
 
 	/**
 	 * Sets up the underlying Pilot, Navigation and Localization subsystem
-	 * @param map Map of course to be used.
+	 * 
+	 * @param map
+	 *            Map of course to be used.
 	 */
 	public NavigationController(GridMap map) {
 		this.pilot = new DifferentialPilot(WHEEL_RADIUS, TRACK_WIDTH,
@@ -47,26 +50,35 @@ public class NavigationController {
 
 	/**
 	 * Drives the robot to the requested co-ordinates
-	 * @param x Location in the x-axis
-	 * @param y Location in the y-axis
+	 * 
+	 * @param x
+	 *            Location in the x-axis
+	 * @param y
+	 *            Location in the y-axis
 	 */
 	public void driveToGrid(int x, int y) {
 		this.followPath(this.getPath(x, y));
 	}
 
 	/**
-	 * Drives the robot to the requested co-ordinates
-	 * and turns to requested heading
-	 * @param x Location in the x-axis
-	 * @param y Location in the y-axis
-	 * @param direction Cardinal Heading
+	 * Drives the robot to the requested co-ordinates and turns to requested
+	 * heading
+	 * 
+	 * @param x
+	 *            Location in the x-axis
+	 * @param y
+	 *            Location in the y-axis
+	 * @param direction
+	 *            Cardinal Heading
 	 */
 	public void driveToGrid(int x, int y, Direction direction) {
 	}
 
 	/**
 	 * Drives the robot along the requested route
-	 * @param route path to follow
+	 * 
+	 * @param route
+	 *            path to follow
 	 */
 	protected void followPath(Path route) {
 		this.navigator.followPath(route);
@@ -74,8 +86,11 @@ public class NavigationController {
 
 	/**
 	 * Determines shortest path to a Location
-	 * @param x Location in the x-axis
-	 * @param y Location in the y-axis
+	 * 
+	 * @param x
+	 *            Location in the x-axis
+	 * @param y
+	 *            Location in the y-axis
 	 * @return shortest path to destination
 	 */
 	private Path getPath(int x, int y) {
@@ -100,27 +115,39 @@ public class NavigationController {
 
 	/**
 	 * Sets the Drop Zone
-	 * @param x Drop zone x-axis start point
-	 * @param y Drop zone y-axis start point
-	 * @param width Drop zone x-axis length
-	 * @param height Drop zone y-axis length
+	 * 
+	 * @param x
+	 *            Drop zone x-axis start point
+	 * @param y
+	 *            Drop zone y-axis start point
+	 * @param width
+	 *            Drop zone x-axis length
+	 * @param height
+	 *            Drop zone y-axis length
 	 */
 	public void setDropZone(int x, int y, int width, int height) {
 	}
 
 	/**
 	 * Sets the Pick-up Zone
-	 * @param x Pick-up zone x-axis start point
-	 * @param y Pick-up zone y-axis start point
-	 * @param width Pick-up zone x-axis length
-	 * @param height Pick-up zone y-axis length
+	 * 
+	 * @param x
+	 *            Pick-up zone x-axis start point
+	 * @param y
+	 *            Pick-up zone y-axis start point
+	 * @param width
+	 *            Pick-up zone x-axis length
+	 * @param height
+	 *            Pick-up zone y-axis length
 	 */
 	public void setPickUpZone(int x, int y, int width, int height) {
 	}
 
 	/**
 	 * Set current location and heading
-	 * @param p current location and heading
+	 * 
+	 * @param p
+	 *            current location and heading
 	 */
 	public void setPose(Pose p) {
 		this.navigator.getPoseProvider().setPose(p);
@@ -128,14 +155,18 @@ public class NavigationController {
 
 	/**
 	 * Turns to requested direction
-	 * @param direction Cardinal Heading
+	 * 
+	 * @param direction
+	 *            Cardinal Heading
 	 */
 	public void turnTo(Direction direction) {
 	}
 
 	/**
 	 * Turns to requested direction
-	 * @param angle Angle clockwise from North
+	 * 
+	 * @param angle
+	 *            Angle clockwise from North
 	 */
 	public void turnTo(double angle) {
 		this.pilot.rotate(angle);

@@ -10,22 +10,23 @@ import lejos.nxt.comm.BTConnection;
 import lejos.nxt.comm.NXTConnection;
 
 /**
- * The ControlComms module talks with the C&C server,
- * Receiving map data, and sending positional data
+ * The ControlComms module talks with the C&C server, Receiving map data, and
+ * sending positional data
+ * 
  * @author Michael Williams
  *
  */
 public class ControlComms {
 
 	private static final int BUFFER_SIZE = 64;
-	
+
 	private int mapBuffer[];
 	private Object lock;
 	private Object runLock;
 	private BitSet mapSet;
 	BTConnection connection;
 	boolean parse;
-	
+
 	protected ControlComms() {
 		this.mapBuffer = new int[DriverRobot.MAP_DATA_LENGTH];
 		this.mapSet = new BitSet(DriverRobot.MAP_DATA_LENGTH);
@@ -36,151 +37,155 @@ public class ControlComms {
 
 	/**
 	 * Provides the map data received from the C&C server
-	 * @param mapData Array long enough to store map data, in which the map data is to be entered  
+	 * 
+	 * @param mapData
+	 *            Array long enough to store map data, in which the map data is
+	 *            to be entered
 	 * @see dpm.teamone.driver.DriverRobot#MAP_DATA_LENGTH
 	 */
 	protected void getMapData(int[] mapData) {
-		while(!mapReady()){
-			try{
+		while (!mapReady()) {
+			try {
 				Thread.sleep(50);
 			} catch (Exception e) {
-				
+
 			}
 		}
-		// We have the map details. No longer any need to wait on data from the C&C server 
-		synchronized(runLock){
+		// We have the map details. No longer any need to wait on data from the
+		// C&C server
+		synchronized (runLock) {
 			this.parse = false;
 		}
-		synchronized(lock){
-			for(int i = 0; i < DriverRobot.MAP_DATA_LENGTH; i++){
+		synchronized (lock) {
+			for (int i = 0; i < DriverRobot.MAP_DATA_LENGTH; i++) {
 				mapData[i] = mapBuffer[i];
 			}
 		}
-		
+
 	}
-	
-	protected boolean mapReady(){
+
+	protected boolean mapReady() {
 		boolean result;
-		synchronized(lock){
+		synchronized (lock) {
 			result = (mapSet.cardinality() == DriverRobot.MAP_DATA_LENGTH);
 		}
 		return result;
 	}
-	
-	private void setKeyValue(String key, String value){
+
+	private void setKeyValue(String key, String value) {
 		boolean check;
 		int val;
-		if(key.equals("map")){
-			synchronized(lock){
+		if (key.equals("map")) {
+			synchronized (lock) {
 				check = mapSet.get(DriverRobot.MAP_DATA_MAP);
 			}
-			if(!check){
-				val = Integer.parseInt(value); 
-				synchronized(lock){
+			if (!check) {
+				val = Integer.parseInt(value);
+				synchronized (lock) {
 					mapBuffer[DriverRobot.MAP_DATA_MAP] = val;
 					mapSet.set(DriverRobot.MAP_DATA_MAP);
 				}
 			}
 			return;
 		}
-		if(key.equals("pick_x")){
-			synchronized(lock){
+		if (key.equals("pick_x")) {
+			synchronized (lock) {
 				check = mapSet.get(DriverRobot.MAP_DATA_PICKUP_X);
 			}
-			if(!check){
-				val = Integer.parseInt(value); 
-				synchronized(lock){
+			if (!check) {
+				val = Integer.parseInt(value);
+				synchronized (lock) {
 					mapBuffer[DriverRobot.MAP_DATA_PICKUP_X] = val;
 					mapSet.set(DriverRobot.MAP_DATA_PICKUP_X);
 				}
 			}
 			return;
 		}
-		if(key.equals("pick_y")){
-			synchronized(lock){
+		if (key.equals("pick_y")) {
+			synchronized (lock) {
 				check = mapSet.get(DriverRobot.MAP_DATA_PICKUP_Y);
 			}
-			if(!check){
-				val = Integer.parseInt(value); 
-				synchronized(lock){
+			if (!check) {
+				val = Integer.parseInt(value);
+				synchronized (lock) {
 					mapBuffer[DriverRobot.MAP_DATA_PICKUP_Y] = val;
 					mapSet.set(DriverRobot.MAP_DATA_PICKUP_Y);
 				}
 			}
 			return;
 		}
-		if(key.equals("pick_w")){
-			synchronized(lock){
+		if (key.equals("pick_w")) {
+			synchronized (lock) {
 				check = mapSet.get(DriverRobot.MAP_DATA_PICKUP_W);
 			}
-			if(!check){
-				val = Integer.parseInt(value); 
-				synchronized(lock){
+			if (!check) {
+				val = Integer.parseInt(value);
+				synchronized (lock) {
 					mapBuffer[DriverRobot.MAP_DATA_PICKUP_W] = val;
 					mapSet.set(DriverRobot.MAP_DATA_PICKUP_W);
 				}
 			}
 			return;
 		}
-		if(key.equals("pick_h")){
-			synchronized(lock){
+		if (key.equals("pick_h")) {
+			synchronized (lock) {
 				check = mapSet.get(DriverRobot.MAP_DATA_PICKUP_H);
 			}
-			if(!check){
-				val = Integer.parseInt(value); 
-				synchronized(lock){
+			if (!check) {
+				val = Integer.parseInt(value);
+				synchronized (lock) {
 					mapBuffer[DriverRobot.MAP_DATA_PICKUP_H] = val;
 					mapSet.set(DriverRobot.MAP_DATA_PICKUP_H);
 				}
 			}
 			return;
 		}
-		if(key.equals("drop_x")){
-			synchronized(lock){
+		if (key.equals("drop_x")) {
+			synchronized (lock) {
 				check = mapSet.get(DriverRobot.MAP_DATA_DROP_X);
 			}
-			if(!check){
-				val = Integer.parseInt(value); 
-				synchronized(lock){
+			if (!check) {
+				val = Integer.parseInt(value);
+				synchronized (lock) {
 					mapBuffer[DriverRobot.MAP_DATA_DROP_X] = val;
 					mapSet.set(DriverRobot.MAP_DATA_DROP_X);
 				}
 			}
 			return;
 		}
-		if(key.equals("drop_y")){
-			synchronized(lock){
+		if (key.equals("drop_y")) {
+			synchronized (lock) {
 				check = mapSet.get(DriverRobot.MAP_DATA_DROP_Y);
 			}
-			if(!check){
-				val = Integer.parseInt(value); 
-				synchronized(lock){
+			if (!check) {
+				val = Integer.parseInt(value);
+				synchronized (lock) {
 					mapBuffer[DriverRobot.MAP_DATA_DROP_Y] = val;
 					mapSet.set(DriverRobot.MAP_DATA_DROP_Y);
 				}
 			}
 			return;
 		}
-		if(key.equals("drop_w")){
-			synchronized(lock){
+		if (key.equals("drop_w")) {
+			synchronized (lock) {
 				check = mapSet.get(DriverRobot.MAP_DATA_DROP_W);
 			}
-			if(!check){
-				val = Integer.parseInt(value); 
-				synchronized(lock){
+			if (!check) {
+				val = Integer.parseInt(value);
+				synchronized (lock) {
 					mapBuffer[DriverRobot.MAP_DATA_DROP_W] = val;
 					mapSet.set(DriverRobot.MAP_DATA_DROP_W);
 				}
 			}
 			return;
 		}
-		if(key.equals("drop_h")){
-			synchronized(lock){
+		if (key.equals("drop_h")) {
+			synchronized (lock) {
 				check = mapSet.get(DriverRobot.MAP_DATA_DROP_H);
 			}
-			if(!check){
-				val = Integer.parseInt(value); 
-				synchronized(lock){
+			if (!check) {
+				val = Integer.parseInt(value);
+				synchronized (lock) {
 					mapBuffer[DriverRobot.MAP_DATA_DROP_H] = val;
 					mapSet.set(DriverRobot.MAP_DATA_DROP_H);
 				}
@@ -188,45 +193,48 @@ public class ControlComms {
 			return;
 		}
 	}
-	
-	private void startInputParser(){
+
+	private void startInputParser() {
 		InputStream input = connection.openInputStream();
 		boolean run = true;
-		while(run){
+		while (run) {
 			char buffer[] = new char[BUFFER_SIZE];
-			try{
+			try {
 				buffer[0] = (char) input.read();
-				if(buffer[0]=='{'){
+				if (buffer[0] == '{') {
 					int i;
-					for(i=1;i>BUFFER_SIZE;i++){
+					for (i = 1; i > BUFFER_SIZE; i++) {
 						buffer[i] = (char) input.read();
-						if(buffer[i]=='}'){
+						if (buffer[i] == '}') {
 							break;
 						}
 					}
-					if( i == BUFFER_SIZE && buffer[i]!='}'){ // buffer overflow
+					if (i == BUFFER_SIZE && buffer[i] != '}') { // buffer
+																// overflow
 						continue;
 					}
 					int j;
-					for(j=1; j > i; j++){
-						if(buffer[j]==':'){
+					for (j = 1; j > i; j++) {
+						if (buffer[j] == ':') {
 							break;
 						}
 					}
-					if(j==i||j==1){ // Syntax error
+					if (j == i || j == 1) { // Syntax error
 						continue;
 					}
-					String key = Arrays.toString(Arrays.copyOfRange(buffer, 1, j)).trim();
-					String value = Arrays.toString(Arrays.copyOfRange(buffer, j+1, i)).trim();
+					String key = Arrays.toString(
+							Arrays.copyOfRange(buffer, 1, j)).trim();
+					String value = Arrays.toString(
+							Arrays.copyOfRange(buffer, j + 1, i)).trim();
 					setKeyValue(key, value);
 				}
-			} catch (Exception e){
+			} catch (Exception e) {
 			}
-			try{
+			try {
 				Thread.sleep(50);
 			} catch (InterruptedException e) {
 			}
-			synchronized(runLock){
+			synchronized (runLock) {
 				run = this.parse;
 			}
 		}
@@ -234,26 +242,28 @@ public class ControlComms {
 
 	/**
 	 * Sends the provided co-ordinates to the C&C server
-	 * @param x Grid location on the x-axis 
-	 * @param y Grid location on the y-axis
+	 * 
+	 * @param x
+	 *            Grid location on the x-axis
+	 * @param y
+	 *            Grid location on the y-axis
 	 */
 	protected void sendPos(int x, int y) {
 	}
 
 	/**
-	 * Starts the connection with the C&C server 
+	 * Starts the connection with the C&C server
 	 */
 	protected void setup() {
-		if(!Bluetooth.getPower()){
+		if (!Bluetooth.getPower()) {
 			Bluetooth.setPower(true);
 		}
 		connection = Bluetooth.waitForConnection(0, NXTConnection.RAW);
-		new Thread()
-        {
-            public void run() {
-            	startInputParser();
-            }
-        }.start();
+		new Thread() {
+			public void run() {
+				startInputParser();
+			}
+		}.start();
 	}
 
 }
