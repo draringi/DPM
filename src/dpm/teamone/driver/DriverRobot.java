@@ -71,6 +71,12 @@ public class DriverRobot {
 	 * {@value}
 	 */
 	public static final int MAP_DATA_DROP_H = 8;
+	
+	public static final int POS_X = 0;
+	
+	public static final int POS_Y = 1;
+	
+	public static final int POS_THETA = 2;
 
 	/**
 	 * Main thread of the driver block. This block handles navigation, and

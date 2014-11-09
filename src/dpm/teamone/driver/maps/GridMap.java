@@ -3,6 +3,7 @@ package dpm.teamone.driver.maps;
 import java.util.ArrayList;
 import java.util.BitSet;
 
+import dpm.teamone.driver.DriverRobot;
 import lejos.robotics.mapping.LineMap;
 import lejos.robotics.pathfinding.FourWayGridMesh;
 import lejos.geom.Rectangle;
@@ -174,5 +175,15 @@ public class GridMap {
 	 */
 	public boolean valid(int x, int y){
 		return (x >= 0 && x < width && y >= 0 && y < height);
+	}
+	
+	/**
+	 * Converts grid co-ordinates into odometer system co-ordinates
+	 */
+	public double [] getPos(int [] val){
+		double [] pos = new double [2];
+		pos[DriverRobot.POS_X] = getPos(val[DriverRobot.POS_X]);
+		pos[DriverRobot.POS_Y] = getPos(val[DriverRobot.POS_Y]);
+		return pos;
 	}
 }

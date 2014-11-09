@@ -9,6 +9,7 @@ import lejos.robotics.navigation.Pose;
 import lejos.robotics.navigation.Waypoint;
 import lejos.robotics.pathfinding.Path;
 import lejos.robotics.pathfinding.ShortestPathFinder;
+import dpm.teamone.driver.DriverRobot;
 import dpm.teamone.driver.maps.GridMap;
 
 /**
@@ -170,5 +171,17 @@ public class NavigationController {
 	 */
 	public void turnTo(double angle) {
 		this.pilot.rotate(angle);
+	}
+	
+	public void getPosition(double [] pos) {
+		Pose pose = this.navigator.getPoseProvider().getPose();
+		pos[DriverRobot.POS_X] = pose.getX();
+		pos[DriverRobot.POS_Y] = pose.getY();
+		pos[DriverRobot.POS_THETA] = pose.getHeading();
+	}
+	
+	protected void setPosition(double [] pos){
+		Pose pose = new Pose((float)pos[DriverRobot.POS_X], (float)pos[DriverRobot.POS_Y], (float)pos[DriverRobot.POS_THETA]);
+		this.navigator.getPoseProvider().setPose(pose);
 	}
 }
