@@ -15,7 +15,7 @@ import lejos.geom.Line;
  * GridMeshes
  * 
  * @author Michael Williams
- *
+ * @author Mehdi Benguerrah
  */
 public class GridMap {
 
@@ -84,7 +84,14 @@ public class GridMap {
 	public int getWidth() {
 		return this.width;
 	}
-
+	/**
+	 * 
+	 * @return True if coordinates correspond to an obstacle
+	 */
+	public boolean isObstacle(int x,int y){
+	return this.bitset.get(getIndex(x, y));
+		
+	}
 	/**
 	 * Lazy Constructor of the GridMesh
 	 * 
