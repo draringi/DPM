@@ -2,7 +2,13 @@ package dpm.teamone.driver.navigation;
 
 import dpm.teamone.driver.maps.GridMap;
 import lejos.robotics.navigation.Pose;
-
+/**
+ * Localisation class allows for a quick robot localisation using 4 movements only
+ * 
+ * 
+ * @author Mehdi Benguerrah
+ *
+ */
 public class Localisation {
 
     private GridMap map;
@@ -11,8 +17,8 @@ public class Localisation {
 
     public Localisation(GridMap map) {
         this.map = map;
-//        sensor = new UltraSonic();
-//        navigation = new NavigationController(map);
+        //sensor = new UltraSonic();
+        //navigation = new NavigationController(map);
     }
 
     /**
