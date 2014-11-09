@@ -3,12 +3,6 @@ import java.util.BitSet;
 
 import dpm.teamone.driver.maps.GridMap;
 
-/**
- * 
- * @author Michael Williams (260369438)
- * @author Leonardo Siracusa (260585931)
- *
- */
 public abstract class Orienteer {
 	private GridMap map;
 	private BitSet options;
@@ -22,6 +16,7 @@ public abstract class Orienteer {
 	private int count;
 	private Object lock;
 	private UltraSonic us;
+	private LCDinfo lcd;
 
 	
 	
@@ -47,6 +42,7 @@ public abstract class Orienteer {
 		this.us = new UltraSonic();
 		this.width = map.getWidth();
 		this.height = map.getHeight();
+		this.lcd = new LCDinfo();
 		int x, y;
 		this.options = new BitSet(height*width*4);
 		this.count = 0;
@@ -69,8 +65,8 @@ public abstract class Orienteer {
 	 * @param wall If there is a wall in front of the robot or not
 	 * @param direction Current travel direction relative to starting point
 	 */
-	public void move(boolean wall, int direction){
-		
+	public void move(boolean wall, Direction direction){
+		//Insert move algorithm here, using nav. `wall` states if there is a wall in front, `direction is the current facing direction`
 	}
 	
 	/**
@@ -146,10 +142,11 @@ public abstract class Orienteer {
 			if(options.cardinality() <= 1){
 				break;
 			}
-			move(wall, getOrientation(pos[THETA]));
+			move(wall, Direction.toDirection(getOrientation(pos[THETA])));
 		}
 		option = new int[3];
 		getOption(option);
+		lcd.setStartPos(option);
 		pos = new double[3];
 		nav.getPosition(pos);
 		getCorrectedOffset(pos, option[THETA]);
