@@ -19,6 +19,7 @@ public class CommunicationsManager {
 	public CommunicationsManager() {
 		this.cnc = new ControlComms();
 		this.truck = new TruckComms();
+		truck.setup();
 	}
 
 	/**
@@ -33,4 +34,11 @@ public class CommunicationsManager {
 		this.cnc.getMapData(mapData);
 	}
 
+	public void grabObject(){
+		this.truck.pickUp();
+	}
+	
+	public void releaseObject(){
+		this.truck.drop();
+	}
 }

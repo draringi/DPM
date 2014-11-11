@@ -3,6 +3,7 @@ package dpm.teamone.driver;
 import dpm.teamone.driver.communications.CommunicationsManager;
 import dpm.teamone.driver.events.EventManager;
 import dpm.teamone.driver.maps.GridMap;
+import dpm.teamone.driver.maps.MapFactory;
 import dpm.teamone.driver.navigation.NavigationController;
 
 /**
@@ -21,6 +22,13 @@ public class DriverRobot {
 	 * @param args
 	 */
 	public static void main(String[] args) {
+		EventManager events;
+		NavigationController nav;
+		GridMap map;
+		CommunicationsManager comms = new CommunicationsManager();
+		int mapData[] = new int[MAP_DATA_LENGTH];
+		comms.waitForMap(mapData);
+		map = MapFactory.getMap(mapData[MAP_DATA_MAP]);
 	}
 
 	/**
@@ -87,10 +95,6 @@ public class DriverRobot {
 
 	public static final int POS_THETA = 2;
 
-	private EventManager myEventManager;
-	private NavigationController myNavigationController;
-	private GridMap myGridMap;
-
-	private CommunicationsManager myCommunicationsManager;
+	
 
 }
