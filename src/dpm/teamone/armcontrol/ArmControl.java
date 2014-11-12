@@ -16,8 +16,17 @@ public class ArmControl {
 	 * @param args
 	 */
 	public static void main() {
+		DriverComms communications = new DriverComms();
+		while(true){
+			communications.waitForSignal();
+			try{
+				Thread.sleep(1000); //Only poll once a second
+			} catch (Exception e){
+				
+			}
+		}
+		
 	}
 
-	private DriverComms communications;
 
 }

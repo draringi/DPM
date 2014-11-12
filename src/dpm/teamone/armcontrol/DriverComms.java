@@ -1,5 +1,9 @@
 package dpm.teamone.armcontrol;
 
+import lejos.nxt.comm.NXTConnection;
+import lejos.nxt.comm.RS485;
+import lejos.nxt.comm.RS485Connection;
+
 /**
  * The DriverComms handles communications with the Drive Brick.
  * 
@@ -8,8 +12,7 @@ package dpm.teamone.armcontrol;
  */
 public class DriverComms {
 
-	private Arm arm;
-
+	RS485Connection connection;
 	/**
 	 * Tells the Drive Brick that is has successfully dropped the block
 	 */
@@ -22,6 +25,29 @@ public class DriverComms {
 	public void signalPickedUp() {
 	}
 
+	public DriverComms(){
+		connection = RS485.waitForConnection(0, NXTConnection.PACKET);
+	}
+	
+	public void waitForSignal() {
+		byte buffer[] = new byte[4];
+		int res = this.connection.readPacket(buffer, buffer.length);
+		if (res == 0){
+			return;
+		}
+		if(buffer.equals("p")){
+			Arm.lower();
+			Arm.grab();
+			Arm.raise();
+		} else if (buffer.equals("d")){
+			Arm.lower();
+			Arm.release();
+			Arm.raise();
+		}
+		buffer = "k".getBytes();
+		this.connection.sendPacket(buffer, buffer.length);
+	}
+	
 	/**
 	 * Tells the Drive Brick to correct its orientation to allow better ability
 	 * to pick up a block
