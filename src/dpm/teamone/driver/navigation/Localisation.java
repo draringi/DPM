@@ -1,6 +1,9 @@
 package dpm.teamone.driver.navigation;
 
-import dpm.teamone.driver.maps.GridMap;
+
+import dpm.teamone.driver.GridMap;
+import lejos.nxt.LCD;
+import lejos.nxt.Sound;
 import lejos.robotics.navigation.Pose;
 /**
  * Localisation class allows for a quick robot localisation using 4 movements only
@@ -17,8 +20,8 @@ public class Localisation {
 
     public Localisation(GridMap map) {
         this.map = map;
-        //sensor = new UltraSonic();
-        //navigation = new NavigationController(map);
+        sensor = new UltraSonic();
+        navigation = new NavigationController(map);
     }
 
     /**
@@ -43,10 +46,21 @@ public class Localisation {
      */
     private int[] getSurroundings() {
         int[] inp = new int[4];
+        
         for (int x = 0; x < 4; x++) {
-            inp[x] = normalize(this.sensor.poll());
-            this.navigation.turnTo(-90);
+           if(sensor.poll()<20){
+        	   Sound.beep();
+        	   inp[x]=0;
+        	   this.navigation.turnTo(-90);
+           }
+           else {
+        	   
+        	   inp[x] = normalize(getDistance());
+        	   this.navigation.turnTo(-90);
+           }
+
         }
+		 
         return inp;
     }
 
@@ -58,6 +72,30 @@ public class Localisation {
      *
      * @return Robot's initial position and heading
      */
+    public int getDistance(){
+    	
+    	return driveUntilWall();
+    	
+    }
+    public int driveUntilWall(){
+    	  
+    	int interval=30;
+    	int distance = 0;
+    	int threshold=20;
+    	int sensor_distance=sensor.poll();
+    	while(sensor_distance>threshold){
+    	navigation.getPilot().travel(interval);
+    	distance+=interval;
+    	sensor_distance=sensor.poll();
+    	}
+    	Sound.twoBeeps();
+    	 LCD.clear();
+		 LCD.drawString("Distance :"+normalize(distance+sensor_distance), 0, 4);
+		
+		 
+    	navigation.getPilot().travel(-distance);
+    	return distance+sensor_distance;
+    }
     public Pose localize(int[] inp) {
         Pose initialLocation = null;
         for (int x = 0; x < this.map.getWidth(); x++) {
@@ -66,7 +104,9 @@ public class Localisation {
                     if (!this.map.isObstacle(x, y)) {
                         int[] surr = computeSur(x, y, ori);
                         if (isMatch(surr, inp)) {
+                        	Sound.twoBeeps();
                             initialLocation = new Pose((x * this.map.TILE_SIZE + 15), (y * this.map.TILE_SIZE + 15), getAngle(ori));
+   
                             return initialLocation;
                         }
                     }
@@ -192,7 +232,7 @@ public class Localisation {
             temp = incrementOrientation(temp);
 
         }
-        System.out.println("For (" + x + "," + y + "," + ori + ") Result:" + arrayToString(surr)); // For testing
+        //System.out.println("For (" + x + "," + y + "," + ori + ") Result:" + arrayToString(surr)); // For testing
         return surr;
     }
 
@@ -231,7 +271,7 @@ public class Localisation {
      * @return Array of theoritical distances
      */
     private int normalize(int inp) {
-
-        return (((inp + (int) this.navigation.TRACK_WIDTH) / this.map.TILE_SIZE) * this.map.TILE_SIZE);
+        return (((inp ) / (this.map.TILE_SIZE)) * this.map.TILE_SIZE);
     }
+ 
 }
