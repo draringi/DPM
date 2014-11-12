@@ -1,42 +1,58 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
+// Test file for the navigation using a map without obstacles
+// Since localisation has not yet been completed the robot's
+// initial location is considered to be (0,0) facing north.
+
+
 package dpm.teamone.driver.navigation;
 
-import dpm.teamone.driver.maps.GridMap;
-import static dpm.teamone.driver.maps.MapFactory.lab5Map;
-import lejos.nxt.Button;
-import lejos.nxt.LCD;
+import maps.GridMap;
+import maps.MapFactory;
 import lejos.robotics.navigation.Pose;
+import lejos.nxt.*;
 
-/**
- *
- * @author Mehdi
- */
-public class Test_Localisation {
+public class Test_Localisation{
     
     public static void main(String[] args){
-   
-        GridMap map = lab5Map();
+    
+    	int buttonChoice;
+    	
 
-        Localisation loc = new Localisation(map);
-        
-        int [] initialLocation = setArray(0,0,30,90); //What the values read by the sensor would be if
-                                                     //the robot is at (3,1) facing North (Lab5) - TEST
-        Pose result = loc.localize(initialLocation);
-       
-        System.out.println("X: "+result.getX()+", Y: "+result.getY()+" Angle "+result.getHeading()); // Result
+
+		do {
+			
+
+			// ask the user whether the motors should drive in a square or float
+			LCD.drawString("< Left | Right >", 0, 0);
+			LCD.drawString("       |        ", 0, 1);
+			LCD.drawString(" Test | Test  ", 0, 2);
+			LCD.drawString("Navig | localisation   ", 0, 3);
+			
+
+			buttonChoice=Button.waitForAnyPress();
+		} while (buttonChoice != Button.ID_LEFT
+				&& buttonChoice != Button.ID_RIGHT);
+
+		if (buttonChoice == Button.ID_LEFT) {
+			 
+			   GridMap map = MapFactory.lab5Map();
+			   NavigationController  nav = new NavigationController(map);
+			  Localisation loc = new Localisation(map);
+			  Pose p=loc.performLocalisation();
+			  LCD.clear();
+			  LCD.drawString("X:"+p.getX()+" Y:"+p.getY(), 0, 2);
+			  LCD.drawString(" Heading: "+p.getHeading(), 0, 4);
+			 nav.setPose(p);
+			 nav.driveToGrid(50, 50);
+			  
+		} else {
+			
+		}
+		
+		while (Button.waitForAnyPress() != Button.ID_ESCAPE);
+		System.exit(0);
+	
      
+      
     }
     
-    // Outputs an array with the specified values 
-   private static int[] setArray(int x1,int x2,int x3,int x4){
-   int[] temp = new int[4];
-   temp[0]=x1;temp[1]=x2;temp[2]=x3;temp[3]=x4;
-   return temp;
-   }
-    }
-    
-
+}
