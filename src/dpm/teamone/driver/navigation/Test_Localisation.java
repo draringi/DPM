@@ -41,8 +41,7 @@ public class Test_Localisation{
 			  LCD.clear();
 			  LCD.drawString("X:"+p.getX()+" Y:"+p.getY(), 0, 2);
 			  LCD.drawString(" Heading: "+p.getHeading(), 0, 4);
-			 nav.setPose(p);
-			 nav.driveToGrid(50, 50);
+			
 			  
 		} else {
 			
