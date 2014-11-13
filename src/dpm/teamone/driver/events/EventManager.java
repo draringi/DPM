@@ -3,6 +3,7 @@ package dpm.teamone.driver.events;
 import lejos.robotics.subsumption.Arbitrator;
 import lejos.robotics.subsumption.Behavior;
 import dpm.teamone.driver.DriverRobot;
+import dpm.teamone.driver.navigation.NavigationController;
 
 /**
  * The EventManager handles all the Event driven programming of the robot. At
@@ -15,7 +16,7 @@ import dpm.teamone.driver.DriverRobot;
 public class EventManager {
 
 	private Arbitrator arbitrator;
-	public DriverRobot robot;
+	public NavigationController nav;
 
 	/**
 	 * Constructor creates an underlying arbitrator while providing access to
@@ -24,9 +25,9 @@ public class EventManager {
 	 * @param robot
 	 *            Main Driver Robot control
 	 */
-	public EventManager(DriverRobot robot) {
-		this.robot = robot;
-		Behavior behaviors[] = { new LineCorrecter() };
+	public EventManager(NavigationController nav) {
+		this.nav = nav;
+		Behavior behaviors[] = { new LineCorrecter(nav) };
 		this.arbitrator = new Arbitrator(behaviors);
 	}
 
@@ -34,6 +35,7 @@ public class EventManager {
 	 * Starts the underlying Arbitrator
 	 */
 	public void start() {
+		arbitrator.start();
 	}
 
 }

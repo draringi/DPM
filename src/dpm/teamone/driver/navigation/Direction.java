@@ -6,7 +6,7 @@ package dpm.teamone.driver.navigation;
  * @author Michael Willaims
  *
  */
-enum Direction {
+public enum Direction {
 
 	NORTH(0, "North"),
 
@@ -34,6 +34,33 @@ enum Direction {
 			break;
 		}
 		return result;
+	}
+	
+	public static Direction fromAngle(int angle){
+		// Sanitize any bad angles. This section should be skipped, but exists for necessities sake/
+		while(angle < 0){
+			angle += 360;
+		}
+		angle = angle % 360;
+		angle += 45;
+		angle /= 90;
+		angle = angle % 4;
+		Direction dir;
+		switch(angle){
+		case 0:
+			dir = EAST;
+			break;
+		case 1:
+			dir = NORTH;
+			break;
+		case 2:
+			dir = WEST;
+			break;
+		case 3:
+		default:
+			dir = SOUTH;
+		}
+		return dir;
 	}
 
 	public static int toInt(Direction dir) {
