@@ -29,6 +29,17 @@ public class DriverRobot {
 		int mapData[] = new int[MAP_DATA_LENGTH];
 		comms.waitForMap(mapData);
 		map = MapFactory.getMap(mapData[MAP_DATA_MAP]);
+		nav = new NavigationController(map);
+		nav.setDropZonet(mapData[MAP_DATA_DROP_X], mapData[MAP_DATA_DROP_Y], mapData[MAP_DATA_DROP_W], mapData[MAP_DATA_DROP_H]);
+		nav.setDropZonet(mapData[MAP_DATA_PICKUP_X], mapData[MAP_DATA_PICKUP_Y], mapData[MAP_DATA_PICKUP_W], mapData[MAP_DATA_PICKUP_H]);
+		nav.localize();
+		events = new EventManager(nav);
+		nav.driveToPickup();
+		nav.findObject();
+		//This is the end of the Beta Goal
+		//comms.grabObject();
+		//nav.driveToDrop();
+		//comms.releaseObject();
 	}
 
 	/**

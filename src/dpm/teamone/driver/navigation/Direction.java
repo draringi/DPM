@@ -88,6 +88,20 @@ public enum Direction {
 		return toDirection(this.val + dir.val);
 	}
 
+	public float toAngle(){
+		switch(this){
+		case NORTH:
+			return 90;
+		case EAST:
+			return 0;
+		case SOUTH:
+			return 270;
+		case WEST:
+		default:
+			return 180;
+		}
+	}
+	
 	@Override
 	public String toString() {
 		return this.name;

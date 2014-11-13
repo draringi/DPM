@@ -36,6 +36,8 @@ public class NavigationController {
         this.map=map;
         this.pilot.setTravelSpeed(FORWARD_SPEED);
         this.pilot.setRotateSpeed(ROTATE_SPEED);
+        this.pickupZone = new int[4];
+        this.dropZone = new int[4];
         }
         
 	// Returns shortest path to destination 
@@ -61,22 +63,50 @@ public class NavigationController {
 	}
 
 	public void driveToGrid(int x, int y, Direction direction) {
+		driveToGrid(x, y);
+		turnTo(direction);
 	}
 
 	public void setDropZonet(int x, int y, int width, int height) {
+		this.dropZone[0] = x;
+		this.dropZone[1] = y;
+		this.dropZone[2] = width;
+		this.dropZone[3] = height;
 	}
         
       
 	public void setPickUpZone(int x, int y, int width, int height) {
+		this.pickupZone[0] = x;
+		this.pickupZone[1] = y;
+		this.pickupZone[2] = width;
+		this.pickupZone[3] = height;
 	}
 
 	public void turnTo(Direction direction) {
+		turnTo(direction.toAngle());
+	}
+	
+	public void localize(){
+		
+	}
+	
+	public void driveToPickup(){
+		driveToGrid(pickupZone[0], pickupZone[1]);
+	}
+	
+	public void driveToDrop(){
+		driveToGrid(dropZone[0], dropZone[1]);
 	}
 
 	public DifferentialPilot getPilot(){
 		
 		return this.pilot;
 	}
+	
+	public void findObject(){
+		
+	}
+	
 	public void turnTo(double angle) {
             this.pilot.rotate(angle);       //Rotates to specified angle
 	}
