@@ -30,8 +30,8 @@ public class DriverRobot {
 		comms.waitForMap(mapData);
 		map = MapFactory.getMap(mapData[MAP_DATA_MAP]);
 		nav = new NavigationController(map);
-		nav.setDropZonet(mapData[MAP_DATA_DROP_X], mapData[MAP_DATA_DROP_Y], mapData[MAP_DATA_DROP_W], mapData[MAP_DATA_DROP_H]);
-		nav.setDropZonet(mapData[MAP_DATA_PICKUP_X], mapData[MAP_DATA_PICKUP_Y], mapData[MAP_DATA_PICKUP_W], mapData[MAP_DATA_PICKUP_H]);
+		nav.setDropZone(mapData[MAP_DATA_DROP_X], mapData[MAP_DATA_DROP_Y], mapData[MAP_DATA_DROP_W], mapData[MAP_DATA_DROP_H]);
+		nav.setPickUpZone(mapData[MAP_DATA_PICKUP_X], mapData[MAP_DATA_PICKUP_Y], mapData[MAP_DATA_PICKUP_W], mapData[MAP_DATA_PICKUP_H]);
 		nav.localize();
 		events = new EventManager(nav);
 		nav.driveToPickup();
