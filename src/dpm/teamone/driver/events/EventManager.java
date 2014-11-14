@@ -13,7 +13,7 @@ import dpm.teamone.driver.navigation.NavigationController;
  * @author Michael Williams
  *
  */
-public class EventManager {
+public class EventManager extends Thread {
 
 	private Arbitrator arbitrator;
 	public NavigationController nav;
@@ -34,7 +34,7 @@ public class EventManager {
 	/**
 	 * Starts the underlying Arbitrator
 	 */
-	public void start() {
+	public void run() {
 		arbitrator.start();
 	}
 
