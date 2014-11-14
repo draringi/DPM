@@ -17,7 +17,7 @@ public class UltraSonic {
 
 	public UltraSonic() {
 		// Change this to which ever port contains the US
-		this.us = new UltrasonicSensor(SensorPort.S2);
+		this.us = new UltrasonicSensor(SensorPort.S1);
 	}
 
 	private int getFiltered() {
