@@ -127,6 +127,11 @@ public class NavigationController {
             this.paths.add(adjustPath(path,path.size()+1));
 
         } else {
+        	if (isIndexValid(x1 + 1, y1, path)) {
+
+                calculatePaths(x1 + 1, y1, x2, y2, path, count);
+
+            }
             if (isIndexValid(x1, y1 + 1, path)) {
 
                 calculatePaths(x1, y1 + 1, x2, y2, path, count);
@@ -137,11 +142,7 @@ public class NavigationController {
                 calculatePaths(x1, y1 - 1, x2, y2, path, count);
 
             }
-            if (isIndexValid(x1 + 1, y1, path)) {
-
-                calculatePaths(x1 + 1, y1, x2, y2, path, count);
-
-            }
+            
             if (isIndexValid(x1 - 1, y1, path)) {
 
                 calculatePaths(x1 - 1, y1, x2, y2, path, count);
