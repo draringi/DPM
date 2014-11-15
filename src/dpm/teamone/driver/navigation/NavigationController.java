@@ -64,18 +64,123 @@ public class NavigationController {
          *            Location in the y-axis
          * @return shortest path to destination
          */
-        public Path getPath(int x, int y){
-        Waypoint destination= new Waypoint(x,y);  //Destination point
-        Pose currentLocation = getPose();
-        LineMap map = this.map.getLineMap();
-        ShortestPathFinder pathAlgo = new ShortestPathFinder(map);
-        pathAlgo.lengthenLines(14);
-        Path route=null;
-        try{
-        route = pathAlgo.findRoute(currentLocation, destination);}
-        catch(Exception e){}
-        return route;
+        public Path getPath(int x, int y) {
+        int currentX = (int) getPose().getX() / 30; //X index 
+        int currentY = (int) getPose().getY() / 30; // Y index
+        ArrayList<Node> path = new ArrayList<Node>();
+
+        calculatePaths(currentX, currentY, x, y, path, 0);
+        return getShortestPath();
+    }
+
+    public Path getPath_TEST(int v, int w, int x, int y) {
+        int currentX = v;//X index 
+        int currentY = w; // Y index
+        ArrayList<Node> path = new ArrayList<Node>();
+
+        calculatePaths(currentX, currentY, x, y, path, 0);
+        return getShortestPath();
+    }
+
+    private Path getShortestPath() {
+        int shortestPath = 100;
+        int index = 0;
+
+        for (int x = 0; x < this.paths.size(); x++) {
+            if (this.paths.get(x).size() < shortestPath) {
+              
+                shortestPath = this.paths.get(x).size();
+                index = x;
+            }
         }
+        List<Node> shortestList = this.paths.get(index);
+        Path path = new Path();
+        for (int y = 0; y < shortestList.size(); y++) {
+            Node node = shortestList.get(y);
+            path.add(new Waypoint((node.x*this.map.TILE_SIZE+15), (node.y*this.map.TILE_SIZE+15)));
+        }
+        return path;
+    }
+
+    private ArrayList<Node> adjustPath(ArrayList<Node> p, int count) {
+        ArrayList<Node> temp = new ArrayList<Node>();
+        for (int i = 0; i < count - 1; i++) {
+            temp.add(p.get(i));
+           
+        }
+        return temp;
+    }
+
+    private void calculatePaths(int x1, int y1, int x2, int y2, ArrayList<Node> path, int count) {
+
+        count++;
+        path.add(new Node(x1, y1));
+
+        if (count < path.size()) {
+          
+            path = adjustPath(path, count);
+            path.add(new Node(x1, y1));
+        }
+
+        if (x1 == x2 && y1 == y2) {
+ 
+            this.paths.add(adjustPath(path,path.size()+1));
+
+        } else {
+            if (isIndexValid(x1, y1 + 1, path)) {
+
+                calculatePaths(x1, y1 + 1, x2, y2, path, count);
+
+            }
+            if (isIndexValid(x1, y1 - 1, path)) {
+
+                calculatePaths(x1, y1 - 1, x2, y2, path, count);
+
+            }
+            if (isIndexValid(x1 + 1, y1, path)) {
+
+                calculatePaths(x1 + 1, y1, x2, y2, path, count);
+
+            }
+            if (isIndexValid(x1 - 1, y1, path)) {
+
+                calculatePaths(x1 - 1, y1, x2, y2, path, count);
+
+            }
+            path.remove(path.size() - 1);
+        }
+
+    }
+
+    private boolean containsNode(Node n, ArrayList<Node> nodes) {
+
+        boolean contains = false;
+        for (int x = 0; x < nodes.size(); x++) {
+            Node temp = nodes.get(x);
+            if ((temp.x == n.x) && (temp.y == n.y)) {
+                contains = true;
+            }
+
+        }
+        return contains;
+    }
+
+    private boolean isIndexValid(int x, int y, ArrayList<Node> path) {
+        boolean isValid = true;
+        if ((x < 0) || (y < 0) || (y >= map.getHeight() || (x >= map.getHeight()))) {
+            isValid = false;
+        }
+        if (map.isObstacle(x, y)) {
+            isValid = false;
+        }
+
+        if (containsNode(new Node(x, y), path)) {
+            isValid = false;
+        }
+
+        return isValid;
+
+    }
         
         /**
          * Drives the robot along the requested route
