@@ -30,7 +30,7 @@ public class NavigationController {
         private static final double ROTATE_SPEED=60;
         private static NXTRegulatedMotor LEFT_MOTOR = Motor.A, RIGHT_MOTOR = Motor.B;
 	private DifferentialPilot pilot;
-
+	private ArrayList<ArrayList<Node>> paths = new ArrayList<ArrayList<Node>>();
 	private Navigator navigator;
         
         public int[] dropZone;
