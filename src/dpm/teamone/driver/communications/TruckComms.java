@@ -29,7 +29,8 @@ public class TruckComms {
 		byte buffer[] = "d".getBytes();
 		this.connection.sendPacket(buffer, buffer.length);
 		this.connection.readPacket(buffer, buffer.length);
-		if (buffer.equals("k")) {
+		String parser = new String(buffer);
+		if (parser.equals("k")) {
 			return;
 		}
 	}
@@ -41,7 +42,8 @@ public class TruckComms {
 		byte buffer[] = "a".getBytes();
 		this.connection.sendPacket(buffer, buffer.length);
 		this.connection.readPacket(buffer, buffer.length);
-		if (buffer.equals("k")) {
+		String parser = new String(buffer);
+		if (parser.equals("k")) {
 			return;
 		}
 	}
@@ -53,7 +55,8 @@ public class TruckComms {
 		byte buffer[] = "t".getBytes();
 		this.connection.sendPacket(buffer, buffer.length);
 		this.connection.readPacket(buffer, buffer.length);
-		if (buffer.equals("k")) {
+		String parser = new String(buffer);
+		if (parser.equals("k")) {
 			return;
 		}
 	}
@@ -65,7 +68,8 @@ public class TruckComms {
 		byte buffer[] = "p".getBytes();
 		this.connection.sendPacket(buffer, buffer.length);
 		this.connection.readPacket(buffer, buffer.length);
-		if (buffer.equals("k")) {
+		String parser = new String(buffer);
+		if (parser.equals("k")) {
 			return;
 		}
 	}

@@ -30,23 +30,24 @@ public class DriverComms {
 	}
 	
 	public void waitForSignal() {
-		byte buffer[] = new byte[4];
+		byte buffer[] = new byte[1];
 		int res = this.connection.readPacket(buffer, buffer.length);
 		if (res == 0){
 			return;
 		}
-		if(buffer.equals("p")){
+		String parser = new String(buffer);
+		if(parser.equals("p")){
 			Arm.lower();
 			Arm.grab();
 			Arm.raise();
-		} else if (buffer.equals("d")){
+		} else if (parser.equals("d")){
 			Arm.lower();
 			Arm.release();
 			Arm.raise();
-		} else if(buffer.equals("a")){
+		} else if(parser.equals("a")){
 			Arm.release();
 			Arm.lower();
-		} else if(buffer.equals("t")){
+		} else if(parser.equals("t")){
 			Arm.raise();
 			Arm.grab();
 		}
