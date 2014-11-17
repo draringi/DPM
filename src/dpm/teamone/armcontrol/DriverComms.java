@@ -43,6 +43,12 @@ public class DriverComms {
 			Arm.lower();
 			Arm.release();
 			Arm.raise();
+		} else if(buffer.equals("a")){
+			Arm.release();
+			Arm.lower();
+		} else if(buffer.equals("t")){
+			Arm.raise();
+			Arm.grab();
 		}
 		buffer = "k".getBytes();
 		this.connection.sendPacket(buffer, buffer.length);

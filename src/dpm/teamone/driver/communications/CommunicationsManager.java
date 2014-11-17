@@ -41,4 +41,12 @@ public class CommunicationsManager {
 	public void releaseObject(){
 		this.truck.drop();
 	}
+	
+	public void prepareClaw(){
+		this.truck.armClaw();
+	}
+	
+	public void prepareTravel(){
+		this.truck.travel();
+	}
 }

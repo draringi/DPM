@@ -35,6 +35,30 @@ public class TruckComms {
 	}
 
 	/**
+	 * Tells the truck brick to arm the claw (Lower and open)
+	 */
+	public void armClaw(){
+		byte buffer[] = "a".getBytes();
+		this.connection.sendPacket(buffer, buffer.length);
+		this.connection.readPacket(buffer, buffer.length);
+		if (buffer.equals("k")) {
+			return;
+		}
+	}
+
+	/**
+	 * Tells the truck brick to place the claw in travel position (raised and closed)
+	 */
+	public void travel(){
+		byte buffer[] = "t".getBytes();
+		this.connection.sendPacket(buffer, buffer.length);
+		this.connection.readPacket(buffer, buffer.length);
+		if (buffer.equals("k")) {
+			return;
+		}
+	}
+	
+	/**
 	 * Tells the truck brick to pick up what is in front of it
 	 */
 	public void pickUp() {
