@@ -2,6 +2,7 @@ package dpm.teamone.driver.events;
 
 import dpm.teamone.driver.navigation.NavigationController;
 import dpm.teamone.driver.navigation.Direction;
+import lejos.geom.Point;
 import lejos.nxt.ColorSensor;
 import lejos.nxt.SensorPort;
 import lejos.robotics.DirectionFinder;
@@ -35,12 +36,17 @@ class LineCorrecter implements Behavior {
 	public void action() {
 		if(leftPassed && rightPassed){
 			Pose pose = nav.getPose();
-			float distance = pose.distanceTo(passPoint);
-			float theta = Math.atan2(distance, SENSOR_DIFF);
+			float distance;
+			if(passPoint!=null){
+				distance = pose.distanceTo(passPoint);
+			} else {
+				distance = 0;
+			}
+			float theta = (float) Math.atan2(distance, SENSOR_DIFF);
 			if(leftFirst){
 				theta = -theta;
 			}
-			theta = theta/Math.PI * 180;
+			theta = (float) (theta/Math.PI * 180);
 			pose.rotateUpdate(theta);
 			Direction dir = Direction.fromAngle(Math.round(pose.getHeading()));
 			float x = pose.getX();
@@ -65,6 +71,7 @@ class LineCorrecter implements Behavior {
 			nav.setPose(pose);
 			leftPassed = false;
 			rightPassed = false;
+			passPoint = null;
 		} else if(leftPassed){
 			leftFirst = true;
 			Pose pose = nav.getPose();

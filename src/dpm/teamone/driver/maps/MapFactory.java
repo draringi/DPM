@@ -37,7 +37,7 @@ public class MapFactory {
 		return map;
 	}
 
-	public GridMap getBetaMap(int mapID){
+	public static GridMap getBetaMap(int mapID){
 		switch(mapID){
 		case 1:
 			return beta1();
