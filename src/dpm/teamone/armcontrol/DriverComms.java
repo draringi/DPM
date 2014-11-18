@@ -31,7 +31,7 @@ public class DriverComms {
 	
 	public void waitForSignal() {
 		byte buffer[] = new byte[1];
-		int res = this.connection.readPacket(buffer, buffer.length);
+		int res = this.connection.read(buffer, buffer.length, true);
 		if (res == 0){
 			return;
 		}

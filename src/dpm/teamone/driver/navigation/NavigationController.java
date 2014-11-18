@@ -2,15 +2,19 @@ package dpm.teamone.driver.navigation;
 
 
 
+import java.util.ArrayList;
+import java.util.List;
+
 import lejos.robotics.navigation.DifferentialPilot;
 import lejos.robotics.navigation.Navigator;
-import maps.GridMap;
+import dpm.teamone.driver.maps.GridMap;
 import lejos.nxt.Motor;
 import lejos.nxt.NXTRegulatedMotor;
 import lejos.robotics.mapping.LineMap;
 import lejos.robotics.navigation.Pose;
 import lejos.robotics.navigation.Waypoint;
 import lejos.robotics.pathfinding.FourWayGridMesh;
+import lejos.robotics.pathfinding.Node;
 import lejos.robotics.pathfinding.Path;
 import lejos.robotics.pathfinding.ShortestPathFinder;
 
