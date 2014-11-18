@@ -27,18 +27,20 @@ public class DriverRobot {
 		NavigationController nav;
 		GridMap map;
 		CommunicationsManager comms = new CommunicationsManager();
-		BetaComms beta = new BetaComms(); // I hate this class and will kill it as soon as possible,
+		//BetaComms beta = new BetaComms(); // I hate this class and will kill it as soon as possible,
 		int mapData[] = new int[MAP_DATA_LENGTH];
 		//beta.waitForMap(mapData);
 		mapData[MAP_DATA_MAP] = BETA_MAP;
 		comms.prepareTravel();
 		//map = MapFactory.getMap(mapData[MAP_DATA_MAP]);
-		map = MapFactory.getBetaMap(mapData[MAP_DATA_MAP]);
+		//map = MapFactory.getBetaMap(mapData[MAP_DATA_MAP]);
+		map = MapFactory.lab5Map();
 		nav = new NavigationController(map);
 		nav.setDropZone(mapData[MAP_DATA_DROP_X], mapData[MAP_DATA_DROP_Y], 1, 1);
 		//nav.setPickUpZone(mapData[MAP_DATA_PICKUP_X], mapData[MAP_DATA_PICKUP_Y], mapData[MAP_DATA_PICKUP_W], mapData[MAP_DATA_PICKUP_H]);
 		nav.localize();
 		events = new EventManager(nav);
+		events.start();
 		nav.driveToPickup();
 		comms.prepareClaw();
 		nav.findObject();

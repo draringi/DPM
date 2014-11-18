@@ -16,10 +16,10 @@ import lejos.nxt.comm.RS485Connection;
 public class TruckComms {
 
 	RS485Connection connection;
-	Object lock;
+	//Object lock;
 
 	protected TruckComms() {
-		this.lock = new Object();
+		//this.lock = new Object();
 	}
 	
 	private void ensureConnection(){
@@ -35,7 +35,14 @@ public class TruckComms {
 		ensureConnection();
 		byte buffer[] = "d".getBytes();
 		this.connection.sendPacket(buffer, buffer.length);
-		this.connection.read(buffer, buffer.length, true);
+		try{
+			Thread.sleep(500);
+		} catch (Exception e){
+		}
+		int result = this.connection.read(buffer, buffer.length);
+		if(result==0){
+			this.drop();
+		}
 		String parser = new String(buffer);
 		if (parser.equals("k")) {
 			return;
@@ -49,7 +56,14 @@ public class TruckComms {
 		ensureConnection();
 		byte buffer[] = "a".getBytes();
 		this.connection.sendPacket(buffer, buffer.length);
-		this.connection.read(buffer, buffer.length, true);
+		try{
+			Thread.sleep(500);
+		} catch (Exception e){
+		}
+		int result = this.connection.read(buffer, buffer.length);
+		if(result==0){
+			this.armClaw();
+		}
 		String parser = new String(buffer);
 		if (parser.equals("k")) {
 			return;
@@ -63,7 +77,14 @@ public class TruckComms {
 		ensureConnection();
 		byte buffer[] = "t".getBytes();
 		this.connection.sendPacket(buffer, buffer.length);
-		this.connection.read(buffer, buffer.length, true);
+		try{
+			Thread.sleep(500);
+		} catch (Exception e){
+		}
+		int result = this.connection.read(buffer, buffer.length);
+		if(result==0){
+			this.travel();
+		}
 		String parser = new String(buffer);
 		if (parser.equals("k")) {
 			return;
@@ -77,7 +98,14 @@ public class TruckComms {
 		ensureConnection();
 		byte buffer[] = "p".getBytes();
 		this.connection.sendPacket(buffer, buffer.length);
-		this.connection.read(buffer, buffer.length, true);
+		try{
+			Thread.sleep(500);
+		} catch (Exception e){
+		}
+		int result = this.connection.read(buffer, buffer.length);
+		if(result==0){
+			this.pickUp();
+		}
 		String parser = new String(buffer);
 		if (parser.equals("k")) {
 			return;

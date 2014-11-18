@@ -20,7 +20,7 @@ public class ArmControl {
 		while(true){
 			communications.waitForSignal();
 			try{
-				Thread.sleep(1000); //Only poll once a second
+				Thread.sleep(100); //Only poll 10 times a second
 			} catch (Exception e){
 				
 			}

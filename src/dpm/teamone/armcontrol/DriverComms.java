@@ -50,6 +50,8 @@ public class DriverComms {
 		} else if(parser.equals("t")){
 			Arm.raise();
 			Arm.grab();
+		} else {
+			return;
 		}
 		buffer = "k".getBytes();
 		this.connection.sendPacket(buffer, buffer.length);

@@ -18,7 +18,7 @@ public class Arm {
 	private static final NXTRegulatedMotor claw = Motor.A;
 	private static final NXTRegulatedMotor arm = Motor.B;
 	private static boolean grabbing = false;
-	private static boolean raised = true;
+	private static boolean raised = false;
 	/**
 	 * Grabs the block in front of it
 	 */

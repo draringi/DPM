@@ -1,7 +1,7 @@
 package dpm.teamone.driver.navigation;
 
 
-import dpm.teamone.driver.GridMap;
+import dpm.teamone.driver.maps.GridMap;
 import lejos.nxt.LCD;
 import lejos.nxt.Sound;
 import lejos.robotics.navigation.Pose;

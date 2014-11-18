@@ -276,7 +276,13 @@ public class NavigationController {
 	}
 	
 	public void localize(){
-		
+		LCDinfo lcd = new LCDinfo();
+		Localisation localizer = new Localisation(this.map);
+		Pose startingPoint = localizer.performLocalisation();
+		int x = map.getGrid(startingPoint.getX());
+		int y = map.getGrid(startingPoint.getY());
+		Direction dir = Direction.fromAngle(Math.round(startingPoint.getHeading()));
+		lcd.setStartPos(x, y, dir);
 	}
 	
 	public void driveToPickup(){
