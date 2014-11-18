@@ -105,7 +105,7 @@ public class Localisation {
                         int[] surr = computeSur(x, y, ori);
                         if (isMatch(surr, inp)) {
                         	Sound.twoBeeps();
-                            initialLocation = new Pose((x * this.map.TILE_SIZE + 15), (y * this.map.TILE_SIZE + 15), getAngle(ori));
+                            initialLocation = new Pose((float)map.getPos(x), (float)map.getPos(y), getAngle(ori));
    
                             return initialLocation;
                         }
@@ -123,7 +123,7 @@ public class Localisation {
      *
      * @return Angle in degrees
      */
-    private int getAngle(int i) {
+    private float getAngle(int i) {
 
         int angle = 0;
 
