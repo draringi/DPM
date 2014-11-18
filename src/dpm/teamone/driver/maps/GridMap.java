@@ -6,6 +6,7 @@ import java.util.BitSet;
 
 import lejos.robotics.mapping.LineMap;
 import lejos.robotics.pathfinding.FourWayGridMesh;
+import lejos.robotics.pathfinding.NavigationMesh;
 import lejos.geom.Rectangle;
 import lejos.geom.Line;
 
@@ -24,7 +25,7 @@ public class GridMap {
 	private int width, height;
 
 	private LineMap linemap;
-	private FourWayGridMesh mesh;
+	private NavigationMesh mesh;
 
 	public  final int TILE_SIZE = 30;
 	private static final float CLEARANCE = 1;
@@ -90,7 +91,7 @@ public class GridMap {
 	 * 
 	 * @return GridMesh representing the GridMap
 	 */
-	public FourWayGridMesh getGridMesh() {
+	public NavigationMesh getGridMesh() {
 		if (mesh == null) {
 			mesh = generateGridMesh();
 		}
@@ -102,8 +103,9 @@ public class GridMap {
 	 * 
 	 * @return GridMesh representing the GridMap
 	 */
-	private FourWayGridMesh generateGridMesh() {
-		return new FourWayGridMesh(this.getLineMap(), TILE_SIZE, CLEARANCE);
+	private NavigationMesh generateGridMesh() {
+		//return new FourWayGridMesh(this.getLineMap(), TILE_SIZE, CLEARANCE);
+		return new GridMesh(this);
 	}
 
 	/**
