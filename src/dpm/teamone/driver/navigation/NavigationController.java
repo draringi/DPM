@@ -69,8 +69,8 @@ public class NavigationController {
          * @return shortest path to destination
          */
         public Path getPath(int x, int y) {
-        int currentX = (int) getPose().getX() / 30; //X index 
-        int currentY = (int) getPose().getY() / 30; // Y index
+        int currentX = map.getGrid(getPose().getX()); //X index 
+        int currentY = map.getGrid(getPose().getY()); // Y index
         ArrayList<Node> path = new ArrayList<Node>();
 
         calculatePaths(currentX, currentY, x, y, path, 0);
@@ -201,12 +201,14 @@ public class NavigationController {
          * Drives the robot to the requested co-ordinates
          * 
          * @param x
-         *            Location in the x-axis
+         *            Grid Location in the x-axis
          * @param y
-         *            Location in the y-axis
+         *            Grid Location in the y-axis
          */
 	public void driveToGrid(int x, int y) {
-            followPath(getPath(x,y));
+		x = (int) Math.round(map.getPos(x));
+		y = (int) Math.round(map.getPos(y));
+		followPath(getPath(x,y));
 	}
 	
 	

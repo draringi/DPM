@@ -37,7 +37,7 @@ public class DriverRobot {
 		map = MapFactory.lab5Map();
 		nav = new NavigationController(map);
 		nav.setDropZone(mapData[MAP_DATA_DROP_X], mapData[MAP_DATA_DROP_Y], 1, 1);
-		//nav.setPickUpZone(mapData[MAP_DATA_PICKUP_X], mapData[MAP_DATA_PICKUP_Y], mapData[MAP_DATA_PICKUP_W], mapData[MAP_DATA_PICKUP_H]);
+		nav.setPickUpZone(3, 0, 1, 1);
 		nav.localize();
 		events = new EventManager(nav);
 		events.start();
