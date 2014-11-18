@@ -87,21 +87,21 @@ public class NavigationController {
     }
 
     private Path getShortestPath() {
-        int shortestPath = 100;
+        int shortestPath = 1000;
         int index = 0;
 
-        for (int x = 0; x < this.paths.size(); x++) {
-            if (this.paths.get(x).size() < shortestPath) {
+        for (int i = 0; i < this.paths.size(); i++) {
+            if (this.paths.get(i).size() < shortestPath) {
               
-                shortestPath = this.paths.get(x).size();
-                index = x;
+                shortestPath = this.paths.get(i).size();
+                index = i;
             }
         }
         List<Node> shortestList = this.paths.get(index);
         Path path = new Path();
         for (int y = 0; y < shortestList.size(); y++) {
             Node node = shortestList.get(y);
-            path.add(new Waypoint((node.x*this.map.TILE_SIZE+15), (node.y*this.map.TILE_SIZE+15)));
+            path.add(new Waypoint(map.getPos(Math.round(node.x)), map.getPos(Math.round(node.x))));
         }
         return path;
     }
@@ -172,14 +172,9 @@ public class NavigationController {
 
     private boolean isIndexValid(int x, int y, ArrayList<Node> path) {
         boolean isValid = true;
-        if ((x < 0) || (y < 0) || (y >= map.getHeight() || (x >= map.getHeight()))) {
+        if (map.blocked(x, y)) {
             isValid = false;
-        }
-        if (map.isObstacle(x, y)) {
-            isValid = false;
-        }
-
-        if (containsNode(new Node(x, y), path)) {
+        } else if (containsNode(new Node(x, y), path)) {
             isValid = false;
         }
 
@@ -206,8 +201,6 @@ public class NavigationController {
          *            Grid Location in the y-axis
          */
 	public void driveToGrid(int x, int y) {
-		x = (int) Math.round(map.getPos(x));
-		y = (int) Math.round(map.getPos(y));
 		followPath(getPath(x,y));
 	}
 	
