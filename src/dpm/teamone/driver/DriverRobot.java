@@ -29,7 +29,8 @@ public class DriverRobot {
 		CommunicationsManager comms = new CommunicationsManager();
 		BetaComms beta = new BetaComms(); // I hate this class and will kill it as soon as possible,
 		int mapData[] = new int[MAP_DATA_LENGTH];
-		beta.waitForMap(mapData);
+		//beta.waitForMap(mapData);
+		mapData[MAP_DATA_MAP] = BETA_MAP;
 		comms.prepareTravel();
 		//map = MapFactory.getMap(mapData[MAP_DATA_MAP]);
 		map = MapFactory.getBetaMap(mapData[MAP_DATA_MAP]);
@@ -46,6 +47,8 @@ public class DriverRobot {
 		//nav.driveToDrop();
 		//comms.releaseObject();
 	}
+	
+	private static final int BETA_MAP = 1;
 
 	/**
 	 * Length of a map data array. Has a value of {@value}
