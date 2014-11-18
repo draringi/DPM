@@ -5,8 +5,11 @@ import java.util.ArrayList;
 import java.util.BitSet;
 
 import lejos.robotics.mapping.LineMap;
+import lejos.robotics.navigation.Waypoint;
 import lejos.robotics.pathfinding.FourWayGridMesh;
 import lejos.robotics.pathfinding.NavigationMesh;
+import lejos.robotics.pathfinding.Path;
+import lejos.geom.Point;
 import lejos.geom.Rectangle;
 import lejos.geom.Line;
 
@@ -43,6 +46,30 @@ public class GridMap {
 		this.height = height;
 		this.bitset = new BitSet(width*height);
 	}
+	
+	public Point convertToPoint(int x, int y){
+		return new Point((float)this.getPos(x), (float)this.getPos(y));
+	}
+	
+	public Waypoint convertToWaypoint(int x, int y){
+		return new Waypoint(this.convertToPoint(x, y));
+	}
+	
+	public Path getPath(Point start, Point end){
+		Pathfinder finder = new Pathfinder(this);
+		int s[] = new int[2];
+		int e[] = new int[2];
+		s[0] = getGrid(start.x);
+		s[1] = getGrid(start.y);
+		e[0] = getGrid(end.x);
+		e[1] = getGrid(end.y);
+		finder.findPath(s, e);
+		Path path = new Path();
+		while(finder.isPath()){
+			path.add(finder.getNext());
+		}
+		return path;
+	}
 
 	/**
 	 * Returns the internal index in the BitSet for a given position
@@ -53,7 +80,7 @@ public class GridMap {
 	 *            y-axis location
 	 * @return Internal Index
 	 */
-	private int getIndex(int x, int y) {
+	protected int getIndex(int x, int y) {
 		return width * y + x;
 	}
 

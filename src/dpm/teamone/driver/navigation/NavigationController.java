@@ -211,13 +211,8 @@ public class NavigationController {
          *            Grid Location in the y-axis
          */
 	public void driveToGrid(int x, int y) {
-		NodePathFinder finder = new NodePathFinder(new AstarSearchAlgorithm(), map.getGridMesh());
 		Path path;
-		try{
-			path = finder.findRoute(getPose(), new Waypoint(map.getPos(x), map.getPos(y)));
-		} catch (Exception e){
-			return;
-		}
+		path = map.getPath(getPose().getLocation(), new Point((float)map.getPos(x), (float)map.getPos(y)));
 		//followPath(getPath(x,y));
 		followPath(path);
 	}
@@ -305,6 +300,7 @@ public class NavigationController {
 	
 	public void driveToPickup(){
 		driveToGrid(pickupZone[0], pickupZone[1]);
+		turnTo(-45);
 	}
 	
 	public void driveToDrop(){

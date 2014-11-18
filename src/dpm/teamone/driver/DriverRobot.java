@@ -1,5 +1,6 @@
 package dpm.teamone.driver;
 
+import lejos.nxt.Button;
 import dpm.teamone.driver.communications.BetaComms;
 import dpm.teamone.driver.communications.CommunicationsManager;
 import dpm.teamone.driver.events.EventManager;
@@ -37,7 +38,7 @@ public class DriverRobot {
 		map = MapFactory.lab5Map();
 		nav = new NavigationController(map);
 		nav.setDropZone(mapData[MAP_DATA_DROP_X], mapData[MAP_DATA_DROP_Y], 1, 1);
-		nav.setPickUpZone(3, 0, 1, 1);
+		nav.setPickUpZone(2, 1, 1, 1);
 		nav.localize();
 		events = new EventManager(nav);
 		//events.start();
@@ -48,6 +49,7 @@ public class DriverRobot {
 		//This is the end of the Beta Goal
 		//nav.driveToDrop();
 		//comms.releaseObject();
+		Button.waitForAnyPress();
 	}
 	
 	private static final int BETA_MAP = 1;
