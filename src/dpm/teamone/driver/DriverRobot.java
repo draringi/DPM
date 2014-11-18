@@ -1,5 +1,6 @@
 package dpm.teamone.driver;
 
+import dpm.teamone.driver.communications.BetaComms;
 import dpm.teamone.driver.communications.CommunicationsManager;
 import dpm.teamone.driver.events.EventManager;
 import dpm.teamone.driver.maps.GridMap;
@@ -26,18 +27,22 @@ public class DriverRobot {
 		NavigationController nav;
 		GridMap map;
 		CommunicationsManager comms = new CommunicationsManager();
+		BetaComms beta = new BetaComms(); // I hate this class and will kill it as soon as possible,
 		int mapData[] = new int[MAP_DATA_LENGTH];
-		comms.waitForMap(mapData);
-		map = MapFactory.getMap(mapData[MAP_DATA_MAP]);
+		beta.waitForMap(mapData);
+		comms.prepareTravel();
+		//map = MapFactory.getMap(mapData[MAP_DATA_MAP]);
+		map = MapFactory.getBetaMap(mapData[MAP_DATA_MAP]);
 		nav = new NavigationController(map);
-		nav.setDropZone(mapData[MAP_DATA_DROP_X], mapData[MAP_DATA_DROP_Y], mapData[MAP_DATA_DROP_W], mapData[MAP_DATA_DROP_H]);
-		nav.setPickUpZone(mapData[MAP_DATA_PICKUP_X], mapData[MAP_DATA_PICKUP_Y], mapData[MAP_DATA_PICKUP_W], mapData[MAP_DATA_PICKUP_H]);
+		nav.setDropZone(mapData[MAP_DATA_DROP_X], mapData[MAP_DATA_DROP_Y], 1, 1);
+		//nav.setPickUpZone(mapData[MAP_DATA_PICKUP_X], mapData[MAP_DATA_PICKUP_Y], mapData[MAP_DATA_PICKUP_W], mapData[MAP_DATA_PICKUP_H]);
 		nav.localize();
 		events = new EventManager(nav);
 		nav.driveToPickup();
+		comms.prepareClaw();
 		nav.findObject();
+		comms.grabObject();
 		//This is the end of the Beta Goal
-		//comms.grabObject();
 		//nav.driveToDrop();
 		//comms.releaseObject();
 	}
@@ -45,7 +50,7 @@ public class DriverRobot {
 	/**
 	 * Length of a map data array. Has a value of {@value}
 	 */
-	public static final int MAP_DATA_LENGTH = 9;
+	public static final int MAP_DATA_LENGTH = 3;
 
 	/**
 	 * Index of map data array for the map number. Has a value of {@value}
@@ -53,52 +58,16 @@ public class DriverRobot {
 	public static final int MAP_DATA_MAP = 0;
 
 	/**
-	 * Index of map data array for the location of the pick-up zone in the
-	 * x-axis. Has a value of {@value}
-	 */
-	public static final int MAP_DATA_PICKUP_X = 1;
-
-	/**
-	 * Index of map data array for the location of the pick-up zone in the
-	 * y-axis. Has a value of {@value}
-	 */
-	public static final int MAP_DATA_PICKUP_Y = 2;
-
-	/**
-	 * Index of map data array for the width of the pickup zone. Has a value of
-	 * * {@value}
-	 */
-	public static final int MAP_DATA_PICKUP_W = 3;
-
-	/**
-	 * Index of map data array for the height of the pickup zone. Has a value of
-	 * * {@value}
-	 */
-	public static final int MAP_DATA_PICKUP_H = 4;
-
-	/**
 	 * Index of map data array for the location of the drop zone in the x-axis.
 	 * Has a value of {@value}
 	 */
-	public static final int MAP_DATA_DROP_X = 5;
+	public static final int MAP_DATA_DROP_X = 1;
 
 	/**
 	 * Index of map data array for the location of the drop zone in the y-axis.
 	 * Has a value of {@value}
 	 */
-	public static final int MAP_DATA_DROP_Y = 6;
-
-	/**
-	 * Index of map data array for the width of the drop zone. Has a value of *
-	 * {@value}
-	 */
-	public static final int MAP_DATA_DROP_W = 7;
-
-	/**
-	 * Index of map data array for the height of the drop zone. Has a value of *
-	 * {@value}
-	 */
-	public static final int MAP_DATA_DROP_H = 8;
+	public static final int MAP_DATA_DROP_Y = 2;
 
 	public static final int POS_X = 0;
 
