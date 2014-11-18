@@ -40,7 +40,7 @@ public class DriverRobot {
 		nav.setPickUpZone(3, 0, 1, 1);
 		nav.localize();
 		events = new EventManager(nav);
-		events.start();
+		//events.start();
 		nav.driveToPickup();
 		comms.prepareClaw();
 		nav.findObject();

@@ -189,7 +189,14 @@ public class NavigationController {
          *            path to follow
          */
         public void followPath(Path route){
-        this.navigator.followPath(route);
+        	this.navigator.followPath(route);
+        	boolean done = false;
+        	while(!done){
+        		done = this.navigator.waitForStop();
+        		if(!done){
+        			this.navigator.followPath();
+        		}
+        	}
         }
         
         /**
