@@ -8,13 +8,16 @@ import java.util.List;
 import lejos.robotics.navigation.DifferentialPilot;
 import lejos.robotics.navigation.Navigator;
 import dpm.teamone.driver.maps.GridMap;
+import lejos.geom.Point;
 import lejos.nxt.Motor;
 import lejos.nxt.NXTRegulatedMotor;
 import lejos.robotics.mapping.LineMap;
 import lejos.robotics.navigation.Pose;
 import lejos.robotics.navigation.Waypoint;
+import lejos.robotics.pathfinding.AstarSearchAlgorithm;
 import lejos.robotics.pathfinding.FourWayGridMesh;
 import lejos.robotics.pathfinding.Node;
+import lejos.robotics.pathfinding.NodePathFinder;
 import lejos.robotics.pathfinding.Path;
 import lejos.robotics.pathfinding.ShortestPathFinder;
 
@@ -208,7 +211,15 @@ public class NavigationController {
          *            Grid Location in the y-axis
          */
 	public void driveToGrid(int x, int y) {
-		followPath(getPath(x,y));
+		NodePathFinder finder = new NodePathFinder(new AstarSearchAlgorithm(), map.getGridMesh());
+		Path path;
+		try{
+			path = finder.findRoute(getPose(), new Waypoint(map.getPos(x), map.getPos(y)));
+		} catch (Exception e){
+			return;
+		}
+		//followPath(getPath(x,y));
+		followPath(path);
 	}
 	
 	
@@ -285,6 +296,11 @@ public class NavigationController {
 		int y = map.getGrid(startingPoint.getY());
 		Direction dir = Direction.fromAngle(Math.round(startingPoint.getHeading()));
 		lcd.setStartPos(x, y, dir);
+		Point loc = this.getPose().getLocation().add(startingPoint.getLocation());
+		Pose status = this.getPose();
+		status.setLocation(loc);
+		status.rotateUpdate(startingPoint.getHeading());
+		this.setPose(status);
 	}
 	
 	public void driveToPickup(){
