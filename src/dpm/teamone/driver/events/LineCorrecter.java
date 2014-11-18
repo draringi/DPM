@@ -47,24 +47,30 @@ class LineCorrecter implements Behavior {
 				theta = -theta;
 			}
 			theta = (float) (theta/Math.PI * 180);
-			pose.rotateUpdate(theta);
-			Direction dir = Direction.fromAngle(Math.round(pose.getHeading()));
+			float beleivedHeading = (pose.getHeading() % 90);
+			if(beleivedHeading > 45){
+				beleivedHeading = 90 - beleivedHeading;
+			}
+			float correction = beleivedHeading - theta;
+			pose.rotateUpdate(correction);
+			
 			float x = pose.getX();
 			float y = pose.getY();
+			theta = (float) (theta / 180 * Math.PI); 
 			int line;
 			float offset = SENSOR_OFFSET + distance/2;
-			switch(dir){
+			switch(Direction.fromAngle(Math.round(pose.getHeading()))){
 			case EAST:
 			case WEST:
 				x = x/30;
 				line = Math.round(x);
-				x = (float) (line * 30 + Math.cos(pose.getHeading()/180 * Math.PI) * offset);
+				x = (float) (line * 30 + Math.sin(theta) * offset);
 				break;
 			case NORTH:
 			case SOUTH:
 				y = x/30;
 				line = Math.round(y);
-				y = (float) (line * 30 + Math.sin(pose.getHeading()/180 * Math.PI) * offset);
+				y = (float) (line * 30 + Math.sin(theta) * offset);
 				break;
 			}
 			pose.setLocation(x, y);
