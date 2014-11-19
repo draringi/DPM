@@ -31,7 +31,7 @@ public class Pathfinder {
 		}
 	}
 	
-	void findPath(int [] start, int [] end){ 
+	public void findPath(int [] start, int [] end){ 
 		cellList[end[X]][end[Y]] = 0;
 		while(cellList[start[X]][start[Y]] == -1){
 			for(int x = 0; x < width; x++){
@@ -74,11 +74,13 @@ public class Pathfinder {
 				continue; 
 			}
 			if(nextStep(x-1, y, dist)){
-				path.addElement(map.convertToWaypoint(x, y));
+				path.addElement(map.convertToWaypoint(x-1, y));
 				x--;
 				continue; 
 			}
 		}
+		path.addElement(map.convertToWaypoint(end[X], end[Y]));
+		
 	}
 	
 	private boolean nextStep(int x, int y, int dist){

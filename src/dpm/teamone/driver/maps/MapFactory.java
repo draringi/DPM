@@ -61,7 +61,7 @@ public class MapFactory {
 		map.set(4, 1);
 		map.set(4, 2);
 		map.set(4, 3);
-		map.set(6, 3);
+		map.set(6, 2);
 		map.set(6, 5);
 		map.set(7, 0);
 		map.set(7, 2);
