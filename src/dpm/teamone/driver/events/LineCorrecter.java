@@ -56,7 +56,7 @@ class LineCorrecter implements Behavior {
 			Direction dir = Direction.fromAngle(Math.round(theta)); 
 			theta += dir.toAngle();
 			float beleivedHeading = pose.getHeading();
-			float correction = theta - beleivedHeading;
+			float correction = beleivedHeading - theta;
 			pose.rotateUpdate(correction);
 			
 			float x = pose.getX();

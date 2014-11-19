@@ -6,6 +6,7 @@ import dpm.teamone.driver.DriverRobot;
 public class LCDinfo {
 
 	protected LCDinfo() {
+		LCD.clear();
 		LCD.drawString("Localizing...", 0, 0);
 	}
 

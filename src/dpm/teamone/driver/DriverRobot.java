@@ -43,8 +43,8 @@ public class DriverRobot {
 //		//nav.setPickUpZone(2, 1, 1, 1); //Lab 5 map
 		nav.setPickUpZone(2, 2, 0, 0); //Any 8x8 map
 		nav.localize();
-//		//events = new EventManager(nav);
-//		//events.start();
+		events = new EventManager(nav);
+		events.start();
 		nav.driveToPickup();
 		comms.prepareClaw();
 		nav.findObject();
@@ -55,7 +55,7 @@ public class DriverRobot {
 		Button.waitForAnyPress();
 	}
 	
-	private static final int BETA_MAP = 1;
+	private static final int BETA_MAP = 3;
 
 	/**
 	 * Length of a map data array. Has a value of {@value}

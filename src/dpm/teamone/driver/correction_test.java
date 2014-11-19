@@ -18,7 +18,6 @@ public class correction_test {
 		EventManager events = new EventManager(nav);
 		events.start();
 		nav.driveToGrid(0, 0);
-		nav.driveToGrid(3, 3);
 		EventManager.pause();
 		RConsole.openUSB(0);
 		int i = 0;
