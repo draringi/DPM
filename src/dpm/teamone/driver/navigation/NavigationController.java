@@ -167,6 +167,10 @@ public void stop(){
         }
  path.remove(path.size() - 1);
     }
+     
+     public GridMap getMap(){
+    	 return this.map;
+     }
 
     private boolean containsNode(Node n, ArrayList<Node> nodes) {
 

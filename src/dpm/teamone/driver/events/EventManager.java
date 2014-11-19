@@ -16,7 +16,9 @@ import dpm.teamone.driver.navigation.NavigationController;
 public class EventManager extends Thread {
 
 	private Arbitrator arbitrator;
-	public NavigationController nav;
+	private NavigationController nav;
+	private static Object lock;
+	private static boolean running;
 
 	/**
 	 * Constructor creates an underlying arbitrator while providing access to
@@ -28,24 +30,35 @@ public class EventManager extends Thread {
 	public EventManager(NavigationController nav) {
 		this.nav = nav;
 		Behavior behaviors[] = { new LineCorrecter(nav) };
-		this.arbitrator = new Arbitrator(behaviors, true);
+		this.arbitrator = new Arbitrator(behaviors);
+		lock = new Object();
 	}
 
 	/**
 	 * Starts the underlying Arbitrator
 	 */
 	public void run() {
-		while(!this.isInterrupted()){
-			arbitrator.start();
-			try {
-				Thread.sleep(10);
-			} catch (InterruptedException e) {
-				break;
-			}
+		running = true;
+		arbitrator.start();
+	}
+	
+	public static boolean isRunning(){
+		boolean result;
+		synchronized(lock){
+			result = running;
+		}
+		return result;
+	}
+	
+	public void restart(){
+		synchronized(lock){
+			running = true;
 		}
 	}
 
-	public void stop() {
-		this.interrupt();
+	public static void pause() {
+		synchronized(lock){
+			running = false;
+		}
 	}
 }

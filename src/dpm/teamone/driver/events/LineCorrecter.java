@@ -42,16 +42,21 @@ class LineCorrecter implements Behavior {
 			} else {
 				distance = 0;
 			}
+			if(distance >= SENSOR_DIFF*4 ){
+				leftPassed = false;
+				rightPassed = false;
+				passPoint = null;
+				return;
+			}
 			float theta = (float) Math.atan2(distance, SENSOR_DIFF);
 			if(leftFirst){
 				theta = -theta;
 			}
 			theta = (float) (theta/Math.PI * 180);
-			float beleivedHeading = (pose.getHeading() % 90);
-			if(beleivedHeading > 45){
-				beleivedHeading = 90 - beleivedHeading;
-			}
-			float correction = beleivedHeading - theta;
+			Direction dir = Direction.fromAngle(Math.round(theta)); 
+			theta += dir.toAngle();
+			float beleivedHeading = pose.getHeading();
+			float correction = theta - beleivedHeading;
 			pose.rotateUpdate(correction);
 			
 			float x = pose.getX();
@@ -59,22 +64,24 @@ class LineCorrecter implements Behavior {
 			theta = (float) (theta / 180 * Math.PI); 
 			int line;
 			float offset = SENSOR_OFFSET + distance/2;
-			switch(Direction.fromAngle(Math.round(pose.getHeading()))){
+			dir = Direction.fromAngle(Math.round(pose.getHeading()));
+			switch(dir){
 			case EAST:
 			case WEST:
-				x = x/30;
-				line = Math.round(x);
+				line = nav.getMap().getGrid(x);
 				x = (float) (line * 30 + Math.sin(theta) * offset);
 				break;
 			case NORTH:
 			case SOUTH:
-				y = x/30;
-				line = Math.round(y);
+				line = nav.getMap().getGrid(x);
 				y = (float) (line * 30 + Math.sin(theta) * offset);
 				break;
 			}
 			pose.setLocation(x, y);
 			nav.setPose(pose);
+			if(LineLogger.isInit()){
+				LineLogger.addRecord(pose, distance, leftFirst, beleivedHeading, correction, pose.getHeading(), dir);
+			}
 			leftPassed = false;
 			rightPassed = false;
 			passPoint = null;
@@ -96,6 +103,9 @@ class LineCorrecter implements Behavior {
 
 	@Override
 	public boolean takeControl() {
+		if(!EventManager.isRunning()){
+			return false;
+		}
 		boolean left, right;
 		left = (leftSensor.getRawLightValue() < LIGHT_LEVEL);
 		right = (rightSensor.getRawLightValue() < LIGHT_LEVEL);
