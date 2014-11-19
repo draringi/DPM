@@ -38,7 +38,8 @@ public class DriverRobot {
 		map = MapFactory.lab5Map();
 		nav = new NavigationController(map);
 		nav.setDropZone(mapData[MAP_DATA_DROP_X], mapData[MAP_DATA_DROP_Y], 1, 1);
-		nav.setPickUpZone(2, 1, 1, 1);
+		nav.setPickUpZone(2, 1, 1, 1); //Lab 5 map
+		//nav.setPickUpZone(2, 2, 0, 0); //Any 8x8 map
 		nav.localize();
 		events = new EventManager(nav);
 		events.start();

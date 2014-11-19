@@ -324,8 +324,13 @@ public class NavigationController {
 		UltraSonic us = new UltraSonic();
 		int  minAngle = 0;
 		int minVal = 90;
-		for (int i = 0; i < 5; i++){
-			int ang = -(i * 10);
+		for (int i = 2; i < 7; i++){
+			int ang = (i * 10);
+			if(map.getWidth()==4){
+				ang = -ang;
+			} else if(map.getWidth()==8){
+				ang +=180;
+			}
 			turnTo(ang);
 			int val = us.poll();
 			if(val < minVal){
@@ -335,7 +340,7 @@ public class NavigationController {
 		}
 		turnTo(minAngle);
 		pilot.travel(minVal);
-		turnTo(minAngle+5);
+		turnTo(minAngle+4);
 		pilot.travel(5);
 	}
 	
