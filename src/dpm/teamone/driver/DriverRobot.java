@@ -1,6 +1,7 @@
 package dpm.teamone.driver;
 
 import lejos.nxt.Button;
+import lejos.robotics.navigation.Pose;
 import dpm.teamone.driver.communications.BetaComms;
 import dpm.teamone.driver.communications.CommunicationsManager;
 import dpm.teamone.driver.events.EventManager;
@@ -37,12 +38,13 @@ public class DriverRobot {
 		map = MapFactory.getBetaMap(mapData[MAP_DATA_MAP]);
 		//map = MapFactory.lab5Map();
 		nav = new NavigationController(map);
-		nav.setDropZone(mapData[MAP_DATA_DROP_X], mapData[MAP_DATA_DROP_Y], 1, 1);
-		//nav.setPickUpZone(2, 1, 1, 1); //Lab 5 map
+		
+//		nav.setDropZone(mapData[MAP_DATA_DROP_X], mapData[MAP_DATA_DROP_Y], 1, 1);
+//		//nav.setPickUpZone(2, 1, 1, 1); //Lab 5 map
 		nav.setPickUpZone(2, 2, 0, 0); //Any 8x8 map
 		nav.localize();
-		events = new EventManager(nav);
-		//events.start();
+//		//events = new EventManager(nav);
+//		//events.start();
 		nav.driveToPickup();
 		comms.prepareClaw();
 		nav.findObject();

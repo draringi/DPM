@@ -2,6 +2,7 @@ package dpm.teamone.armcontrol;
 
 import lejos.nxt.Motor;
 import lejos.nxt.NXTRegulatedMotor;
+import lejos.nxt.Sound;
 
 /**
  * Arm handles picking up and dropping blocks
@@ -11,12 +12,13 @@ import lejos.nxt.NXTRegulatedMotor;
  */
 public class Arm {
 
-	private static final int GRAB_ANGLE = 0;
+	private static final int GRAB_ANGLE = -40;
 	private static final int RELEASE_ANGLE = 90;
 	private static final int LOWER_ANGLE = 0;
 	private static final int RAISE_ANGLE = -90;
-	private static final NXTRegulatedMotor claw = Motor.A;
+	private static  NXTRegulatedMotor claw = Motor.A;
 	private static final NXTRegulatedMotor arm = Motor.B;
+	
 	private static boolean grabbing = false;
 	private static boolean raised = false;
 	/**
@@ -24,11 +26,14 @@ public class Arm {
 	 */
 	public static void grab() {
 		if(!grabbing){
+			claw.setSpeed(0.2f);
 			claw.rotateTo(GRAB_ANGLE, true);
 			grabbing = true;
 			try{
 				Thread.sleep(500);
 			} catch(Exception e){
+				Sound.beep();
+		
 			}
 		}
 	}

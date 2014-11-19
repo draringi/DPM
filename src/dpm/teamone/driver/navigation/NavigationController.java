@@ -11,6 +11,7 @@ import dpm.teamone.driver.maps.GridMap;
 import lejos.geom.Point;
 import lejos.nxt.Motor;
 import lejos.nxt.NXTRegulatedMotor;
+import lejos.nxt.Sound;
 import lejos.robotics.mapping.LineMap;
 import lejos.robotics.navigation.Pose;
 import lejos.robotics.navigation.Waypoint;
@@ -32,11 +33,11 @@ import lejos.robotics.pathfinding.ShortestPathFinder;
 public class NavigationController {
         
         private static final double WHEEL_DIAMETER=4.1;
-        private static final double TRACK_WIDTH=19.1;
-        private static final double FORWARD_SPEED=10;
-        private static final double ROTATE_SPEED=40;
+        private static final double TRACK_WIDTH=19.96;
+        private static final double FORWARD_SPEED=6;
+        private static final double ROTATE_SPEED=20;
         private static NXTRegulatedMotor LEFT_MOTOR = Motor.A, RIGHT_MOTOR = Motor.B;
-	private DifferentialPilot pilot;
+	public DifferentialPilot pilot;
 	private ArrayList<ArrayList<Node>> paths = new ArrayList<ArrayList<Node>>();
 	private Navigator navigator;
         
@@ -53,7 +54,7 @@ public class NavigationController {
 		 *            Map of course to be used.
 		 */
         public NavigationController(GridMap map){
-        this.pilot= new DifferentialPilot(WHEEL_DIAMETER,TRACK_WIDTH,LEFT_MOTOR,RIGHT_MOTOR);
+        this.pilot= new DifferentialPilot(WHEEL_DIAMETER-0.03,WHEEL_DIAMETER,TRACK_WIDTH,LEFT_MOTOR,RIGHT_MOTOR,false);
         this.navigator= new Navigator(pilot);
         this.map=map;
         this.pilot.setTravelSpeed(FORWARD_SPEED);
@@ -79,7 +80,14 @@ public class NavigationController {
         calculatePaths(currentX, currentY, x, y, path, 0);
         return getShortestPath();
     }
-
+public void forward(){
+	this.pilot.forward();
+	
+}
+public void stop(){
+	this.pilot.stop();
+	
+}
     public Path getPath_TEST(int v, int w, int x, int y) {
         int currentX = v;//X index 
         int currentY = w; // Y index
@@ -300,7 +308,7 @@ public class NavigationController {
 	
 	public void driveToPickup(){
 		driveToGrid(pickupZone[0], pickupZone[1]);
-		turnTo(-45);
+		
 	}
 	
 	public void rotate(int angle){
@@ -319,29 +327,34 @@ public class NavigationController {
 		
 		return this.pilot;
 	}
-	
+	public void setAngle(int ang){
+		Pose p = this.getPose();
+		p.setHeading(ang);
+		this.navigator.getPoseProvider().setPose(p);
+		
+	}
 	public void findObject(){
 		UltraSonic us = new UltraSonic();
+		
+		
 		int  minAngle = 0;
-		int minVal = 90;
-		for (int i = 2; i < 7; i++){
-			int ang = (i * 10);
-			if(map.getWidth()==4){
-				ang = -ang;
-			} else if(map.getWidth()==8){
-				ang +=180;
-			}
-			turnTo(ang);
-			int val = us.poll();
-			if(val < minVal){
-				minVal = val;
-				minAngle = ang;
+		int minVal = 190;
+		int currentAng = 180;
+		this.turnTo(180);
+		while(currentAng< 270){
+			Sound.beep();
+			currentAng+=5;
+			this.turnTo(currentAng);
+			if(us.poll()<minVal){
+				
+				minAngle = currentAng;
+				minVal = us.poll();
 			}
 		}
-		turnTo(minAngle);
-		pilot.travel(minVal);
-		turnTo(minAngle+4);
-		pilot.travel(5);
+		turnTo(minAngle+7);
+		pilot.travel(minVal+6);
+		turnTo(minAngle+10);
+		pilot.travel(4);
 	}
 	
 	/**

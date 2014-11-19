@@ -2,6 +2,7 @@ package dpm.teamone.driver.navigation;
 
 
 import dpm.teamone.driver.maps.GridMap;
+import lejos.geom.Point;
 import lejos.nxt.LCD;
 import lejos.nxt.Sound;
 import lejos.robotics.navigation.Pose;
@@ -78,23 +79,30 @@ public class Localisation {
     	
     }
     public int driveUntilWall(){
-    	  
-    	int interval=30;
-    	int distance = 0;
-    	int threshold=20;
-    	int sensor_distance=sensor.poll();
-    	while(sensor_distance>threshold){
-    	navigation.getPilot().travel(interval);
-    	distance+=interval;
-    	sensor_distance=sensor.poll();
-    	}
-    	Sound.twoBeeps();
+    	 this.navigation.setPose(new Pose(0,0,0));
+    	 Point curr = new Point(0,0);
+    	 int threshold=20;
+    	 int sensor_distance=sensor.poll();
+    	 int distance =0;
+    	 boolean is0 = true;
+    	 while(sensor_distance>threshold){
+    	 this.navigation.forward();
+    	 is0 = false;
+    	 sensor_distance=sensor.poll();
+    	 }
+    	 this.navigation.stop();
+    	 if(is0){
+    	 return 0;
+    	 }
+    	 distance = (int)this.navigation.getPose().distanceTo(curr);
+    	 Sound.twoBeeps();
     	 LCD.clear();
-		 LCD.drawString("Distance :"+normalize(distance+sensor_distance), 0, 4);
-		
-		 
-    	navigation.getPilot().travel(-distance);
-    	return distance+sensor_distance;
+    	 LCD.drawString("Distance :"+normalize(distance+sensor_distance), 0, 4);
+
+
+    	 navigation.getPilot().travel(-distance);
+    	 return distance+sensor_distance;
+    	 
     }
     public Pose localize(int[] inp) {
         Pose initialLocation = null;
