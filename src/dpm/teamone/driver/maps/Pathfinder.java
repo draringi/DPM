@@ -56,7 +56,7 @@ public class Pathfinder {
 		}
 		int x = start[X];
 		int y = start[Y];
-		while (x != end[X] && y != end[Y]){
+		while (x != end[X] || y != end[Y]){
 			int dist = cellList[x][y]; 
 			if(nextStep(x, y+1, dist)){
 				path.addElement(map.convertToWaypoint(x, y+1));
@@ -79,7 +79,6 @@ public class Pathfinder {
 				continue; 
 			}
 		}
-		path.addElement(map.convertToWaypoint(end[X], end[Y]));
 		
 	}
 	
