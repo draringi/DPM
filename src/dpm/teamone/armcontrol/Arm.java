@@ -16,7 +16,7 @@ public class Arm {
 	private static final int RELEASE_ANGLE = 90;
 	private static final int LOWER_ANGLE = 0;
 	private static final int RAISE_ANGLE = -90;
-	private static  NXTRegulatedMotor claw = Motor.A;
+	private static final NXTRegulatedMotor claw = Motor.A;
 	private static final NXTRegulatedMotor arm = Motor.B;
 	
 	private static boolean grabbing = false;

@@ -28,14 +28,24 @@ public class EventManager extends Thread {
 	public EventManager(NavigationController nav) {
 		this.nav = nav;
 		Behavior behaviors[] = { new LineCorrecter(nav) };
-		this.arbitrator = new Arbitrator(behaviors);
+		this.arbitrator = new Arbitrator(behaviors, true);
 	}
 
 	/**
 	 * Starts the underlying Arbitrator
 	 */
 	public void run() {
-		arbitrator.start();
+		while(!this.isInterrupted()){
+			arbitrator.start();
+			try {
+				Thread.sleep(10);
+			} catch (InterruptedException e) {
+				break;
+			}
+		}
 	}
 
+	public void stop() {
+		this.interrupt();
+	}
 }
