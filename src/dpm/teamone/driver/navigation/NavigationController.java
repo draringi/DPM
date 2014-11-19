@@ -32,8 +32,8 @@ import lejos.robotics.pathfinding.ShortestPathFinder;
  */
 public class NavigationController {
         
-        private static final double WHEEL_DIAMETER=4.1;
-        private static final double TRACK_WIDTH=19.96;
+        private static final double WHEEL_DIAMETER=4.2;
+        private static final double TRACK_WIDTH=18.5;
         private static final double FORWARD_SPEED=6;
         private static final double ROTATE_SPEED=20;
         private static NXTRegulatedMotor LEFT_MOTOR = Motor.A, RIGHT_MOTOR = Motor.B;
