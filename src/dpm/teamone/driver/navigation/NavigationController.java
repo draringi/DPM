@@ -303,6 +303,14 @@ public class NavigationController {
 		turnTo(-45);
 	}
 	
+	public void rotate(int angle){
+		this.pilot.rotate(angle);
+	}
+	
+	public void rotate(double angle){
+		this.pilot.rotate(angle);
+	}
+	
 	public void driveToDrop(){
 		driveToGrid(dropZone[0], dropZone[1]);
 	}
@@ -313,7 +321,22 @@ public class NavigationController {
 	}
 	
 	public void findObject(){
-		
+		UltraSonic us = new UltraSonic();
+		int  minAngle = 0;
+		int minVal = 90;
+		for (int i = 0; i < 5; i++){
+			int ang = -(i * 10);
+			turnTo(ang);
+			int val = us.poll();
+			if(val < minVal){
+				minVal = val;
+				minAngle = ang;
+			}
+		}
+		turnTo(minAngle);
+		pilot.travel(minVal);
+		turnTo(minAngle+5);
+		pilot.travel(5);
 	}
 	
 	/**
@@ -323,7 +346,7 @@ public class NavigationController {
 	 *            Angle clockwise from East (Positive x-axis)
 	 */
 	public void turnTo(double angle) {
-            this.pilot.rotate(angle);       //Rotates to specified angle
+		navigator.rotateTo(angle);       //Rotates to specified angle
 	}
         
 	/**

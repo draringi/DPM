@@ -51,12 +51,12 @@ public class Localisation {
            if(sensor.poll()<20){
         	   Sound.beep();
         	   inp[x]=0;
-        	   this.navigation.turnTo(-90);
+        	   this.navigation.rotate(-90);
            }
            else {
         	   
         	   inp[x] = normalize(getDistance());
-        	   this.navigation.turnTo(-90);
+        	   this.navigation.rotate(-90);
            }
 
         }
