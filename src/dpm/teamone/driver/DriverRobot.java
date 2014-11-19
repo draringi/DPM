@@ -25,7 +25,7 @@ public class DriverRobot {
 	 * @param args
 	 */
 	public static void main(String[] args) {
-		EventManager events;
+		//EventManager events;
 		NavigationController nav;
 		GridMap map;
 		CommunicationsManager comms = new CommunicationsManager();
@@ -33,19 +33,19 @@ public class DriverRobot {
 		int mapData[] = new int[MAP_DATA_LENGTH];
 		//beta.waitForMap(mapData);
 		mapData[MAP_DATA_MAP] = BETA_MAP;
-		//comms.prepareTravel();
+		comms.prepareTravel();
 		//map = MapFactory.getMap(mapData[MAP_DATA_MAP]);
-		//map = MapFactory.getBetaMap(mapData[MAP_DATA_MAP]);
-		map = MapFactory.lab5Map();
+		map = MapFactory.getBetaMap(mapData[MAP_DATA_MAP]);
+		//map = MapFactory.lab5Map();
 		nav = new NavigationController(map);
 		
 //		nav.setDropZone(mapData[MAP_DATA_DROP_X], mapData[MAP_DATA_DROP_Y], 1, 1);
-//		//nav.setPickUpZone(2, 1, 1, 1); //Lab 5 map
-		//nav.setPickUpZone(3, 1, 0, 0); //Any 8x8 map
-		//nav.localize();
+		//nav.setPickUpZone(3, 1, 1, 1); //Lab 5 map
+		nav.setPickUpZone(2, 2, 0, 0); //Any 8x8 map
+		nav.localize();
 		//events = new EventManager(nav);
-		//e/vents.start();
-		//nav.driveToPickup();
+		//events.start();
+		nav.driveToPickup();
 		comms.prepareClaw();
 		nav.findObject();
 		comms.grabObject();
@@ -55,7 +55,7 @@ public class DriverRobot {
 		Button.waitForAnyPress();
 	}
 	
-	private static final int BETA_MAP = 3;
+	private static final int BETA_MAP = 2;
 
 	/**
 	 * Length of a map data array. Has a value of {@value}

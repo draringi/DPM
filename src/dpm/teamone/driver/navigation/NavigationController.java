@@ -32,9 +32,9 @@ import lejos.robotics.pathfinding.ShortestPathFinder;
  */
 public class NavigationController {
         
-        private static final double WHEEL_DIAMETER=4.2;
-        private static final double TRACK_WIDTH=18.5;
-        private static final double FORWARD_SPEED=6;
+        private static final double WHEEL_DIAMETER=4.1;
+        private static final double TRACK_WIDTH=19.8;
+        private static final double FORWARD_SPEED=10;
         private static final double ROTATE_SPEED=20;
         private static NXTRegulatedMotor LEFT_MOTOR = Motor.A, RIGHT_MOTOR = Motor.B;
 	public DifferentialPilot pilot;
@@ -54,7 +54,7 @@ public class NavigationController {
 		 *            Map of course to be used.
 		 */
         public NavigationController(GridMap map){
-        this.pilot= new DifferentialPilot(WHEEL_DIAMETER-0.03,WHEEL_DIAMETER,TRACK_WIDTH,LEFT_MOTOR,RIGHT_MOTOR,false);
+        this.pilot= new DifferentialPilot(WHEEL_DIAMETER,WHEEL_DIAMETER,TRACK_WIDTH,LEFT_MOTOR,RIGHT_MOTOR,false);
         this.navigator= new Navigator(pilot);
         this.map=map;
         this.pilot.setTravelSpeed(FORWARD_SPEED);
@@ -343,11 +343,11 @@ public void stop(){
 		
 		int  minAngle = 0;
 		int minVal = 190;
-		int currentAng = 180;
+		int currentAng = 200;
 		this.turnTo(180);
-		while(currentAng< 270){
+		while(currentAng< 250){
 			Sound.beep();
-			currentAng+=5;
+			currentAng+=2;
 			this.turnTo(currentAng);
 			if(us.poll()<minVal){
 				
@@ -355,10 +355,11 @@ public void stop(){
 				minVal = us.poll();
 			}
 		}
+		turnTo(minAngle+5);
+		pilot.travel(minVal);
 		turnTo(minAngle+7);
-		pilot.travel(minVal+6);
-		turnTo(minAngle+10);
-		pilot.travel(4);
+		pilot.travel(3);
+		turnTo(minAngle+2);
 	}
 	
 	/**

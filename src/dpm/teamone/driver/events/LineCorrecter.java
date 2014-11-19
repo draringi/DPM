@@ -58,7 +58,7 @@ class LineCorrecter implements Behavior {
 			float beleivedHeading = pose.getHeading();
 			float correction = beleivedHeading - theta;
 			pose.rotateUpdate(correction);
-			
+			/*
 			float x = pose.getX();
 			float y = pose.getY();
 			theta = (float) (theta / 180 * Math.PI); 
@@ -76,8 +76,8 @@ class LineCorrecter implements Behavior {
 				line = nav.getMap().getGrid(x);
 				y = (float) (line * 30 + Math.sin(theta) * offset);
 				break;
-			}
-			pose.setLocation(x, y);
+			}*/
+			//pose.setLocation(x, y);
 			nav.setPose(pose);
 			if(LineLogger.isInit()){
 				LineLogger.addRecord(pose, distance, leftFirst, beleivedHeading, correction, pose.getHeading(), dir);

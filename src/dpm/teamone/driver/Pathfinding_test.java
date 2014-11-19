@@ -13,10 +13,10 @@ public class Pathfinding_test {
 	public static void main(String[] args) {
 		RConsole.openUSB(0);
 		//GridMap map = MapFactory.getBetaMap(3);
-		GridMap map = MapFactory.getBetaMap(3);
+		GridMap map = MapFactory.getBetaMap(2);
 		String str = "w: " + map.getWidth() + "\t h: " + map.getHeight(); 
 		RConsole.println(str);
-		Point start = new Point(135,45);
+		Point start = new Point(135,105);
 		Point end = new Point(45, 45);
 		str = "start: (" + map.getGrid(start.x) +", " +map.getGrid(start.y)+")\tend: (" + map.getGrid(end.x) +", " +map.getGrid(end.y)+")";
 		RConsole.println(str);
@@ -30,7 +30,7 @@ public class Pathfinding_test {
 		int s[] = new int[2];
 		int e[] = new int[2];
 		s[0] = 5;
-		s[1] = 2;
+		s[1] = 4;
 		e[0] = 2;
 		e[1] = 2;
 		pfinder.findPath(s, e);
