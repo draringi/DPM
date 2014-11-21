@@ -109,4 +109,8 @@ public class MapFactory {
 		map.set(7, 6);
 		return map;
 	}
+	
+	public static GridMap blankMap(){
+		return new GridMap(4, 4);
+	}
 }

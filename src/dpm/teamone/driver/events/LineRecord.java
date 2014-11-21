@@ -8,9 +8,9 @@ public class LineRecord{
 	public float believedAngle, angleOffset, realAngle;
 	public boolean leftFirst;
 	public float dist;
-	public Pose status;
+	public Pose status, previous;
 	
-	public LineRecord(Pose status, float dist, boolean leftFirst, float believed, float offset, float real, Direction dir){
+	public LineRecord(Pose status, float dist, boolean leftFirst, float believed, float offset, float real, Direction dir, Pose previous){
 		this.status = status;
 		this.dist = dist;
 		this.leftFirst = leftFirst;
@@ -18,5 +18,6 @@ public class LineRecord{
 		this.angleOffset = offset;
 		this.realAngle = real;
 		this.dir = dir;
+		this.previous = previous;
 	}
 }

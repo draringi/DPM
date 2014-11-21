@@ -2,6 +2,7 @@ package dpm.teamone.driver;
 
 import lejos.nxt.Button;
 import lejos.nxt.comm.RConsole;
+import lejos.robotics.navigation.Pose;
 import dpm.teamone.driver.events.EventManager;
 import dpm.teamone.driver.events.LineLogger;
 import dpm.teamone.driver.events.LineRecord;
@@ -12,11 +13,16 @@ public class correction_test {
 
 	public static void main(String[] args) {
 		Button.waitForAnyPress();
-		NavigationController nav = new NavigationController(MapFactory.lab5Map());
-		nav.localize();
+		NavigationController nav = new NavigationController(MapFactory.blankMap());
+		nav.setPose(new Pose(-15, -15, 0));
 		LineLogger.Init();
 		EventManager events = new EventManager(nav);
 		events.start();
+		//nav.driveToGrid(0, 0);
+		//nav.driveToGrid(1, 0);
+		//nav.driveToGrid(2, 0);
+		nav.driveToGrid(3, 0);
+		nav.driveToGrid(3, 3);
 		nav.driveToGrid(0, 0);
 		EventManager.pause();
 		RConsole.openUSB(0);
@@ -40,6 +46,8 @@ public class correction_test {
 			str = "Which is " + record.dir.toString();
 			RConsole.println(str);
 			str = "Status: " + record.status;
+			RConsole.println(str);
+			str = "Previous Status: " + record.previous;
 			RConsole.println(str);
 			RConsole.print("\n");
 		}

@@ -23,8 +23,8 @@ public class LineLogger {
 		records.push(record);
 	}
 	
-	public static void addRecord(Pose status, float dist, boolean leftFirst, float believed, float offset, float real, Direction dir){
-		records.push(new LineRecord(status, dist, leftFirst, believed, offset, real, dir));
+	public static void addRecord(Pose status, float dist, boolean leftFirst, float believed, float offset, float real, Direction dir, Pose prev){
+		records.push(new LineRecord(status, dist, leftFirst, believed, offset, real, dir, prev));
 	}
 	
 	public static boolean hasRecords(){

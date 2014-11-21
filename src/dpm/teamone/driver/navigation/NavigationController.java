@@ -213,6 +213,9 @@ public void stop(){
         		}
         	}
         }
+        public void correctPath(){
+        	this.navigator.followPath();
+        }
         
         /**
          * Drives the robot to the requested co-ordinates
