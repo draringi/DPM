@@ -50,7 +50,7 @@ public class EventManager extends Thread {
 		return result;
 	}
 	
-	public void restart(){
+	public static void restart(){
 		synchronized(lock){
 			running = true;
 		}

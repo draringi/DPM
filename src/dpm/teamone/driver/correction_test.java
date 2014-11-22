@@ -1,6 +1,7 @@
 package dpm.teamone.driver;
 
 import lejos.nxt.Button;
+import lejos.nxt.LCD;
 import lejos.nxt.comm.RConsole;
 import lejos.robotics.navigation.Pose;
 import dpm.teamone.driver.events.EventManager;
@@ -21,12 +22,15 @@ public class correction_test {
 		//nav.driveToGrid(0, 0);
 		//nav.driveToGrid(1, 0);
 		//nav.driveToGrid(2, 0);
+		//nav.driveToGrid(1, 1);
+		nav.driveToGrid(3, 3);
 		nav.driveToGrid(1, 1);
-		nav.driveToGrid(2, 2);
-		nav.driveToGrid(0, 2);
-		nav.driveToGrid(2, 0);
+		//nav.driveToGrid(2, 0);
 		EventManager.pause();
-		nav.turnTo(0);
+		//nav.turnTo(0);
+		nav.turnTo(180);
+		Pose pose = nav.getPose();
+		LCD.drawInt(Math.round((pose.getX() * 10)), 0, 2);
 		RConsole.openUSB(0);
 		int i = 0;
 		while(LineLogger.hasRecords()){

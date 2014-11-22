@@ -7,6 +7,7 @@ import java.util.List;
 
 import lejos.robotics.navigation.DifferentialPilot;
 import lejos.robotics.navigation.Navigator;
+import dpm.teamone.driver.events.EventManager;
 import dpm.teamone.driver.maps.GridMap;
 import lejos.geom.Point;
 import lejos.nxt.Motor;
@@ -204,13 +205,20 @@ public void stop(){
          *            path to follow
          */
         public void followPath(Path route){
-        	this.navigator.followPath(route);
+        	this.navigator.setPath(route);
+        	this.navigator.singleStep(true);
         	boolean done = false;
         	while(!done){
+        		EventManager.pause();
+        		Waypoint wp = this.navigator.getWaypoint();
+        		this.navigator.rotateTo(this.getPose().angleTo(wp));
+        		this.navigator.followPath();
+        		try {
+					Thread.sleep(1000);
+				} catch (InterruptedException e) {
+				}
+        		EventManager.restart();
         		done = this.navigator.waitForStop();
-        		if(!done){
-        			this.navigator.followPath();
-        		}
         	}
         }
         public void correctPath(){
