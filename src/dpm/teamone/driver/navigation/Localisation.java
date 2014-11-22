@@ -161,11 +161,12 @@ public class Localisation {
 						int[] surr = computeSur(x, y, ori);
 						if (isMatch(surr, inp)) {
 							Sound.twoBeeps();
-//							initialLocation = new Pose((float) map.getPos(x),
-//									(float) map.getPos(y), getAngle(ori));
-							initialLocation = new Pose(x,
-									y, ori);
-							matches.add(initialLocation);
+////							initialLocation = new Pose((float) map.getPos(x),
+////									(float) map.getPos(y), getAngle(ori));
+//							initialLocation = new Pose(x,
+//									y, ori);
+//							matches.add(initialLocation);
+							return new Pose((float) map.getPos((int)initialLocation.getX()),(float) map.getPos((int)initialLocation.getY()), getAngle((int)initialLocation.getHeading()));
 						}
 					}
 				}
@@ -186,6 +187,7 @@ public class Localisation {
 			initialLocation = matches.get(i);
 			currentLocation = getCurrentLocation(initialLocation);
 			if(isMatch(surr,computeSur((int)currentLocation.getX(), (int)currentLocation.getY(), (int) currentLocation.getHeading()))){
+				
 				initialLocation = new Pose((float) map.getPos((int)initialLocation.getX()),(float) map.getPos((int)initialLocation.getY()), getAngle((int)initialLocation.getHeading()));
 				currentLocation =  new Pose((float) map.getPos((int)currentLocation.getX()),(float) map.getPos((int)currentLocation.getY()), getAngle((int)currentLocation.getHeading()));
 				this.navigation.setPose(currentLocation);
