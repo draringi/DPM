@@ -21,10 +21,12 @@ public class correction_test {
 		//nav.driveToGrid(0, 0);
 		//nav.driveToGrid(1, 0);
 		//nav.driveToGrid(2, 0);
-		nav.driveToGrid(3, 0);
-		nav.driveToGrid(3, 3);
-		nav.driveToGrid(0, 0);
+		nav.driveToGrid(1, 1);
+		nav.driveToGrid(2, 2);
+		nav.driveToGrid(0, 2);
+		nav.driveToGrid(2, 0);
 		EventManager.pause();
+		nav.turnTo(0);
 		RConsole.openUSB(0);
 		int i = 0;
 		while(LineLogger.hasRecords()){

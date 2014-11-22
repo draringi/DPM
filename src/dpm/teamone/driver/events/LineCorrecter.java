@@ -19,7 +19,7 @@ class LineCorrecter implements Behavior {
 	private static final float SENSOR_OFFSET = (float) 12.6; 
 	private static final float SENSOR_DIFF = (float) 11.1;
 	private NavigationController nav;
-	private boolean leftPassed, rightPassed, leftFirst, passSet;
+	private boolean leftPassed, rightPassed, leftFirst;
 	private Point passPoint;
 
 	protected LineCorrecter(NavigationController nav){
@@ -31,7 +31,6 @@ class LineCorrecter implements Behavior {
 		this.leftPassed = false;
 		this.rightPassed = false;
 		this.leftFirst = false;
-		this.passSet = false;
 		this.passPoint = null;
 	}
 	
@@ -41,15 +40,17 @@ class LineCorrecter implements Behavior {
 		if(leftPassed && rightPassed){
 			float distance;
 			if(passPoint!=null){
-				Sound.beepSequence();
+				Sound.beepSequenceUp();
 				distance = pose.distanceTo(passPoint);
 			} else {
 				distance = 0;
 			}
-			if(distance >= SENSOR_DIFF*4 ){
-				leftPassed = false;
-				rightPassed = false;
-				passPoint = null;
+			if(distance >= SENSOR_DIFF ){
+				Sound.buzz();
+				this.leftPassed = false;
+				this.rightPassed = false;
+				this.leftFirst = false;
+				this.passPoint = null;
 				return;
 			}
 			float theta = (float) Math.atan2(distance, SENSOR_DIFF);
@@ -87,23 +88,19 @@ class LineCorrecter implements Behavior {
 			this.nav.setPose(pose);
 			this.leftPassed = false;
 			this.rightPassed = false;
+			this.leftFirst = false;
 			this.passPoint = null;
-			this.passSet = false;
-			Sound.beep();
 			try{
-				Thread.sleep(100);
+				Thread.sleep(1000);
 			} catch (Exception e){
 			}
 			return;
-		} else if(leftPassed && !passSet){
+		} else if(leftPassed){
 			this.leftFirst = true;
 			this.passPoint = pose.getLocation();
-			this.passSet = true;
-			Sound.beepSequence();
-		} else if (!passSet) {
+		} else {
 			this.leftFirst = false;
 			this.passPoint = pose.getLocation();
-			this.passSet = true;
 		}
 	}
 
@@ -117,13 +114,16 @@ class LineCorrecter implements Behavior {
 		if(!EventManager.isRunning()){
 			return false;
 		}
-		boolean left, right;
+		boolean left, right, change;
 		left = (leftSensor.getRawLightValue() < LIGHT_LEVEL);
 		right = (rightSensor.getRawLightValue() < LIGHT_LEVEL);
+		change = (left && !leftPassed)||(right && !rightPassed);
+		if(!change){
+			return false;
+		}
 		this.rightPassed = rightPassed || right;
 		this.leftPassed = leftPassed || left;
-		
-		return (left || right);
+		return true;
 	}
 
 }
