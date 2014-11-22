@@ -16,8 +16,8 @@ class LineCorrecter implements Behavior {
 	private static final SensorPort RIGHT_LIGHT_PORT = SensorPort.S2, LEFT_LIGHT_PORT = SensorPort.S3;
 	private ColorSensor leftSensor, rightSensor;
 	private static final int LIGHT_LEVEL = 500;
-	private static final float SENSOR_OFFSET = (float) 7.5; 
-	private static final float SENSOR_DIFF = (float) 4.8;
+	private static final float SENSOR_OFFSET = (float) 12.6; 
+	private static final float SENSOR_DIFF = (float) 11.1;
 	private NavigationController nav;
 	private boolean leftPassed, rightPassed, leftFirst, passSet;
 	private Point passPoint;
