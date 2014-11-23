@@ -308,17 +308,12 @@ public void stop(){
 	
 	public void localize(){
 		LCDinfo lcd = new LCDinfo();
-		Localisation localizer = new Localisation(this.map);
+		Localisation localizer = new Localisation(this.map, this);
 		Pose startingPoint = localizer.performLocalisation();
 		int x = map.getGrid(startingPoint.getX());
 		int y = map.getGrid(startingPoint.getY());
 		Direction dir = Direction.fromAngle(Math.round(startingPoint.getHeading()));
 		lcd.setStartPos(x, y, dir);
-		Point loc = this.getPose().getLocation().add(startingPoint.getLocation());
-		Pose status = this.getPose();
-		status.setLocation(loc);
-		status.rotateUpdate(startingPoint.getHeading());
-		this.setPose(status);
 	}
 	
 	public void driveToPickup(){

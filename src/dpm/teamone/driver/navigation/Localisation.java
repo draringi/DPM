@@ -161,12 +161,12 @@ public class Localisation {
 						int[] surr = computeSur(x, y, ori);
 						if (isMatch(surr, inp)) {
 							Sound.twoBeeps();
-////							initialLocation = new Pose((float) map.getPos(x),
-////									(float) map.getPos(y), getAngle(ori));
-//							initialLocation = new Pose(x,
-//									y, ori);
-//							matches.add(initialLocation);
-							return new Pose((float) map.getPos((int)initialLocation.getX()),(float) map.getPos((int)initialLocation.getY()), getAngle((int)initialLocation.getHeading()));
+							initialLocation = new Pose((float) map.getPos(x),(float) map.getPos(y), getAngle(ori));
+							currentLocation = getCurrentLocation(initialLocation);
+							//matches.add(initialLocation);
+							//return initialLocation;
+							return getCurrentLocation(initialLocation);
+							//return new Pose((float) map.getPos((int)initialLocation.getX()),(float) map.getPos((int)initialLocation.getY()), getAngle((int)initialLocation.getHeading()));
 						}
 					}
 				}
@@ -392,7 +392,7 @@ else if(heading==3){
 	 * @return Array of theoritical distances
 	 */
 	private int normalize(int inp) {
-		return (((inp) / (this.map.TILE_SIZE)) * this.map.TILE_SIZE);
+		return map.getGrid(inp, true) * map.TILE_SIZE;
 	}
 
 }
