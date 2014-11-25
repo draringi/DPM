@@ -33,8 +33,8 @@ import lejos.robotics.pathfinding.ShortestPathFinder;
  */
 public class NavigationController {
         
-        private static final double WHEEL_DIAMETER=4.1;
-        private static final double TRACK_WIDTH=19.8;
+        private static final double WHEEL_DIAMETER=4.0;
+        private static final double TRACK_WIDTH=19.2;
         private static final double FORWARD_SPEED=10;
         private static final double ROTATE_SPEED=20;
         private static NXTRegulatedMotor LEFT_MOTOR = Motor.A, RIGHT_MOTOR = Motor.B;
@@ -211,6 +211,8 @@ public void stop(){
         	while(!done){
         		EventManager.pause();
         		Waypoint wp = this.navigator.getWaypoint();
+        		LEFT_MOTOR.flt(true);
+        		RIGHT_MOTOR.flt(true);
         		this.navigator.rotateTo(this.getPose().angleTo(wp));
         		this.navigator.followPath();
         		try {
