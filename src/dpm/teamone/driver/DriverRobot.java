@@ -16,7 +16,7 @@ import dpm.teamone.driver.navigation.NavigationController;
  */
 public class DriverRobot {
 
-	private static final int BETA_MAP = 2;
+	private static final int BETA_MAP = 1;
 
 	/**
 	 * Index of map data array for the location of the drop zone in the x-axis.
@@ -57,25 +57,23 @@ public class DriverRobot {
 		NavigationController nav;
 		GridMap map;
 		CommunicationsManager comms = new CommunicationsManager();
-		// BetaComms beta = new BetaComms(); // I hate this class and will kill
-		// it as soon as possible,
 		int mapData[] = new int[MAP_DATA_LENGTH];
 		// beta.waitForMap(mapData);
 		mapData[MAP_DATA_MAP] = BETA_MAP;
 		comms.prepareTravel();
 		// map = MapFactory.getMap(mapData[MAP_DATA_MAP]);
-		// map = MapFactory.getBetaMap(mapData[MAP_DATA_MAP]);
-		map = MapFactory.lab5Map();
+		map = MapFactory.getBetaMap(mapData[MAP_DATA_MAP]);
+		//map = MapFactory.lab5Map();
 		nav = new NavigationController(map);
 
 		// nav.setDropZone(mapData[MAP_DATA_DROP_X], mapData[MAP_DATA_DROP_Y],
 		// 1, 1);
-		nav.setPickUpZone(3, 1, 1, 1); // Lab 5 map
-		// nav.setPickUpZone(2, 2, 0, 0); //Any 8x8 map
+		//nav.setPickUpZone(3, 1, 1, 1); // Lab 5 map
+		nav.setPickUpZone(2, 2, 0, 0); //Any 8x8 map
 		nav.localize();
 		events = new EventManager(nav);
-		// events.start();
-		// nav.driveToPickup();
+		events.start();
+		nav.driveToPickup();
 		// comms.prepareClaw();
 		// nav.findObject();
 		// comms.grabObject();
