@@ -5,12 +5,12 @@ package dpm.teamone.driver.communications;
  * exports the commands and events for the main thread to use.
  * 
  * @author Michael Williams
- *
+ * 
  */
 public class CommunicationsManager {
 
-	private ControlComms cnc;
-	private TruckComms truck;
+	private final ControlComms cnc;
+	private final TruckComms truck;
 
 	/**
 	 * Standard Constructor, Creates the individual communication modules and
@@ -20,6 +20,22 @@ public class CommunicationsManager {
 		this.cnc = new ControlComms();
 		this.truck = new TruckComms();
 		truck.setup();
+	}
+
+	public void grabObject() {
+		this.truck.pickUp();
+	}
+
+	public void prepareClaw() {
+		this.truck.armClaw();
+	}
+
+	public void prepareTravel() {
+		this.truck.travel();
+	}
+
+	public void releaseObject() {
+		this.truck.drop();
 	}
 
 	/**
@@ -32,21 +48,5 @@ public class CommunicationsManager {
 	public void waitForMap(int[] mapData) {
 		this.cnc.setup();
 		this.cnc.getMapData(mapData);
-	}
-
-	public void grabObject(){
-		this.truck.pickUp();
-	}
-	
-	public void releaseObject(){
-		this.truck.drop();
-	}
-	
-	public void prepareClaw(){
-		this.truck.armClaw();
-	}
-	
-	public void prepareTravel(){
-		this.truck.travel();
 	}
 }

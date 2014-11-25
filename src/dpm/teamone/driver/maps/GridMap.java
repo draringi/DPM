@@ -1,17 +1,15 @@
- 
 package dpm.teamone.driver.maps;
 
 import java.util.ArrayList;
 import java.util.BitSet;
 
-import lejos.robotics.mapping.LineMap;
-import lejos.robotics.navigation.Waypoint;
-import lejos.robotics.pathfinding.FourWayGridMesh;
-import lejos.robotics.pathfinding.NavigationMesh;
-import lejos.robotics.pathfinding.Path;
+import lejos.geom.Line;
 import lejos.geom.Point;
 import lejos.geom.Rectangle;
-import lejos.geom.Line;
+import lejos.robotics.mapping.LineMap;
+import lejos.robotics.navigation.Waypoint;
+import lejos.robotics.pathfinding.NavigationMesh;
+import lejos.robotics.pathfinding.Path;
 
 /**
  * The GridMap provides an easy way to create maps for the robot, working on a
@@ -19,19 +17,19 @@ import lejos.geom.Line;
  * GridMeshes
  * 
  * @author Michael Williams
- * @author Mehdi  Benguerrah
+ * @author Mehdi Benguerrah
  */
 public class GridMap {
 
-	private BitSet bitset;
+	private static final float CLEARANCE = 1;
 
-	private int width, height;
+	private final BitSet bitset;
 
 	private LineMap linemap;
 	private NavigationMesh mesh;
 
-	public  final int TILE_SIZE = 30;
-	private static final float CLEARANCE = 1;
+	public final int TILE_SIZE = 30;
+	private final int width, height;
 
 	/**
 	 * Create an empty map with the provided height and width
@@ -44,73 +42,84 @@ public class GridMap {
 	public GridMap(int width, int height) {
 		this.width = width;
 		this.height = height;
-		this.bitset = new BitSet(width*height);
+		this.bitset = new BitSet(width * height);
 	}
-	
-	public Point convertToPoint(int x, int y){
-		return new Point((float)this.getPos(x), (float)this.getPos(y));
+
+	public boolean blocked(int x, int y) {
+		if (!(valid(x, y))) {
+			return true;
+		}
+		return bitset.get(getIndex(x, y));
 	}
-	
-	public Waypoint convertToWaypoint(int x, int y){
+
+	public Point convertToPoint(int x, int y) {
+		return new Point((float) this.getPos(x), (float) this.getPos(y));
+	}
+
+	public Waypoint convertToWaypoint(int x, int y) {
 		return new Waypoint(this.convertToPoint(x, y));
 	}
-	
-	public Path getPath(Point start, Point end){
-		Pathfinder finder = new Pathfinder(this);
-		int s[] = new int[2];
-		int e[] = new int[2];
-		s[0] = getGrid(start.x);
-		s[1] = getGrid(start.y);
-		e[0] = getGrid(end.x);
-		e[1] = getGrid(end.y);
-		finder.findPath(s, e);
-		Path path = new Path();
-		while(finder.isPath()){
-			path.add(finder.getNext());
+
+	/**
+	 * Actual Constructor of the GridMesh
+	 * 
+	 * @return GridMesh representing the GridMap
+	 */
+	private NavigationMesh generateGridMesh() {
+		// return new FourWayGridMesh(this.getLineMap(), TILE_SIZE, CLEARANCE);
+		return new GridMesh(this);
+	}
+
+	/**
+	 * Actual Constructor of the LineMap
+	 * 
+	 * @return LineMap equivalent of the GridMap
+	 */
+	private LineMap generateLineMap() {
+		Rectangle rect = new Rectangle(-TILE_SIZE, -TILE_SIZE, width
+				* TILE_SIZE, height * TILE_SIZE);
+		ArrayList<Line> lines = new ArrayList<Line>();
+		// Add surrounding wall
+		lines.add(new Line((width - 1) * TILE_SIZE, -TILE_SIZE, -TILE_SIZE,
+				-TILE_SIZE));
+		lines.add(new Line((width - 1) * TILE_SIZE, (height - 1) * TILE_SIZE,
+				-TILE_SIZE, (height - 1) * TILE_SIZE));
+		lines.add(new Line((width - 1) * TILE_SIZE, (height - 1) * TILE_SIZE,
+				(width - 1) * TILE_SIZE, -TILE_SIZE));
+		lines.add(new Line(-TILE_SIZE, (height - 1) * TILE_SIZE, -TILE_SIZE,
+				-TILE_SIZE));
+		for (int x = 0; x < width; x++) {
+			for (int y = 0; y < height; y++) {
+				if (bitset.get(getIndex(x, y))) {
+					lines.add(new Line((x - 1) * TILE_SIZE, y * TILE_SIZE, x
+							* TILE_SIZE, y * TILE_SIZE));
+					lines.add(new Line((x - 1) * TILE_SIZE,
+							(y - 1) * TILE_SIZE, x * TILE_SIZE, (y - 1)
+									* TILE_SIZE));
+					lines.add(new Line((x - 1) * TILE_SIZE,
+							(y - 1) * TILE_SIZE, (x - 1) * TILE_SIZE, y
+									* TILE_SIZE));
+					lines.add(new Line(x * TILE_SIZE, (y - 1) * TILE_SIZE, x
+							* TILE_SIZE, y * TILE_SIZE));
+				}
+			}
 		}
-		return path;
+		return new LineMap(lines.toArray(new Line[lines.size()]), rect);
+	}
+
+	public int getGrid(double val) {
+		return getGrid(val, false);
 	}
 
 	/**
-	 * Returns the internal index in the BitSet for a given position
-	 * 
-	 * @param x
-	 *            x-axis location
-	 * @param y
-	 *            y-axis location
-	 * @return Internal Index
+	 * Converts double from the odometer system into grid id value
 	 */
-	protected int getIndex(int x, int y) {
-		return width * y + x;
-	}
-
-	/**
-	 * Sets the provided location as a wall
-	 * 
-	 * @param x
-	 *            x-axis location
-	 * @param y
-	 *            y-axis location
-	 */
-
-	protected void set(int x, int y){
-		this.bitset.set(getIndex(x, y));
-	}
-
-	/**
-	 * 
-	 * @return Height of the GridMap
-	 */
-	public int getHeight() {
-		return this.height;
-	}
-
-	/**
-	 * 
-	 * @return Width of the GridMap
-	 */
-	public int getWidth() {
-		return this.width;
+	public int getGrid(double val, boolean orienteering) {
+		val /= 30;
+		if (!orienteering) {
+			val = Math.ceil(val);
+		}
+		return (int) Math.round(val);
 	}
 
 	/**
@@ -126,29 +135,26 @@ public class GridMap {
 	}
 
 	/**
-	 * Actual Constructor of the GridMesh
 	 * 
-	 * @return GridMesh representing the GridMap
+	 * @return Height of the GridMap
 	 */
-	private NavigationMesh generateGridMesh() {
-		//return new FourWayGridMesh(this.getLineMap(), TILE_SIZE, CLEARANCE);
-		return new GridMesh(this);
+	public int getHeight() {
+		return this.height;
 	}
 
 	/**
-	 * Lazy Constructor of the LineMap
+	 * Returns the internal index in the BitSet for a given position
 	 * 
-	 * @return LineMap equivalent of the GridMap
+	 * @param x
+	 *            x-axis location
+	 * @param y
+	 *            y-axis location
+	 * @return Internal Index
 	 */
-        public boolean isObstacle(int x,int y){
-            boolean obstacle = false;
-            try{
-     obstacle = bitset.get(getIndex(x, y));}
-            catch(Exception e){
-           
-            }
-        return obstacle;
-        }
+	protected int getIndex(int x, int y) {
+		return (width * y) + x;
+	}
+
 	public LineMap getLineMap() {
 		if (linemap == null) {
 			linemap = generateLineMap();
@@ -156,30 +162,20 @@ public class GridMap {
 		return linemap;
 	}
 
-	/**
-	 * Actual Constructor of the LineMap
-	 * 
-	 * @return LineMap equivalent of the GridMap
-	 */
-	private LineMap generateLineMap() {
-		Rectangle rect = new Rectangle(-TILE_SIZE, -TILE_SIZE, width*TILE_SIZE, height*TILE_SIZE);
-		ArrayList<Line> lines = new ArrayList<Line>();
-		//Add surrounding wall
-		lines.add(new Line((width - 1)*TILE_SIZE, -TILE_SIZE, -TILE_SIZE, -TILE_SIZE));
-		lines.add(new Line((width - 1)*TILE_SIZE, (height - 1)*TILE_SIZE, -TILE_SIZE, (height - 1)*TILE_SIZE));
-		lines.add(new Line((width - 1)*TILE_SIZE, (height - 1)*TILE_SIZE, (width - 1)*TILE_SIZE, -TILE_SIZE));
-		lines.add(new Line(-TILE_SIZE, (height - 1)*TILE_SIZE, -TILE_SIZE, -TILE_SIZE));
-		for(int x=0; x < width; x++){
-			for(int y=0; y < height; y++){
-				if(bitset.get(getIndex(x, y))){
-					lines.add(new Line((x-1)*TILE_SIZE, y*TILE_SIZE, x*TILE_SIZE, y*TILE_SIZE));
-					lines.add(new Line((x-1)*TILE_SIZE, (y-1)*TILE_SIZE, x*TILE_SIZE, (y-1)*TILE_SIZE));
-					lines.add(new Line((x-1)*TILE_SIZE, (y-1)*TILE_SIZE, (x-1)*TILE_SIZE, y*TILE_SIZE));
-					lines.add(new Line(x*TILE_SIZE, (y-1)*TILE_SIZE, x*TILE_SIZE, y*TILE_SIZE));
-				}
-			}
+	public Path getPath(Point start, Point end) {
+		Pathfinder finder = new Pathfinder(this);
+		int s[] = new int[2];
+		int e[] = new int[2];
+		s[0] = getGrid(start.x);
+		s[1] = getGrid(start.y);
+		e[0] = getGrid(end.x);
+		e[1] = getGrid(end.y);
+		finder.findPath(s, e);
+		Path path = new Path();
+		while (finder.isPath()) {
+			path.add(finder.getNext());
 		}
-		return new LineMap(lines.toArray(new Line[lines.size()]), rect);
+		return path;
 	}
 
 	/**
@@ -188,45 +184,59 @@ public class GridMap {
 	 * @return positional value of the center of a grid.
 	 */
 	public double getPos(int val) {
-		return (double) val * 30.0 - 15;
+		return (val * 30.0) - 15;
 	}
 
 	/**
-	 * Converts double from the odometer system into grid id value
+	 * 
+	 * @return Width of the GridMap
 	 */
-	public int getGrid(double val, boolean orienteering) {
-		val /= 30;
-		if (!orienteering) {
-			val = Math.ceil(val);
-		}
-		return (int) Math.round(val);
+	public int getWidth() {
+		return this.width;
 	}
 
-	public int getGrid(double val) {
-		return getGrid(val, false);
-	}
-	
-	public boolean blocked(int x, int y){
-		if(!(valid(x, y))){
-			return true;
+	/**
+	 * Lazy Constructor of the LineMap
+	 * 
+	 * @return LineMap equivalent of the GridMap
+	 */
+	public boolean isObstacle(int x, int y) {
+		boolean obstacle = false;
+		try {
+			obstacle = bitset.get(getIndex(x, y));
+		} catch (Exception e) {
+
 		}
-		return bitset.get(getIndex(x, y));
+		return obstacle;
+	}
+
+	/**
+	 * Sets the provided location as a wall
+	 * 
+	 * @param x
+	 *            x-axis location
+	 * @param y
+	 *            y-axis location
+	 */
+
+	protected void set(int x, int y) {
+		this.bitset.set(getIndex(x, y));
 	}
 
 	/**
 	 * Reports if a co-ordinate set is a valid spot on the map
 	 */
-	public boolean valid(int x, int y){
-		return (x >= 0 && x < width && y >= 0 && y < height);
+	public boolean valid(int x, int y) {
+		return ((x >= 0) && (x < width) && (y >= 0) && (y < height));
 	}
-	
+
 	/**
 	 * Converts grid co-ordinates into odometer system co-ordinates
 	 */
-//	public double [] getPos(int [] val){
-//		double [] pos = new double [2];
-//		pos[DriverRobot.] = getPos(val[DriverRobot.POS_X]);
-//		pos[DriverRobot.POS_Y] = getPos(val[DriverRobot.POS_Y]);
-//		return pos;
-//	}
+	// public double [] getPos(int [] val){
+	// double [] pos = new double [2];
+	// pos[DriverRobot.] = getPos(val[DriverRobot.POS_X]);
+	// pos[DriverRobot.POS_Y] = getPos(val[DriverRobot.POS_Y]);
+	// return pos;
+	// }
 }

@@ -7,13 +7,13 @@ import lejos.nxt.UltrasonicSensor;
  * Averaging filtering Ultrasonic reader
  * 
  * @author Michael Williams (260369438)
- *
+ * 
  */
 public class UltraSonic {
 
-	private UltrasonicSensor us;
-
 	private static final int MAX = 90, LOOPS = 10;
+
+	private final UltrasonicSensor us;
 
 	public UltraSonic() {
 		// Change this to which ever port contains the US

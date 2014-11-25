@@ -17,26 +17,26 @@ import dpm.teamone.driver.maps.GridMap;
  * 
  * @author Mehdi Benguerrah
  * @author Michael Williams
- *
+ * 
  */
 public class Localizer {
 
-	private static final double WHEEL_RADIUS = 2.5;
-	// Distance between centers of the left and right wheels
-	private static final double TRACK_WIDTH = 15.5;
 	private static NXTRegulatedMotor LEFT_MOTOR = Motor.A,
 			RIGHT_MOTOR = Motor.B;
-	private DifferentialPilot pilot = new DifferentialPilot(WHEEL_RADIUS,
-			TRACK_WIDTH, LEFT_MOTOR, RIGHT_MOTOR);
+	private static final int particles = 25, borders = 50;
+	// Distance between centers of the left and right wheels
+	private static final double TRACK_WIDTH = 15.5;
+	private static final double WHEEL_RADIUS = 2.5;
 
 	// The Ultrasonic sensor is not-mounted on a motor so instead of
 	// only the sensor rotating, the whole robot will turn
 
-	private FixedRangeScanner scanner = new FixedRangeScanner(this.pilot,
-			new UltrasonicSensor(SensorPort.S3));
+	private final MCLPoseProvider localisationAlgo;
 	private GridMap map;
-	private static final int particles = 25, borders = 50;
-	private MCLPoseProvider localisationAlgo;
+	private final DifferentialPilot pilot = new DifferentialPilot(WHEEL_RADIUS,
+			TRACK_WIDTH, LEFT_MOTOR, RIGHT_MOTOR);
+	private final FixedRangeScanner scanner = new FixedRangeScanner(this.pilot,
+			new UltrasonicSensor(SensorPort.S3));
 
 	/**
 	 * Sets up the Localization Algorithm to use for localizing

@@ -5,7 +5,7 @@ package dpm.teamone.armcontrol;
  * Brick
  * 
  * @author Michael Williams
- *
+ * 
  */
 public class ArmControl {
 
@@ -17,16 +17,15 @@ public class ArmControl {
 	 */
 	public static void main(String[] args) {
 		DriverComms communications = new DriverComms();
-		while(true){
+		while (true) {
 			communications.waitForSignal();
-			try{
-				Thread.sleep(100); //Only poll 10 times a second
-			} catch (Exception e){
-				
+			try {
+				Thread.sleep(100); // Only poll 10 times a second
+			} catch (Exception e) {
+
 			}
 		}
-		
-	}
 
+	}
 
 }

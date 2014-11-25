@@ -2,7 +2,6 @@ package dpm.teamone.driver.events;
 
 import lejos.robotics.subsumption.Arbitrator;
 import lejos.robotics.subsumption.Behavior;
-import dpm.teamone.driver.DriverRobot;
 import dpm.teamone.driver.navigation.NavigationController;
 
 /**
@@ -11,14 +10,36 @@ import dpm.teamone.driver.navigation.NavigationController;
  * crossed.
  * 
  * @author Michael Williams
- *
+ * 
  */
 public class EventManager extends Thread {
 
-	private Arbitrator arbitrator;
-	private NavigationController nav;
 	private static Object lock;
 	private static boolean running;
+
+	public static boolean isRunning() {
+		boolean result;
+		synchronized (lock) {
+			result = running;
+		}
+		return result;
+	}
+
+	public static void pause() {
+		synchronized (lock) {
+			running = false;
+		}
+	}
+
+	public static void restart() {
+		synchronized (lock) {
+			running = true;
+		}
+	}
+
+	private final Arbitrator arbitrator;
+
+	private final NavigationController nav;
 
 	/**
 	 * Constructor creates an underlying arbitrator while providing access to
@@ -37,28 +58,9 @@ public class EventManager extends Thread {
 	/**
 	 * Starts the underlying Arbitrator
 	 */
+	@Override
 	public void run() {
 		running = true;
 		arbitrator.start();
-	}
-	
-	public static boolean isRunning(){
-		boolean result;
-		synchronized(lock){
-			result = running;
-		}
-		return result;
-	}
-	
-	public static void restart(){
-		synchronized(lock){
-			running = true;
-		}
-	}
-
-	public static void pause() {
-		synchronized(lock){
-			running = false;
-		}
 	}
 }

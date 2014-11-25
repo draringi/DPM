@@ -14,29 +14,30 @@ public class correction_test {
 
 	public static void main(String[] args) {
 		Button.waitForAnyPress();
-		NavigationController nav = new NavigationController(MapFactory.blankMap());
+		NavigationController nav = new NavigationController(
+				MapFactory.blankMap());
 		nav.setPose(new Pose(-15, -15, 0));
 		LineLogger.Init();
 		EventManager events = new EventManager(nav);
 		events.start();
-		//nav.driveToGrid(0, 0);
-		//nav.driveToGrid(1, 0);
-		//nav.driveToGrid(2, 0);
-		//nav.driveToGrid(1, 1);
+		// nav.driveToGrid(0, 0);
+		// nav.driveToGrid(1, 0);
+		// nav.driveToGrid(2, 0);
+		// nav.driveToGrid(1, 1);
 		nav.driveToGrid(3, 3);
 		nav.driveToGrid(1, 1);
-		//nav.driveToGrid(2, 0);
+		// nav.driveToGrid(2, 0);
 		EventManager.pause();
-		//nav.turnTo(0);
+		// nav.turnTo(0);
 		nav.turnTo(180);
 		Pose pose = nav.getPose();
 		LCD.drawInt(Math.round((pose.getX() * 10)), 0, 2);
 		RConsole.openUSB(0);
 		int i = 0;
-		while(LineLogger.hasRecords()){
+		while (LineLogger.hasRecords()) {
 			LineRecord record = LineLogger.getNext();
 			RConsole.println("Record " + i++);
-			if(record.leftFirst){
+			if (record.leftFirst) {
 				RConsole.println("Left Sensor was first");
 			} else {
 				RConsole.println("Right Sensor was first");

@@ -5,6 +5,16 @@ import java.util.BitSet;
 import dpm.teamone.driver.maps.GridMap;
 
 public abstract class Orienteer {
+	public static final int FORWARD = 0, LEFT = 1, BACKWARDS = 2, RIGHT = 3;
+
+	public static final int NORTH = 0, EAST = 1, SOUTH = 2, WEST = 3;
+
+	public static final int THRESHOLD = 25;
+
+	private static final double TILE_SIZE = 30, TILE_OFFSET = 15;
+
+	public static final int X = 0, Y = 1, THETA = 2;
+
 	/**
 	 * Adds 2 Odometer system co-ordinates together in a sane manner
 	 * 
@@ -55,24 +65,19 @@ public abstract class Orienteer {
 		return (orientation * Math.PI) / 2;
 	}
 
-	private GridMap map;
-	private BitSet options;
-	private NavigationController nav;
-	public static final int NORTH = 0, EAST = 1, SOUTH = 2, WEST = 3;
-	public static final int FORWARD = 0, LEFT = 1, BACKWARDS = 2, RIGHT = 3;
-	public static final int X = 0, Y = 1, THETA = 2;
-	public static final int THRESHOLD = 25;
-	private int width, height;
-
-	private static final double TILE_SIZE = 30, TILE_OFFSET = 15;
-
 	private int count;
+	private final LCDinfo lcd;
+	private final Object lock;
 
-	private Object lock;
+	private final GridMap map;
 
-	private UltraSonic us;
+	private final NavigationController nav;
 
-	private LCDinfo lcd;
+	private final BitSet options;
+
+	private final UltraSonic us;
+
+	private final int width, height;
 
 	/**
 	 * Default constructor

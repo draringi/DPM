@@ -1,8 +1,6 @@
 package dpm.teamone.driver;
 
 import lejos.nxt.Button;
-import lejos.robotics.navigation.Pose;
-import dpm.teamone.driver.communications.BetaComms;
 import dpm.teamone.driver.communications.CommunicationsManager;
 import dpm.teamone.driver.events.EventManager;
 import dpm.teamone.driver.maps.GridMap;
@@ -14,58 +12,11 @@ import dpm.teamone.driver.navigation.NavigationController;
  * Drive Brick
  * 
  * @author Michael Williams
- *
+ * 
  */
 public class DriverRobot {
 
-	/**
-	 * Main thread of the driver block. This block handles navigation, and
-	 * communication with the C&C server.
-	 * 
-	 * @param args
-	 */
-	public static void main(String[] args) {
-		EventManager events;
-		NavigationController nav;
-		GridMap map;
-		CommunicationsManager comms = new CommunicationsManager();
-		//BetaComms beta = new BetaComms(); // I hate this class and will kill it as soon as possible,
-		int mapData[] = new int[MAP_DATA_LENGTH];
-		//beta.waitForMap(mapData);
-		mapData[MAP_DATA_MAP] = BETA_MAP;
-		comms.prepareTravel();
-		//map = MapFactory.getMap(mapData[MAP_DATA_MAP]);
-		//map = MapFactory.getBetaMap(mapData[MAP_DATA_MAP]);
-		map = MapFactory.lab5Map();
-		nav = new NavigationController(map);
-		
-//		nav.setDropZone(mapData[MAP_DATA_DROP_X], mapData[MAP_DATA_DROP_Y], 1, 1);
-		nav.setPickUpZone(3, 1, 1, 1); //Lab 5 map
-		//nav.setPickUpZone(2, 2, 0, 0); //Any 8x8 map
-		nav.localize();
-		events = new EventManager(nav);
-		//events.start();
-		//nav.driveToPickup();
-		//comms.prepareClaw();
-		//nav.findObject();
-		//comms.grabObject();
-		//This is the end of the Beta Goal
-		//nav.driveToDrop();
-		//comms.releaseObject();
-		Button.waitForAnyPress();
-	}
-	
 	private static final int BETA_MAP = 2;
-
-	/**
-	 * Length of a map data array. Has a value of {@value}
-	 */
-	public static final int MAP_DATA_LENGTH = 3;
-
-	/**
-	 * Index of map data array for the map number. Has a value of {@value}
-	 */
-	public static final int MAP_DATA_MAP = 0;
 
 	/**
 	 * Index of map data array for the location of the drop zone in the x-axis.
@@ -79,12 +30,59 @@ public class DriverRobot {
 	 */
 	public static final int MAP_DATA_DROP_Y = 2;
 
+	/**
+	 * Length of a map data array. Has a value of {@value}
+	 */
+	public static final int MAP_DATA_LENGTH = 3;
+
+	/**
+	 * Index of map data array for the map number. Has a value of {@value}
+	 */
+	public static final int MAP_DATA_MAP = 0;
+
+	public static final int POS_THETA = 2;
+
 	public static final int POS_X = 0;
 
 	public static final int POS_Y = 1;
 
-	public static final int POS_THETA = 2;
+	/**
+	 * Main thread of the driver block. This block handles navigation, and
+	 * communication with the C&C server.
+	 * 
+	 * @param args
+	 */
+	public static void main(String[] args) {
+		EventManager events;
+		NavigationController nav;
+		GridMap map;
+		CommunicationsManager comms = new CommunicationsManager();
+		// BetaComms beta = new BetaComms(); // I hate this class and will kill
+		// it as soon as possible,
+		int mapData[] = new int[MAP_DATA_LENGTH];
+		// beta.waitForMap(mapData);
+		mapData[MAP_DATA_MAP] = BETA_MAP;
+		comms.prepareTravel();
+		// map = MapFactory.getMap(mapData[MAP_DATA_MAP]);
+		// map = MapFactory.getBetaMap(mapData[MAP_DATA_MAP]);
+		map = MapFactory.lab5Map();
+		nav = new NavigationController(map);
 
-	
+		// nav.setDropZone(mapData[MAP_DATA_DROP_X], mapData[MAP_DATA_DROP_Y],
+		// 1, 1);
+		nav.setPickUpZone(3, 1, 1, 1); // Lab 5 map
+		// nav.setPickUpZone(2, 2, 0, 0); //Any 8x8 map
+		nav.localize();
+		events = new EventManager(nav);
+		// events.start();
+		// nav.driveToPickup();
+		// comms.prepareClaw();
+		// nav.findObject();
+		// comms.grabObject();
+		// This is the end of the Beta Goal
+		// nav.driveToDrop();
+		// comms.releaseObject();
+		Button.waitForAnyPress();
+	}
 
 }
