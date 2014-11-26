@@ -1,7 +1,5 @@
 package dpm.teamone.driver.navigation;
 
-import java.util.ArrayList;
-
 import lejos.geom.Point;
 import lejos.nxt.LCD;
 import lejos.nxt.Sound;
@@ -18,8 +16,6 @@ import dpm.teamone.driver.maps.GridMap;
  */
 public class Localisation {
 
-	private int currentDirection;
-	private int distanceFromInitial;
 	private final GridMap map;
 	private final NavigationController navigation;
 	private final UltraSonic sensor;
@@ -120,7 +116,7 @@ public class Localisation {
 		return surr;
 	}
 
-	public int driveUntilWall(boolean doReturn) {
+	public int driveUntilWall() {
 		this.navigation.setPose(new Pose(0, 0, 0));
 		Point curr = new Point(0, 0);
 		int threshold = 20;
@@ -142,9 +138,7 @@ public class Localisation {
 		LCD.drawString("Distance :" + normalize(distance + sensor_distance), 0,
 				4);
 
-		if (doReturn) {
-			navigation.getPilot().travel(-distance);
-		}
+		navigation.getPilot().travel(-distance);
 		return distance + sensor_distance;
 
 	}
@@ -179,39 +173,6 @@ public class Localisation {
 
 	}
 
-	private int getCountArray(int[] inp) {
-		int count = 0;
-		for (int i = 0; i < inp.length; i++) {
-			if (inp[i] == -1) {
-				count++;
-			}
-		}
-		return count;
-	}
-
-	private Pose getCurrentLocation(Pose initial) {
-		Pose current;
-		int heading = (int) initial.getHeading();
-		heading = (heading + this.currentDirection) % 4;
-		int x = (int) initial.getX();
-		int y = (int) initial.getY();
-		if (heading == 0) {
-			y += (this.distanceFromInitial / 30);
-
-		} else if (heading == 1) {
-			x += (this.distanceFromInitial / 30);
-
-		} else if (heading == 2) {
-			y -= (this.distanceFromInitial / 30);
-
-		} else if (heading == 3) {
-			x -= (this.distanceFromInitial / 30);
-
-		}
-		current = new Pose(x, y, heading);
-		return current;
-	}
-
 	/**
 	 * Helper method that finds best match
 	 * 
@@ -221,9 +182,9 @@ public class Localisation {
 	 * 
 	 * @return Robot's initial position and heading
 	 */
-	public int getDistance(boolean doReturn) {
+	public int getDistance() {
 
-		return driveUntilWall(doReturn);
+		return driveUntilWall();
 
 	}
 
@@ -234,35 +195,17 @@ public class Localisation {
 	 * @return Values read by the sensor
 	 */
 	private int[] getSurroundings() {
-		int[] inp = setUpArray(4);
-
-		int turns = 0;
+		int[] inp = new int[4];
 
 		for (int x = 0; x < 4; x++) {
 			if (sensor.poll() < 20) {
 				Sound.beep();
 				inp[x] = 0;
+				this.navigation.rotate(-90);
+			} else {
 
-			}
-			this.navigation.rotate(-90);
-		}
-		int nullValueCount = getCountArray(inp);
-		int nullValues = 0;
-		for (int i = 0; i < 4; i++) {
-			if (inp[i] == -1) {
-				nullValues++;
-				for (int t = 0; t < (i - turns); t++) {
-					turns = i;
-					this.navigation.rotate(-90);
-				}
-				if (nullValues == nullValueCount) {
-					this.currentDirection = i;
-					inp[i] = normalize(getDistance(false));
-					this.distanceFromInitial = inp[i];
-				} else {
-					inp[i] = normalize(getDistance(true));
-
-				}
+				inp[x] = normalize(getDistance());
+				this.navigation.rotate(-90);
 			}
 
 		}
@@ -311,8 +254,6 @@ public class Localisation {
 
 	public Pose localize(int[] inp) {
 		Pose initialLocation = null;
-		Pose currentLocation = null;
-		ArrayList<Pose> matches = new ArrayList<Pose>();
 		for (int x = 0; x < this.map.getWidth(); x++) {
 			for (int y = 0; y < this.map.getHeight(); y++) {
 				for (int ori = 0; ori < 4; ori++) {
@@ -322,56 +263,14 @@ public class Localisation {
 							Sound.twoBeeps();
 							initialLocation = new Pose((float) map.getPos(x),
 									(float) map.getPos(y), getAngle(ori));
-							currentLocation = getCurrentLocation(initialLocation);
-							// matches.add(initialLocation);
-							// return initialLocation;
-							return getCurrentLocation(initialLocation);
-							// return new Pose((float)
-							// map.getPos((int)initialLocation.getX()),(float)
-							// map.getPos((int)initialLocation.getY()),
-							// getAngle((int)initialLocation.getHeading()));
+							navigation.setPose(initialLocation);
+							return initialLocation;
 						}
 					}
 				}
 			}
 		}
-		if (matches.size() == 1) {
-
-			Pose ret = matches.get(0);
-			ret = new Pose((float) map.getPos((int) ret.getX()),
-					(float) map.getPos((int) ret.getY()),
-					getAngle((int) ret.getHeading()));
-			currentLocation = getCurrentLocation(initialLocation);
-			currentLocation = new Pose((float) map.getPos((int) currentLocation
-					.getX()), (float) map.getPos((int) currentLocation.getY()),
-					getAngle((int) currentLocation.getHeading()));
-			this.navigation.setPose(currentLocation);
-			return ret;
-		} else {
-			int[] surr = this.getSurroundings();
-			for (int i = 0; i < matches.size(); i++) {
-				initialLocation = matches.get(i);
-				currentLocation = getCurrentLocation(initialLocation);
-				if (isMatch(
-						surr,
-						computeSur((int) currentLocation.getX(),
-								(int) currentLocation.getY(),
-								(int) currentLocation.getHeading()))) {
-
-					initialLocation = new Pose(
-							(float) map.getPos((int) initialLocation.getX()),
-							(float) map.getPos((int) initialLocation.getY()),
-							getAngle((int) initialLocation.getHeading()));
-					currentLocation = new Pose(
-							(float) map.getPos((int) currentLocation.getX()),
-							(float) map.getPos((int) currentLocation.getY()),
-							getAngle((int) currentLocation.getHeading()));
-					this.navigation.setPose(currentLocation);
-					return initialLocation;
-				}
-			}
-		}
-		return null;
+		return initialLocation;
 	}
 
 	/**
@@ -384,7 +283,7 @@ public class Localisation {
 	 * @return Array of theoritical distances
 	 */
 	private int normalize(int inp) {
-		return map.getGrid(inp, true) * map.TILE_SIZE;
+		return (((inp) / (this.map.TILE_SIZE)) * this.map.TILE_SIZE);
 	}
 
 	/**
@@ -399,15 +298,6 @@ public class Localisation {
 		int[] surroundings = getSurroundings();
 		return localize(surroundings);
 
-	}
-
-	private int[] setUpArray(int size) {
-		int[] temp = new int[size];
-		for (int i = 0; i < size; i++) {
-
-			temp[i] = -1;
-		}
-		return temp;
 	}
 
 }
