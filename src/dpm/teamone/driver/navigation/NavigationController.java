@@ -302,8 +302,8 @@ public class NavigationController {
 
 	public void localize() {
 		LCDinfo lcd = new LCDinfo();
-		Localisation localizer = new Localisation(this.map, this);
-		Pose startingPoint = localizer.performLocalisation();
+		Orienteer localizer = new Orienteer(this.map, this);
+		Pose startingPoint = localizer.localize();
 		int x = map.getGrid(startingPoint.getX());
 		int y = map.getGrid(startingPoint.getY());
 		Direction dir = Direction.fromAngle(Math.round(startingPoint

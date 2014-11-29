@@ -16,18 +16,18 @@ public enum Direction {
 
 	WEST(3, "West");
 
-	public static Direction fromAngle(int angle) {
+	public static Direction fromAngle(float angle) {
 		// Sanitize any bad angles. This section should be skipped, but exists
 		// for necessities sake/
 		while (angle < 0) {
 			angle += 360;
 		}
+		int angle_int;
 		angle = angle % 360;
-		angle += 45;
 		angle /= 90;
-		angle = angle % 4;
+		angle_int = Math.round(angle) % 4;
 		Direction dir;
-		switch (angle) {
+		switch (angle_int) {
 		case 0:
 			dir = EAST;
 			break;
@@ -96,13 +96,21 @@ public enum Direction {
 		case EAST:
 			return 0;
 		case SOUTH:
-			return 270;
+			return -90;
 		case WEST:
 		default:
 			return 180;
 		}
 	}
 
+	public static float intToAngle(int val){
+		return toDirection(val).toAngle();
+	}
+	
+	public static int angleToInt(float angle){
+		return toInt(fromAngle(angle));
+	}
+	
 	@Override
 	public String toString() {
 		return this.name;

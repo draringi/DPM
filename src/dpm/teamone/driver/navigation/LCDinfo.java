@@ -16,6 +16,7 @@ public class LCDinfo {
 	}
 
 	protected void setStartPos(int x, int y, Direction dir) {
+		LCD.clear();
 		LCD.drawString("X: ", 0, 0);
 		LCD.drawString("Y: ", 0, 1);
 		LCD.drawString("H: ", 0, 2);
