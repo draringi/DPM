@@ -351,22 +351,23 @@ public class Orienteer {
 	}
 	
 	private Point getFront(){
-		int x, y, t;
+		int x, y;
+		Direction dir;
 		Pose pos = nav.getPose();
 		x = this.map.getGrid(pos.getX());
 		y = this.map.getGrid(pos.getY());
-		t = facingToInt(pos.getHeading());
-		switch(t){
-		case 0:
+		dir = Direction.fromAngle(pos.getHeading());
+		switch(dir){
+		case EAST:
 			x++;
 			break;
-		case -1:
+		case NORTH:
 			y++;
 			break;
-		case -2:
+		case WEST:
 			x--;
 			break;
-		case -3:
+		case SOUTH:
 			y--;
 			break;
 		}
@@ -398,12 +399,15 @@ public class Orienteer {
 				min = 2;
 			}
 		}
+		float angle;
 		switch(min){
 		case 0:
-			this.nav.rotate(90);
+			angle = Direction.intToAngle((Direction.angleToInt(nav.getPose().getHeading()) + LEFT + 4) % 4);
+			this.nav.turnTo(angle);
 			break;
 		case 1:
-			this.nav.rotate(-90);
+			angle = Direction.intToAngle((Direction.angleToInt(nav.getPose().getHeading()) + RIGHT + 4) % 4);
+			this.nav.turnTo(angle);
 			break;
 		case 2:
 			this.nav.gotoPoint(getFront());
