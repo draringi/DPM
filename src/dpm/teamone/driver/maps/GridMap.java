@@ -8,7 +8,6 @@ import lejos.geom.Point;
 import lejos.geom.Rectangle;
 import lejos.robotics.mapping.LineMap;
 import lejos.robotics.navigation.Waypoint;
-import lejos.robotics.pathfinding.NavigationMesh;
 import lejos.robotics.pathfinding.Path;
 
 /**
@@ -21,12 +20,9 @@ import lejos.robotics.pathfinding.Path;
  */
 public class GridMap {
 
-	private static final float CLEARANCE = 1;
-
 	private final BitSet bitset;
 
 	private LineMap linemap;
-	private NavigationMesh mesh;
 
 	public final int TILE_SIZE = 30;
 	private final int width, height;
@@ -58,16 +54,6 @@ public class GridMap {
 
 	public Waypoint convertToWaypoint(int x, int y) {
 		return new Waypoint(this.convertToPoint(x, y));
-	}
-
-	/**
-	 * Actual Constructor of the GridMesh
-	 * 
-	 * @return GridMesh representing the GridMap
-	 */
-	private NavigationMesh generateGridMesh() {
-		// return new FourWayGridMesh(this.getLineMap(), TILE_SIZE, CLEARANCE);
-		return new GridMesh(this);
 	}
 
 	/**
@@ -120,18 +106,6 @@ public class GridMap {
 			val = Math.ceil(val);
 		}
 		return (int) Math.round(val);
-	}
-
-	/**
-	 * Lazy Constructor of the GridMesh
-	 * 
-	 * @return GridMesh representing the GridMap
-	 */
-	public NavigationMesh getGridMesh() {
-		if (mesh == null) {
-			mesh = generateGridMesh();
-		}
-		return mesh;
 	}
 
 	/**

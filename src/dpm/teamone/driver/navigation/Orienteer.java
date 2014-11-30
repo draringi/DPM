@@ -3,8 +3,6 @@ package dpm.teamone.driver.navigation;
 import java.util.BitSet;
 
 import lejos.geom.Point;
-import lejos.nxt.LCD;
-import lejos.robotics.navigation.DifferentialPilot;
 import lejos.robotics.navigation.Pose;
 import lejos.util.Delay;
 import dpm.teamone.driver.events.EventManager;
@@ -16,8 +14,6 @@ public class Orienteer {
 	public static final int NORTH = 0, EAST = 1, SOUTH = 2, WEST = 3;
 
 	public static final int THRESHOLD = 25;
-
-	private static final double TILE_SIZE = 30, TILE_OFFSET = 15;
 
 	public static final int X = 0, Y = 1, THETA = 2;
 
