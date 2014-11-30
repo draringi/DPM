@@ -61,13 +61,6 @@ class LineCorrecter implements Behavior {
 			theta += dir.toAngle();
 			float beleivedHeading = pose.getHeading();
 			float correction = theta - beleivedHeading;
-			if(EventManager.isLocalizing()){
-				pose = nav.getPose();
-				pose.rotateUpdate(correction);
-				this.nav.setPose(pose);
-				Sound.twoBeeps();
-				return;
-			}
 			float x = pose.getX();
 			float y = pose.getY();
 			theta = (float) ((theta / 180) * Math.PI);

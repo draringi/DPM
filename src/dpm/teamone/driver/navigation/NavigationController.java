@@ -398,4 +398,13 @@ public class NavigationController {
 	public void turnTo(double angle) {
 		navigator.rotateTo(angle); // Rotates to specified angle
 	}
+
+	public boolean moving(){
+		return pilot.isMoving();
+	}
+	
+	public void gotoPoint(Point next) {
+		Waypoint wp = new Waypoint(next);
+		navigator.goTo(wp);
+	}
 }

@@ -2,9 +2,11 @@ package dpm.teamone.driver.navigation;
 
 import java.util.BitSet;
 
+import lejos.geom.Point;
 import lejos.nxt.LCD;
 import lejos.robotics.navigation.DifferentialPilot;
 import lejos.robotics.navigation.Pose;
+import lejos.util.Delay;
 import dpm.teamone.driver.events.EventManager;
 import dpm.teamone.driver.maps.GridMap;
 
@@ -247,15 +249,15 @@ public class Orienteer {
 	 * @param nav
 	 */
 	public Pose localize() {
-		EventManager.startLocalizing();
+		this.nav.setPose(new Pose(-15, -15, 0));
 		int[] option;
 		int[] offset;
 		Pose pos;
 		while (this.options.cardinality() > 1) {
 			pos = this.nav.getPose();
 			offset = new int[3];
-			offset[X] = this.map.getGrid(pos.getX(), true);
-			offset[Y] = this.map.getGrid(pos.getY(), true);
+			offset[X] = this.map.getGrid(pos.getX());
+			offset[Y] = this.map.getGrid(pos.getY());
 			offset[THETA] = facingToInt(pos.getHeading());
 			boolean wall = (this.us.poll() < THRESHOLD);
 
@@ -295,7 +297,6 @@ public class Orienteer {
 		start.setLocation((float)map.getPos(option[X]), (float)map.getPos(option[Y]));
 		start.setHeading(Direction.intToAngle(option[THETA]));
 		this.nav.setPose(addPositions(pos, start));
-		EventManager.stopLocalizing();
 		return start;
 	}
 
@@ -319,8 +320,8 @@ public class Orienteer {
 	private int changeCount(int direction){
 		Pose pos = this.nav.getPose();
 		int offset[] = new int[3];
-		offset[X] = this.map.getGrid(pos.getX(), true);
-		offset[Y] = this.map.getGrid(pos.getY(), true);
+		offset[X] = this.map.getGrid(pos.getX());
+		offset[Y] = this.map.getGrid(pos.getY());
 		offset[THETA] = (facingToInt(pos.getHeading()) + direction) % 4;
 		int changecount = 0;
 		for (int y = 0; y < this.height; y++) {
@@ -342,6 +343,29 @@ public class Orienteer {
 		return changecount;
 	}
 	
+	private Point getFront(){
+		int x, y, t;
+		Pose pos = nav.getPose();
+		x = this.map.getGrid(pos.getX());
+		y = this.map.getGrid(pos.getY());
+		t = facingToInt(pos.getHeading());
+		switch(t){
+		case 0:
+			x++;
+			break;
+		case -1:
+			y++;
+			break;
+		case -2:
+			x--;
+			break;
+		case -3:
+			y--;
+			break;
+		}
+		return new Point((float)map.getPos(x), (float)map.getPos(y));
+	}
+	
 	/**
 	 * Moves the robot to a new orientation, dependent on implementation
 	 * 
@@ -352,20 +376,15 @@ public class Orienteer {
 	 */
 	public void move(boolean wall, Direction direction) {
 		if(!wall){
-			DifferentialPilot pilot = this.nav.getPilot(); 
-			pilot.travel(30, true);
-			try {
-				Thread.sleep(300);
-			} catch (InterruptedException e) {
-			}
+			Point next = getFront();
+			nav.gotoPoint(next);
+			Delay.msDelay(400);
 			EventManager.restart();
-			while(pilot.isMoving()){
-				try {
-					Thread.sleep(100);
-				} catch (InterruptedException e) {
-				}
+			while(nav.moving()){
+				Delay.msDelay(100);
 			}
 			EventManager.pause();
+			Delay.msDelay(10);
 			return;
 		}
 		int remaining_center = this.options.cardinality()/2;

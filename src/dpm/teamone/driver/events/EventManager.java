@@ -15,20 +15,12 @@ import dpm.teamone.driver.navigation.NavigationController;
 public class EventManager extends Thread {
 
 	private static Object lock;
-	private static boolean running, localizing;
+	private static boolean running;
 
 	public static boolean isRunning() {
 		boolean result;
 		synchronized (lock) {
 			result = running;
-		}
-		return result;
-	}
-
-	protected static boolean isLocalizing() {
-		boolean result;
-		synchronized (lock) {
-			result = localizing;
 		}
 		return result;
 	}
@@ -42,18 +34,6 @@ public class EventManager extends Thread {
 	public static void restart() {
 		synchronized (lock) {
 			running = true;
-		}
-	}
-
-	public static void stopLocalizing() {
-		synchronized (lock) {
-			localizing = false;
-		}
-	}
-
-	public static void startLocalizing() {
-		synchronized (lock) {
-			localizing = true;
 		}
 	}
 	
@@ -71,7 +51,6 @@ public class EventManager extends Thread {
 		Behavior behaviors[] = { new LineCorrecter(nav) };
 		this.arbitrator = new Arbitrator(behaviors);
 		lock = new Object();
-		localizing = false;
 	}
 
 	/**
@@ -79,7 +58,7 @@ public class EventManager extends Thread {
 	 */
 	@Override
 	public void run() {
-		running = true;
+		restart();
 		arbitrator.start();
 	}
 }
