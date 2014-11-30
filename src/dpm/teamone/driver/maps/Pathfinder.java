@@ -25,36 +25,36 @@ public class Pathfinder {
 		// this.size = *;
 		this.width = map.getWidth();
 		this.height = map.getHeight();
-		this.cellList = new int[width][height];
-		for (int x = 0; x < width; x++) {
-			for (int y = 0; y < height; y++) {
+		this.cellList = new int[this.width][this.height];
+		for (int x = 0; x < this.width; x++) {
+			for (int y = 0; y < this.height; y++) {
 				this.cellList[x][y] = -1;
 			}
 		}
 	}
 
 	public void findPath(int[] start, int[] end) {
-		cellList[end[X]][end[Y]] = 0;
-		while (cellList[start[X]][start[Y]] == -1) {
-			for (int x = 0; x < width; x++) {
-				for (int y = 0; y < height; y++) {
-					if (cellList[x][y] != -1) {
-						int dist = cellList[x][y];
-						if (!map.blocked(x, y + 1)
-								&& (cellList[x][y + 1] == -1)) {
-							cellList[x][y + 1] = dist + 1;
+		this.cellList[end[X]][end[Y]] = 0;
+		while (this.cellList[start[X]][start[Y]] == -1) {
+			for (int x = 0; x < this.width; x++) {
+				for (int y = 0; y < this.height; y++) {
+					if (this.cellList[x][y] != -1) {
+						int dist = this.cellList[x][y];
+						if (!this.map.blocked(x, y + 1)
+								&& (this.cellList[x][y + 1] == -1)) {
+							this.cellList[x][y + 1] = dist + 1;
 						}
-						if (!map.blocked(x, y - 1)
-								&& (cellList[x][y - 1] == -1)) {
-							cellList[x][y - 1] = dist + 1;
+						if (!this.map.blocked(x, y - 1)
+								&& (this.cellList[x][y - 1] == -1)) {
+							this.cellList[x][y - 1] = dist + 1;
 						}
-						if (!map.blocked(x + 1, y)
-								&& (cellList[x + 1][y] == -1)) {
-							cellList[x + 1][y] = dist + 1;
+						if (!this.map.blocked(x + 1, y)
+								&& (this.cellList[x + 1][y] == -1)) {
+							this.cellList[x + 1][y] = dist + 1;
 						}
-						if (!map.blocked(x - 1, y)
-								&& (cellList[x - 1][y] == -1)) {
-							cellList[x - 1][y] = dist + 1;
+						if (!this.map.blocked(x - 1, y)
+								&& (this.cellList[x - 1][y] == -1)) {
+							this.cellList[x - 1][y] = dist + 1;
 						}
 					}
 				}
@@ -63,24 +63,24 @@ public class Pathfinder {
 		int x = start[X];
 		int y = start[Y];
 		while ((x != end[X]) || (y != end[Y])) {
-			int dist = cellList[x][y];
-			if (nextStep(x, y + 1, dist)) {
-				path.addElement(map.convertToWaypoint(x, y + 1));
+			int dist = this.cellList[x][y];
+			if (this.nextStep(x, y + 1, dist)) {
+				this.path.addElement(this.map.convertToWaypoint(x, y + 1));
 				y++;
 				continue;
 			}
-			if (nextStep(x, y - 1, dist)) {
-				path.addElement(map.convertToWaypoint(x, y - 1));
+			if (this.nextStep(x, y - 1, dist)) {
+				this.path.addElement(this.map.convertToWaypoint(x, y - 1));
 				y--;
 				continue;
 			}
-			if (nextStep(x + 1, y, dist)) {
-				path.addElement(map.convertToWaypoint(x + 1, y));
+			if (this.nextStep(x + 1, y, dist)) {
+				this.path.addElement(this.map.convertToWaypoint(x + 1, y));
 				x++;
 				continue;
 			}
-			if (nextStep(x - 1, y, dist)) {
-				path.addElement(map.convertToWaypoint(x - 1, y));
+			if (this.nextStep(x - 1, y, dist)) {
+				this.path.addElement(this.map.convertToWaypoint(x - 1, y));
 				x--;
 				continue;
 			}
@@ -89,14 +89,14 @@ public class Pathfinder {
 	}
 
 	public Waypoint getNext() {
-		return (Waypoint) path.pop();
+		return (Waypoint) this.path.pop();
 	}
 
 	public boolean isPath() {
-		return !path.isEmpty();
+		return !this.path.isEmpty();
 	}
 
 	private boolean nextStep(int x, int y, int dist) {
-		return map.valid(x, y) && (cellList[x][y] == (dist - 1));
+		return this.map.valid(x, y) && (this.cellList[x][y] == (dist - 1));
 	}
 }

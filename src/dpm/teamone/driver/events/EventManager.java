@@ -14,9 +14,6 @@ import dpm.teamone.driver.navigation.NavigationController;
  */
 public class EventManager extends Thread {
 
-	private static Object lock;
-	private static boolean running;
-
 	public static boolean isRunning() {
 		boolean result;
 		synchronized (lock) {
@@ -24,7 +21,7 @@ public class EventManager extends Thread {
 		}
 		return result;
 	}
-	
+
 	public static void pause() {
 		synchronized (lock) {
 			running = false;
@@ -36,9 +33,12 @@ public class EventManager extends Thread {
 			running = true;
 		}
 	}
-	
-	private final Arbitrator arbitrator;
 
+	private static Object lock;
+
+	private static boolean running;
+
+	private final Arbitrator arbitrator;
 
 	/**
 	 * Constructor creates an underlying arbitrator while providing access to
@@ -59,6 +59,6 @@ public class EventManager extends Thread {
 	@Override
 	public void run() {
 		restart();
-		arbitrator.start();
+		this.arbitrator.start();
 	}
 }

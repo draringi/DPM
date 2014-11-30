@@ -42,10 +42,10 @@ public class GridMap {
 	}
 
 	public boolean blocked(int x, int y) {
-		if (!(valid(x, y))) {
+		if (!(this.valid(x, y))) {
 			return true;
 		}
-		return bitset.get(getIndex(x, y));
+		return this.bitset.get(this.getIndex(x, y));
 	}
 
 	public Point convertToPoint(int x, int y) {
@@ -62,31 +62,35 @@ public class GridMap {
 	 * @return LineMap equivalent of the GridMap
 	 */
 	private LineMap generateLineMap() {
-		Rectangle rect = new Rectangle(-TILE_SIZE, -TILE_SIZE, width
-				* TILE_SIZE, height * TILE_SIZE);
+		Rectangle rect = new Rectangle(-this.TILE_SIZE, -this.TILE_SIZE,
+				this.width * this.TILE_SIZE, this.height * this.TILE_SIZE);
 		ArrayList<Line> lines = new ArrayList<Line>();
 		// Add surrounding wall
-		lines.add(new Line((width - 1) * TILE_SIZE, -TILE_SIZE, -TILE_SIZE,
-				-TILE_SIZE));
-		lines.add(new Line((width - 1) * TILE_SIZE, (height - 1) * TILE_SIZE,
-				-TILE_SIZE, (height - 1) * TILE_SIZE));
-		lines.add(new Line((width - 1) * TILE_SIZE, (height - 1) * TILE_SIZE,
-				(width - 1) * TILE_SIZE, -TILE_SIZE));
-		lines.add(new Line(-TILE_SIZE, (height - 1) * TILE_SIZE, -TILE_SIZE,
-				-TILE_SIZE));
-		for (int x = 0; x < width; x++) {
-			for (int y = 0; y < height; y++) {
-				if (bitset.get(getIndex(x, y))) {
-					lines.add(new Line((x - 1) * TILE_SIZE, y * TILE_SIZE, x
-							* TILE_SIZE, y * TILE_SIZE));
-					lines.add(new Line((x - 1) * TILE_SIZE,
-							(y - 1) * TILE_SIZE, x * TILE_SIZE, (y - 1)
-									* TILE_SIZE));
-					lines.add(new Line((x - 1) * TILE_SIZE,
-							(y - 1) * TILE_SIZE, (x - 1) * TILE_SIZE, y
-									* TILE_SIZE));
-					lines.add(new Line(x * TILE_SIZE, (y - 1) * TILE_SIZE, x
-							* TILE_SIZE, y * TILE_SIZE));
+		lines.add(new Line((this.width - 1) * this.TILE_SIZE, -this.TILE_SIZE,
+				-this.TILE_SIZE, -this.TILE_SIZE));
+		lines.add(new Line((this.width - 1) * this.TILE_SIZE, (this.height - 1)
+				* this.TILE_SIZE, -this.TILE_SIZE, (this.height - 1)
+				* this.TILE_SIZE));
+		lines.add(new Line((this.width - 1) * this.TILE_SIZE, (this.height - 1)
+				* this.TILE_SIZE, (this.width - 1) * this.TILE_SIZE,
+				-this.TILE_SIZE));
+		lines.add(new Line(-this.TILE_SIZE, (this.height - 1) * this.TILE_SIZE,
+				-this.TILE_SIZE, -this.TILE_SIZE));
+		for (int x = 0; x < this.width; x++) {
+			for (int y = 0; y < this.height; y++) {
+				if (this.bitset.get(this.getIndex(x, y))) {
+					lines.add(new Line((x - 1) * this.TILE_SIZE, y
+							* this.TILE_SIZE, x * this.TILE_SIZE, y
+							* this.TILE_SIZE));
+					lines.add(new Line((x - 1) * this.TILE_SIZE, (y - 1)
+							* this.TILE_SIZE, x * this.TILE_SIZE, (y - 1)
+							* this.TILE_SIZE));
+					lines.add(new Line((x - 1) * this.TILE_SIZE, (y - 1)
+							* this.TILE_SIZE, (x - 1) * this.TILE_SIZE, y
+							* this.TILE_SIZE));
+					lines.add(new Line(x * this.TILE_SIZE, (y - 1)
+							* this.TILE_SIZE, x * this.TILE_SIZE, y
+							* this.TILE_SIZE));
 				}
 			}
 		}
@@ -94,7 +98,7 @@ public class GridMap {
 	}
 
 	public int getGrid(double val) {
-		return getGrid(val, false);
+		return this.getGrid(val, false);
 	}
 
 	/**
@@ -126,24 +130,24 @@ public class GridMap {
 	 * @return Internal Index
 	 */
 	protected int getIndex(int x, int y) {
-		return (width * y) + x;
+		return (this.width * y) + x;
 	}
 
 	public LineMap getLineMap() {
-		if (linemap == null) {
-			linemap = generateLineMap();
+		if (this.linemap == null) {
+			this.linemap = this.generateLineMap();
 		}
-		return linemap;
+		return this.linemap;
 	}
 
 	public Path getPath(Point start, Point end) {
 		Pathfinder finder = new Pathfinder(this);
 		int s[] = new int[2];
 		int e[] = new int[2];
-		s[0] = getGrid(start.x);
-		s[1] = getGrid(start.y);
-		e[0] = getGrid(end.x);
-		e[1] = getGrid(end.y);
+		s[0] = this.getGrid(start.x);
+		s[1] = this.getGrid(start.y);
+		e[0] = this.getGrid(end.x);
+		e[1] = this.getGrid(end.y);
 		finder.findPath(s, e);
 		Path path = new Path();
 		while (finder.isPath()) {
@@ -177,7 +181,7 @@ public class GridMap {
 	public boolean isObstacle(int x, int y) {
 		boolean obstacle = false;
 		try {
-			obstacle = bitset.get(getIndex(x, y));
+			obstacle = this.bitset.get(this.getIndex(x, y));
 		} catch (Exception e) {
 
 		}
@@ -194,14 +198,14 @@ public class GridMap {
 	 */
 
 	protected void set(int x, int y) {
-		this.bitset.set(getIndex(x, y));
+		this.bitset.set(this.getIndex(x, y));
 	}
 
 	/**
 	 * Reports if a co-ordinate set is a valid spot on the map
 	 */
 	public boolean valid(int x, int y) {
-		return ((x >= 0) && (x < width) && (y >= 0) && (y < height));
+		return ((x >= 0) && (x < this.width) && (y >= 0) && (y < this.height));
 	}
 
 	/**

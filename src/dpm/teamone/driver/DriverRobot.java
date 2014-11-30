@@ -17,6 +17,48 @@ import dpm.teamone.driver.navigation.NavigationController;
  */
 public class DriverRobot {
 
+	/**
+	 * Main thread of the driver block. This block handles navigation, and
+	 * communication with the C&C server.
+	 * 
+	 * @param args
+	 */
+	public static void main(String[] args) {
+		EventManager events;
+		NavigationController nav;
+		GridMap map;
+		CommunicationsManager comms = new CommunicationsManager();
+		int mapData[] = new int[MAP_DATA_LENGTH];
+		// beta.waitForMap(mapData);
+		mapData[MAP_DATA_MAP] = BETA_MAP;
+		comms.prepareTravel();
+		// map = MapFactory.getMap(mapData[MAP_DATA_MAP]);
+		// map = MapFactory.getBetaMap(mapData[MAP_DATA_MAP]);
+		map = MapFactory.lab5Map();
+		nav = new NavigationController(map);
+
+		// nav.setDropZone(mapData[MAP_DATA_DROP_X], mapData[MAP_DATA_DROP_Y],
+		// 1, 1);
+		nav.setPickUpZone(3, 1, 1, 1); // Lab 5 map
+		// nav.setPickUpZone(2, 2, 0, 0); //Any 8x8 map
+		Delay.msDelay(10);
+		events = new EventManager(nav);
+		EventManager.pause();
+		nav.localize();
+		events.start();
+		Delay.msDelay(10);
+		EventManager.restart();
+		// nav.driveToPickup();
+		EventManager.pause();
+		// comms.prepareClaw();
+		// nav.findObject();
+		// comms.grabObject();
+		// This is the end of the Beta Goal
+		// nav.driveToDrop();
+		// comms.releaseObject();
+		Button.waitForAnyPress();
+	}
+
 	private static final int BETA_MAP = 1;
 
 	/**
@@ -46,47 +88,5 @@ public class DriverRobot {
 	public static final int POS_X = 0;
 
 	public static final int POS_Y = 1;
-
-	/**
-	 * Main thread of the driver block. This block handles navigation, and
-	 * communication with the C&C server.
-	 * 
-	 * @param args
-	 */
-	public static void main(String[] args) {
-		EventManager events;
-		NavigationController nav;
-		GridMap map;
-		CommunicationsManager comms = new CommunicationsManager();
-		int mapData[] = new int[MAP_DATA_LENGTH];
-		// beta.waitForMap(mapData);
-		mapData[MAP_DATA_MAP] = BETA_MAP;
-		comms.prepareTravel();
-		// map = MapFactory.getMap(mapData[MAP_DATA_MAP]);
-		//map = MapFactory.getBetaMap(mapData[MAP_DATA_MAP]);
-		map = MapFactory.lab5Map();
-		nav = new NavigationController(map);
-
-		// nav.setDropZone(mapData[MAP_DATA_DROP_X], mapData[MAP_DATA_DROP_Y],
-		// 1, 1);
-		nav.setPickUpZone(3, 1, 1, 1); // Lab 5 map
-		//nav.setPickUpZone(2, 2, 0, 0); //Any 8x8 map
-		Delay.msDelay(10);
-		events = new EventManager(nav);
-		EventManager.pause();
-		nav.localize();
-		events.start();
-		Delay.msDelay(10);
-		EventManager.restart();
-		//nav.driveToPickup();
-		EventManager.pause();
-		// comms.prepareClaw();
-		// nav.findObject();
-		// comms.grabObject();
-		// This is the end of the Beta Goal
-		// nav.driveToDrop();
-		// comms.releaseObject();
-		Button.waitForAnyPress();
-	}
 
 }

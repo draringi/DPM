@@ -7,8 +7,6 @@ import dpm.teamone.driver.navigation.Direction;
 
 public class LineLogger {
 
-	private static Queue<LineRecord> records;
-
 	public static void addRecord(LineRecord record) {
 		records.push(record);
 	}
@@ -36,4 +34,6 @@ public class LineLogger {
 	public static boolean isInit() {
 		return (records != null);
 	}
+
+	private static Queue<LineRecord> records;
 }

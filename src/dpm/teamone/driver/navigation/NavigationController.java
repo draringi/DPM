@@ -51,7 +51,7 @@ public class NavigationController {
 	public NavigationController(GridMap map) {
 		this.pilot = new DifferentialPilot(WHEEL_DIAMETER, WHEEL_DIAMETER,
 				TRACK_WIDTH, LEFT_MOTOR, RIGHT_MOTOR, false);
-		this.navigator = new Navigator(pilot);
+		this.navigator = new Navigator(this.pilot);
 		this.map = map;
 		this.pilot.setTravelSpeed(FORWARD_SPEED);
 		this.pilot.setRotateSpeed(ROTATE_SPEED);
@@ -76,34 +76,34 @@ public class NavigationController {
 
 		if (count < path.size()) {
 
-			path = adjustPath(path, count);
+			path = this.adjustPath(path, count);
 			path.add(new Node(x1, y1));
 		}
 
 		if ((x1 == x2) && (y1 == y2)) {
 
-			this.paths.add(adjustPath(path, path.size() + 1));
+			this.paths.add(this.adjustPath(path, path.size() + 1));
 
 		} else {
-			if (isIndexValid(x1 + 1, y1, path)) {
+			if (this.isIndexValid(x1 + 1, y1, path)) {
 
-				calculatePaths(x1 + 1, y1, x2, y2, path, count);
-
-			}
-			if (isIndexValid(x1, y1 + 1, path)) {
-
-				calculatePaths(x1, y1 + 1, x2, y2, path, count);
+				this.calculatePaths(x1 + 1, y1, x2, y2, path, count);
 
 			}
-			if (isIndexValid(x1, y1 - 1, path)) {
+			if (this.isIndexValid(x1, y1 + 1, path)) {
 
-				calculatePaths(x1, y1 - 1, x2, y2, path, count);
+				this.calculatePaths(x1, y1 + 1, x2, y2, path, count);
+
+			}
+			if (this.isIndexValid(x1, y1 - 1, path)) {
+
+				this.calculatePaths(x1, y1 - 1, x2, y2, path, count);
 
 			}
 
-			if (isIndexValid(x1 - 1, y1, path)) {
+			if (this.isIndexValid(x1 - 1, y1, path)) {
 
-				calculatePaths(x1 - 1, y1, x2, y2, path, count);
+				this.calculatePaths(x1 - 1, y1, x2, y2, path, count);
 
 			}
 
@@ -129,7 +129,7 @@ public class NavigationController {
 	}
 
 	public void driveToDrop() {
-		driveToGrid(dropZone[0], dropZone[1]);
+		this.driveToGrid(this.dropZone[0], this.dropZone[1]);
 	}
 
 	/**
@@ -142,10 +142,10 @@ public class NavigationController {
 	 */
 	public void driveToGrid(int x, int y) {
 		Path path;
-		path = map.getPath(getPose().getLocation(),
-				new Point((float) map.getPos(x), (float) map.getPos(y)));
+		path = this.map.getPath(this.getPose().getLocation(), new Point(
+				(float) this.map.getPos(x), (float) this.map.getPos(y)));
 		// followPath(getPath(x,y));
-		followPath(path);
+		this.followPath(path);
 	}
 
 	/**
@@ -160,12 +160,12 @@ public class NavigationController {
 	 *            Cardinal Heading
 	 */
 	public void driveToGrid(int x, int y, Direction direction) {
-		driveToGrid(x, y);
-		turnTo(direction);
+		this.driveToGrid(x, y);
+		this.turnTo(direction);
 	}
 
 	public void driveToPickup() {
-		driveToGrid(pickupZone[0], pickupZone[1]);
+		this.driveToGrid(this.pickupZone[0], this.pickupZone[1]);
 
 	}
 
@@ -186,11 +186,11 @@ public class NavigationController {
 				minVal = us.poll();
 			}
 		}
-		turnTo(minAngle + 5);
-		pilot.travel(minVal);
-		turnTo(minAngle + 7);
-		pilot.travel(3);
-		turnTo(minAngle + 2);
+		this.turnTo(minAngle + 5);
+		this.pilot.travel(minVal);
+		this.turnTo(minAngle + 7);
+		this.pilot.travel(3);
+		this.turnTo(minAngle + 2);
 	}
 
 	/**
@@ -238,12 +238,12 @@ public class NavigationController {
 	 * @return shortest path to destination
 	 */
 	public Path getPath(int x, int y) {
-		int currentX = map.getGrid(getPose().getX()); // X index
-		int currentY = map.getGrid(getPose().getY()); // Y index
+		int currentX = this.map.getGrid(this.getPose().getX()); // X index
+		int currentY = this.map.getGrid(this.getPose().getY()); // Y index
 		ArrayList<Node> path = new ArrayList<Node>();
 
-		calculatePaths(currentX, currentY, x, y, path, 0);
-		return getShortestPath();
+		this.calculatePaths(currentX, currentY, x, y, path, 0);
+		return this.getShortestPath();
 	}
 
 	public Path getPath_TEST(int v, int w, int x, int y) {
@@ -251,8 +251,8 @@ public class NavigationController {
 		int currentY = w; // Y index
 		ArrayList<Node> path = new ArrayList<Node>();
 
-		calculatePaths(currentX, currentY, x, y, path, 0);
-		return getShortestPath();
+		this.calculatePaths(currentX, currentY, x, y, path, 0);
+		return this.getShortestPath();
 	}
 
 	public DifferentialPilot getPilot() {
@@ -282,17 +282,22 @@ public class NavigationController {
 		Path path = new Path();
 		for (int y = 0; y < shortestList.size(); y++) {
 			Node node = shortestList.get(y);
-			path.add(new Waypoint(map.getPos(Math.round(node.x)), map
+			path.add(new Waypoint(this.map.getPos(Math.round(node.x)), this.map
 					.getPos(Math.round(node.x))));
 		}
 		return path;
 	}
 
+	public void gotoPoint(Point next) {
+		Waypoint wp = new Waypoint(next);
+		this.navigator.goTo(wp);
+	}
+
 	private boolean isIndexValid(int x, int y, ArrayList<Node> path) {
 		boolean isValid = true;
-		if (map.blocked(x, y)) {
+		if (this.map.blocked(x, y)) {
 			isValid = false;
-		} else if (containsNode(new Node(x, y), path)) {
+		} else if (this.containsNode(new Node(x, y), path)) {
 			isValid = false;
 		}
 
@@ -304,11 +309,15 @@ public class NavigationController {
 		LCDinfo lcd = new LCDinfo();
 		Orienteer localizer = new Orienteer(this.map, this);
 		Pose startingPoint = localizer.localize();
-		int x = map.getGrid(startingPoint.getX());
-		int y = map.getGrid(startingPoint.getY());
+		int x = this.map.getGrid(startingPoint.getX());
+		int y = this.map.getGrid(startingPoint.getY());
 		Direction dir = Direction.fromAngle(Math.round(startingPoint
 				.getHeading()));
 		lcd.setStartPos(x, y, dir);
+	}
+
+	public boolean moving() {
+		return this.pilot.isMoving();
 	}
 
 	public void rotate(double angle) {
@@ -386,7 +395,7 @@ public class NavigationController {
 	 *            Cardinal Heading
 	 */
 	public void turnTo(Direction direction) {
-		turnTo(direction.toAngle());
+		this.turnTo(direction.toAngle());
 	}
 
 	/**
@@ -396,15 +405,6 @@ public class NavigationController {
 	 *            Angle clockwise from East (Positive x-axis)
 	 */
 	public void turnTo(double angle) {
-		navigator.rotateTo(angle); // Rotates to specified angle
-	}
-
-	public boolean moving(){
-		return pilot.isMoving();
-	}
-	
-	public void gotoPoint(Point next) {
-		Waypoint wp = new Waypoint(next);
-		navigator.goTo(wp);
+		this.navigator.rotateTo(angle); // Rotates to specified angle
 	}
 }

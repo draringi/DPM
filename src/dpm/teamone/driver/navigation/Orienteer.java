@@ -9,14 +9,6 @@ import dpm.teamone.driver.events.EventManager;
 import dpm.teamone.driver.maps.GridMap;
 
 public class Orienteer {
-	public static final int FORWARD = 0, LEFT = -1, BACKWARDS = -2, RIGHT = -3;
-
-	public static final int NORTH = 0, EAST = 1, SOUTH = 2, WEST = 3;
-
-	public static final int THRESHOLD = 25;
-
-	public static final int X = 0, Y = 1, THETA = 2;
-
 	/**
 	 * Adds 2 Odometer system co-ordinates together in a sane manner
 	 *
@@ -31,8 +23,11 @@ public class Orienteer {
 		return result;
 	}
 
-	
-	public static int facingToInt(float angle){
+	public static double degreesToRads(float angle) {
+		return ((angle / 180) * Math.PI);
+	}
+
+	public static int facingToInt(float angle) {
 		angle /= 90;
 		return -Math.round(angle) % 4;
 	}
@@ -40,10 +35,14 @@ public class Orienteer {
 	public static double orientationToRads(int orientation) {
 		return degreesToRads(Direction.intToAngle(orientation));
 	}
-	
-	public static double degreesToRads(float angle) {
-		return (angle/180 * Math.PI);
-	}
+
+	public static final int FORWARD = 0, LEFT = -1, BACKWARDS = -2, RIGHT = -3;
+
+	public static final int NORTH = 0, EAST = 1, SOUTH = 2, WEST = 3;
+
+	public static final int THRESHOLD = 25;
+
+	public static final int X = 0, Y = 1, THETA = 2;
 
 	private int count;
 	private final LCDinfo lcd;
@@ -89,6 +88,40 @@ public class Orienteer {
 		}
 	}
 
+	private int changeCount(int direction) {
+		Pose pos = this.nav.getPose();
+		int offset[] = new int[3];
+
+		offset[THETA] = (facingToInt(pos.getHeading()) + direction) % 4;
+		if (direction == FORWARD) {
+			Point p = this.getFront();
+			offset[X] = this.map.getGrid(p.getX());
+			offset[Y] = this.map.getGrid(p.getY());
+		} else {
+			offset[X] = this.map.getGrid(pos.getX());
+			offset[Y] = this.map.getGrid(pos.getY());
+		}
+		int changecount = 0;
+		for (int y = 0; y < this.height; y++) {
+			for (int x = 0; x < this.width; x++) {
+				for (int d = 0; d < 4; d++) {
+					if (this.isOption(x, y, d)) {
+						int option[] = new int[3];
+						option[X] = x;
+						option[Y] = y;
+						option[THETA] = d;
+						int[] correctedOffset = this.getCorrectedOffset(offset,
+								option[THETA]);
+						if (this.validOption(option, correctedOffset, true)) {
+							changecount++;
+						}
+					}
+				}
+			}
+		}
+		return changecount;
+	}
+
 	/**
 	 * removes an option from the option matrix
 	 * 
@@ -98,23 +131,6 @@ public class Orienteer {
 	 */
 	public void clearOption(int x, int y, int direction) {
 		this.options.clear(this.getOptionIndex(x, y, direction));
-	}
-
-	/**
-	 * corrects an offset for a given starting orientation in the odometer
-	 * system
-	 * 
-	 * @param offset
-	 * @param orientation
-	 */
-	public void getCorrectedOffset(Pose offset, int orientation) {
-		
-		float x = offset.getX();
-		float y = offset.getY();
-		double angle = orientationToRads(orientation);
-		offset.setLocation((float) (x*Math.cos(angle) - y*Math.sin(angle)),
-				(float) (y*Math.cos(angle) + x*Math.sin(angle)));
-		//offset.rotateUpdate(Direction.intToAngle(orientation));
 	}
 
 	/**
@@ -128,9 +144,29 @@ public class Orienteer {
 		int[] correctedOffset = new int[3];
 		double angle = orientationToRads(orientation);
 		correctedOffset[THETA] = offset[THETA];
-		correctedOffset[X] = (int) Math.round((offset[X] * Math.cos(angle)) - (offset[Y] * Math.sin(angle)));
-		correctedOffset[Y] = (int) Math.round((offset[Y] * Math.cos(angle)) + (offset[X] * Math.sin(angle)));
+		correctedOffset[X] = (int) Math.round((offset[X] * Math.cos(angle))
+				- (offset[Y] * Math.sin(angle)));
+		correctedOffset[Y] = (int) Math.round((offset[Y] * Math.cos(angle))
+				+ (offset[X] * Math.sin(angle)));
 		return correctedOffset;
+	}
+
+	/**
+	 * corrects an offset for a given starting orientation in the odometer
+	 * system
+	 * 
+	 * @param offset
+	 * @param orientation
+	 */
+	public void getCorrectedOffset(Pose offset, int orientation) {
+
+		float x = offset.getX();
+		float y = offset.getY();
+		double angle = orientationToRads(orientation);
+		offset.setLocation(
+				(float) ((x * Math.cos(angle)) - (y * Math.sin(angle))),
+				(float) ((y * Math.cos(angle)) + (x * Math.sin(angle))));
+		// offset.rotateUpdate(Direction.intToAngle(orientation));
 	}
 
 	/**
@@ -145,6 +181,30 @@ public class Orienteer {
 		return result;
 	}
 
+	private Point getFront() {
+		int x, y;
+		Direction dir;
+		Pose pos = this.nav.getPose();
+		x = this.map.getGrid(pos.getX());
+		y = this.map.getGrid(pos.getY());
+		dir = Direction.fromAngle(pos.getHeading());
+		switch (dir) {
+		case EAST:
+			x++;
+			break;
+		case NORTH:
+			y++;
+			break;
+		case WEST:
+			x--;
+			break;
+		case SOUTH:
+			y--;
+			break;
+		}
+		return new Point((float) this.map.getPos(x), (float) this.map.getPos(y));
+	}
+
 	/**
 	 * Adds 2 directions, and returns a valid direction
 	 * 
@@ -153,7 +213,7 @@ public class Orienteer {
 	 * @return
 	 */
 	public int getOffsetDirection(int initial, double angle) {
-		return (initial + facingToInt((float)angle)) % 4;
+		return (initial + facingToInt((float) angle)) % 4;
 	}
 
 	/**
@@ -267,8 +327,10 @@ public class Orienteer {
 							option[THETA] = d;
 							int[] correctedOffset = this.getCorrectedOffset(
 									offset, option[THETA]);
-							if (!this.validOption(option, correctedOffset, wall)) {
-								this.options.clear(this.getOptionIndex(x, y, d));
+							if (!this
+									.validOption(option, correctedOffset, wall)) {
+								this.options
+										.clear(this.getOptionIndex(x, y, d));
 							}
 						}
 					}
@@ -277,12 +339,11 @@ public class Orienteer {
 			synchronized (this.lock) {
 				this.count++;
 			}
-			
+
 			if (this.options.cardinality() <= 1) {
 				break;
 			}
-			this.move(wall,
-					Direction.fromAngle(Math.round(pos.getHeading())));
+			this.move(wall, Direction.fromAngle(Math.round(pos.getHeading())));
 		}
 		option = new int[3];
 		this.getOption(option);
@@ -290,7 +351,8 @@ public class Orienteer {
 		pos = this.nav.getPose();
 		this.getCorrectedOffset(pos, option[THETA]);
 		Pose start = new Pose();
-		start.setLocation((float)map.getPos(option[X]), (float)map.getPos(option[Y]));
+		start.setLocation((float) this.map.getPos(option[X]),
+				(float) this.map.getPos(option[Y]));
 		start.setHeading(Direction.intToAngle(option[THETA]));
 		this.nav.setPose(addPositions(pos, start));
 		return start;
@@ -313,63 +375,6 @@ public class Orienteer {
 		return this.map.blocked(x, y) == blocked;
 	}
 
-	private int changeCount(int direction){
-		Pose pos = this.nav.getPose();
-		int offset[] = new int[3];
-		
-		offset[THETA] = (facingToInt(pos.getHeading()) + direction) % 4;
-		if(direction == FORWARD){
-			Point p = getFront();
-			offset[X] = this.map.getGrid(p.getX());
-			offset[Y] = this.map.getGrid(p.getY());
-		} else {
-			offset[X] = this.map.getGrid(pos.getX());
-			offset[Y] = this.map.getGrid(pos.getY());
-		}
-		int changecount = 0;
-		for (int y = 0; y < this.height; y++) {
-			for (int x = 0; x < this.width; x++) {
-				for (int d = 0; d < 4; d++) {
-					if (this.isOption(x, y, d)) {
-						int option[] = new int[3];
-						option[X] = x;
-						option[Y] = y;
-						option[THETA] = d;
-						int[] correctedOffset = this.getCorrectedOffset(offset, option[THETA]);
-						if (this.validOption(option, correctedOffset, true)) {
-							changecount++;
-						}
-					}
-				}
-			}
-		}
-		return changecount;
-	}
-	
-	private Point getFront(){
-		int x, y;
-		Direction dir;
-		Pose pos = nav.getPose();
-		x = this.map.getGrid(pos.getX());
-		y = this.map.getGrid(pos.getY());
-		dir = Direction.fromAngle(pos.getHeading());
-		switch(dir){
-		case EAST:
-			x++;
-			break;
-		case NORTH:
-			y++;
-			break;
-		case WEST:
-			x--;
-			break;
-		case SOUTH:
-			y--;
-			break;
-		}
-		return new Point((float)map.getPos(x), (float)map.getPos(y));
-	}
-	
 	/**
 	 * Moves the robot to a new orientation, dependent on implementation
 	 * 
@@ -379,37 +384,40 @@ public class Orienteer {
 	 *            Current travel direction relative to starting point
 	 */
 	public void move(boolean wall, Direction direction) {
-		int remaining_center = this.options.cardinality()/2;
+		int remaining_center = this.options.cardinality() / 2;
 		int count[] = new int[2];
-		count[0] = Math.abs(changeCount(LEFT) - remaining_center);
-		count[1] = Math.abs(changeCount(RIGHT) - remaining_center);
+		count[0] = Math.abs(this.changeCount(LEFT) - remaining_center);
+		count[1] = Math.abs(this.changeCount(RIGHT) - remaining_center);
 		int min;
-		if(count[0] > count[1]){
+		if (count[0] > count[1]) {
 			min = 1;
 		} else {
 			min = 0;
 		}
-		if(!wall){
-			int frontCount = Math.abs(changeCount(FORWARD) - remaining_center);
-			if(frontCount <= count[min]){
+		if (!wall) {
+			int frontCount = Math.abs(this.changeCount(FORWARD)
+					- remaining_center);
+			if (frontCount <= count[min]) {
 				min = 2;
 			}
 		}
 		float angle;
-		switch(min){
+		switch (min) {
 		case 0:
-			angle = Direction.intToAngle((Direction.angleToInt(nav.getPose().getHeading()) + LEFT + 4) % 4);
+			angle = Direction.intToAngle((Direction.angleToInt(this.nav
+					.getPose().getHeading()) + LEFT + 4) % 4);
 			this.nav.turnTo(angle);
 			break;
 		case 1:
-			angle = Direction.intToAngle((Direction.angleToInt(nav.getPose().getHeading()) + RIGHT + 4) % 4);
+			angle = Direction.intToAngle((Direction.angleToInt(this.nav
+					.getPose().getHeading()) + RIGHT + 4) % 4);
 			this.nav.turnTo(angle);
 			break;
 		case 2:
-			this.nav.gotoPoint(getFront());
+			this.nav.gotoPoint(this.getFront());
 			Delay.msDelay(400);
 			EventManager.restart();
-			while(nav.moving()){
+			while (this.nav.moving()) {
 				Delay.msDelay(100);
 			}
 			EventManager.pause();

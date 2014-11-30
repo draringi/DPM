@@ -13,7 +13,7 @@ package dpm.teamone.driver.communications;
 ///**
 // * The ControlComms module talks with the C&C server, Receiving map data, and
 // * sending positional data
-// * 
+// *
 // * @author Michael Williams
 // *
 // */

@@ -35,12 +35,12 @@ class LineCorrecter implements Behavior {
 
 	@Override
 	public void action() {
-		Pose pose = nav.getPose();
-		if (leftPassed && rightPassed) {
+		Pose pose = this.nav.getPose();
+		if (this.leftPassed && this.rightPassed) {
 			float distance;
-			if (passPoint != null) {
+			if (this.passPoint != null) {
 				Sound.beepSequenceUp();
-				distance = pose.distanceTo(passPoint);
+				distance = pose.distanceTo(this.passPoint);
 			} else {
 				distance = 0;
 			}
@@ -53,7 +53,7 @@ class LineCorrecter implements Behavior {
 				return;
 			}
 			float theta = (float) Math.atan2(distance, SENSOR_DIFF);
-			if (leftFirst) {
+			if (this.leftFirst) {
 				theta = -theta;
 			}
 			theta = (float) ((theta / Math.PI) * 180);
@@ -69,22 +69,22 @@ class LineCorrecter implements Behavior {
 			switch (dir) {
 			case EAST:
 			case WEST:
-				line = nav.getMap().getGrid(x, true);
+				line = this.nav.getMap().getGrid(x, true);
 				x = (float) ((line * 30) + (Math.cos(theta) * offset));
 				break;
 			case NORTH:
 			case SOUTH:
-				line = nav.getMap().getGrid(y, true);
+				line = this.nav.getMap().getGrid(y, true);
 				y = (float) ((line * 30) + (Math.sin(theta) * offset));
 				break;
 			}
-			pose = nav.getPose();
+			pose = this.nav.getPose();
 			pose.setLocation(x, y);
 			pose.rotateUpdate(correction);
 			if (LineLogger.isInit()) {
-				LineLogger.addRecord(pose, distance, leftFirst,
+				LineLogger.addRecord(pose, distance, this.leftFirst,
 						beleivedHeading, correction, pose.getHeading(), dir,
-						nav.getPose());
+						this.nav.getPose());
 			}
 			this.nav.setPose(pose);
 			this.leftPassed = false;
@@ -96,7 +96,7 @@ class LineCorrecter implements Behavior {
 			} catch (Exception e) {
 			}
 			return;
-		} else if (leftPassed) {
+		} else if (this.leftPassed) {
 			this.leftFirst = true;
 			this.passPoint = pose.getLocation();
 		} else {
@@ -116,14 +116,14 @@ class LineCorrecter implements Behavior {
 			return false;
 		}
 		boolean left, right, change;
-		left = (leftSensor.getRawLightValue() < LIGHT_LEVEL);
-		right = (rightSensor.getRawLightValue() < LIGHT_LEVEL);
-		change = (left && !leftPassed) || (right && !rightPassed);
+		left = (this.leftSensor.getRawLightValue() < LIGHT_LEVEL);
+		right = (this.rightSensor.getRawLightValue() < LIGHT_LEVEL);
+		change = (left && !this.leftPassed) || (right && !this.rightPassed);
 		if (!change) {
 			return false;
 		}
-		this.rightPassed = rightPassed || right;
-		this.leftPassed = leftPassed || left;
+		this.rightPassed = this.rightPassed || right;
+		this.leftPassed = this.leftPassed || left;
 		return true;
 	}
 

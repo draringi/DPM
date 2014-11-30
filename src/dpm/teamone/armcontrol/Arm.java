@@ -12,16 +12,6 @@ import lejos.nxt.Sound;
  */
 public class Arm {
 
-	private static final NXTRegulatedMotor arm = Motor.B;
-	private static final NXTRegulatedMotor claw = Motor.A;
-	private static final int GRAB_ANGLE = -10;
-	private static boolean grabbing = true;
-	private static final int LOWER_ANGLE = 0;
-	private static final int RAISE_ANGLE = -90;
-
-	private static boolean raised = false;
-	private static final int RELEASE_ANGLE = 120;
-
 	/**
 	 * Grabs the block in front of it
 	 */
@@ -68,5 +58,19 @@ public class Arm {
 			grabbing = false;
 		}
 	}
+
+	private static final NXTRegulatedMotor arm = Motor.B;
+	private static final NXTRegulatedMotor claw = Motor.A;
+
+	private static final int GRAB_ANGLE = -10;
+	private static boolean grabbing = true;
+
+	private static final int LOWER_ANGLE = 0;
+
+	private static final int RAISE_ANGLE = -90;
+
+	private static boolean raised = false;
+
+	private static final int RELEASE_ANGLE = 120;
 
 }

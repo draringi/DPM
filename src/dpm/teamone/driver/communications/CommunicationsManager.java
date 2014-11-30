@@ -19,7 +19,7 @@ public class CommunicationsManager {
 	public CommunicationsManager() {
 		this.cnc = new ControlComms();
 		this.truck = new TruckComms();
-		truck.setup();
+		this.truck.setup();
 	}
 
 	public void grabObject() {

@@ -15,7 +15,7 @@ public class DriverComms {
 	RS485Connection connection;
 
 	public DriverComms() {
-		connection = RS485.waitForConnection(0, NXTConnection.PACKET);
+		this.connection = RS485.waitForConnection(0, NXTConnection.PACKET);
 	}
 
 	/**

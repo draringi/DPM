@@ -27,7 +27,7 @@ public class TruckComms {
 	 * Tells the truck brick to arm the claw (Lower and open)
 	 */
 	public void armClaw() {
-		ensureConnection();
+		this.ensureConnection();
 		byte buffer[] = "a".getBytes();
 		this.connection.sendPacket(buffer, buffer.length);
 		try {
@@ -48,7 +48,7 @@ public class TruckComms {
 	 * Tells the truck brick to drop what it is holding
 	 */
 	public void drop() {
-		ensureConnection();
+		this.ensureConnection();
 		byte buffer[] = "d".getBytes();
 		this.connection.sendPacket(buffer, buffer.length);
 		try {
@@ -66,7 +66,7 @@ public class TruckComms {
 	}
 
 	private void ensureConnection() {
-		while (connection == null) {
+		while (this.connection == null) {
 			this.connection = RS485.connect("NXT", NXTConnection.PACKET);
 		}
 	}
@@ -75,7 +75,7 @@ public class TruckComms {
 	 * Tells the truck brick to pick up what is in front of it
 	 */
 	public void pickUp() {
-		ensureConnection();
+		this.ensureConnection();
 		byte buffer[] = "p".getBytes();
 		this.connection.sendPacket(buffer, buffer.length);
 		try {
@@ -104,7 +104,7 @@ public class TruckComms {
 	 * closed)
 	 */
 	public void travel() {
-		ensureConnection();
+		this.ensureConnection();
 		byte buffer[] = "t".getBytes();
 		this.connection.sendPacket(buffer, buffer.length);
 		try {
