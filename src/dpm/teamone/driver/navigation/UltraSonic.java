@@ -2,6 +2,7 @@ package dpm.teamone.driver.navigation;
 
 import lejos.nxt.SensorPort;
 import lejos.nxt.UltrasonicSensor;
+import lejos.util.Delay;
 
 /**
  * Averaging filtering Ultrasonic reader
@@ -11,7 +12,7 @@ import lejos.nxt.UltrasonicSensor;
  */
 public class UltraSonic {
 
-	private static final int MAX = 90, LOOPS = 50;
+	private static final int MAX = 90, LOOPS = 40;
 
 	private final UltrasonicSensor us;
 
@@ -22,10 +23,7 @@ public class UltraSonic {
 
 	private int getFiltered() {
 		this.us.ping();
-		try {
-			Thread.sleep(40);
-		} catch (InterruptedException e) {
-		}
+		Delay.msDelay(15); // 34cm/ms, 34*15 = 255*2
 		int dist = this.us.getDistance();
 		if (dist > MAX) {
 			return MAX;
