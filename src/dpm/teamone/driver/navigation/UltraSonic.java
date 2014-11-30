@@ -11,7 +11,7 @@ import lejos.nxt.UltrasonicSensor;
  */
 public class UltraSonic {
 
-	private static final int MAX = 90, LOOPS = 10;
+	private static final int MAX = 90, LOOPS = 50;
 
 	private final UltrasonicSensor us;
 

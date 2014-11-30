@@ -72,9 +72,9 @@ public class DriverRobot {
 		//nav.setPickUpZone(3, 1, 1, 1); // Lab 5 map
 		nav.setPickUpZone(2, 2, 0, 0); //Any 8x8 map
 		Delay.msDelay(100);
+		events = new EventManager(nav);
 		EventManager.pause();
 		nav.localize();
-		events = new EventManager(nav);
 		events.start();
 		Delay.msDelay(100);
 		EventManager.restart();
