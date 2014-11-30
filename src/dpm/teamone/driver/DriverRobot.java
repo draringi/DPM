@@ -62,18 +62,22 @@ public class DriverRobot {
 		mapData[MAP_DATA_MAP] = BETA_MAP;
 		comms.prepareTravel();
 		// map = MapFactory.getMap(mapData[MAP_DATA_MAP]);
-		map = MapFactory.getBetaMap(mapData[MAP_DATA_MAP]);
-		//map = MapFactory.lab5Map();
+		//map = MapFactory.getBetaMap(mapData[MAP_DATA_MAP]);
+		map = MapFactory.lab5Map();
 		nav = new NavigationController(map);
 
 		// nav.setDropZone(mapData[MAP_DATA_DROP_X], mapData[MAP_DATA_DROP_Y],
 		// 1, 1);
-		//nav.setPickUpZone(3, 1, 1, 1); // Lab 5 map
-		nav.setPickUpZone(2, 2, 0, 0); //Any 8x8 map
-		nav.localize();
+		nav.setPickUpZone(3, 1, 1, 1); // Lab 5 map
+		//nav.setPickUpZone(2, 2, 0, 0); //Any 8x8 map
 		events = new EventManager(nav);
+		
+		EventManager.pause();
+		nav.localize();
 		events.start();
+		EventManager.restart();
 		nav.driveToPickup();
+		EventManager.pause();
 		// comms.prepareClaw();
 		// nav.findObject();
 		// comms.grabObject();

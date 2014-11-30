@@ -15,7 +15,7 @@ import dpm.teamone.driver.navigation.NavigationController;
 public class EventManager extends Thread {
 
 	private static Object lock;
-	private static boolean running;
+	private static boolean running, localizing;
 
 	public static boolean isRunning() {
 		boolean result;
@@ -25,6 +25,14 @@ public class EventManager extends Thread {
 		return result;
 	}
 
+	protected static boolean isLocalizing() {
+		boolean result;
+		synchronized (lock) {
+			result = localizing;
+		}
+		return result;
+	}
+	
 	public static void pause() {
 		synchronized (lock) {
 			running = false;
@@ -37,9 +45,20 @@ public class EventManager extends Thread {
 		}
 	}
 
+	public static void stopLocalizing() {
+		synchronized (lock) {
+			localizing = false;
+		}
+	}
+
+	public static void startLocalizing() {
+		synchronized (lock) {
+			localizing = true;
+		}
+	}
+	
 	private final Arbitrator arbitrator;
 
-	private final NavigationController nav;
 
 	/**
 	 * Constructor creates an underlying arbitrator while providing access to
@@ -49,10 +68,10 @@ public class EventManager extends Thread {
 	 *            Main Driver Robot control
 	 */
 	public EventManager(NavigationController nav) {
-		this.nav = nav;
 		Behavior behaviors[] = { new LineCorrecter(nav) };
 		this.arbitrator = new Arbitrator(behaviors);
 		lock = new Object();
+		localizing = false;
 	}
 
 	/**

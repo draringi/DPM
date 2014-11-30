@@ -3,7 +3,9 @@ package dpm.teamone.driver.navigation;
 import java.util.BitSet;
 
 import lejos.nxt.LCD;
+import lejos.robotics.navigation.DifferentialPilot;
 import lejos.robotics.navigation.Pose;
+import dpm.teamone.driver.events.EventManager;
 import dpm.teamone.driver.maps.GridMap;
 
 public class Orienteer {
@@ -245,6 +247,7 @@ public class Orienteer {
 	 * @param nav
 	 */
 	public Pose localize() {
+		EventManager.startLocalizing();
 		int[] option;
 		int[] offset;
 		Pose pos;
@@ -292,6 +295,7 @@ public class Orienteer {
 		start.setLocation((float)map.getPos(option[X]), (float)map.getPos(option[Y]));
 		start.setHeading(Direction.intToAngle(option[THETA]));
 		this.nav.setPose(addPositions(pos, start));
+		EventManager.stopLocalizing();
 		return start;
 	}
 
@@ -348,7 +352,20 @@ public class Orienteer {
 	 */
 	public void move(boolean wall, Direction direction) {
 		if(!wall){
-			this.nav.getPilot().travel(30);
+			DifferentialPilot pilot = this.nav.getPilot(); 
+			pilot.travel(30, true);
+			try {
+				Thread.sleep(300);
+			} catch (InterruptedException e) {
+			}
+			EventManager.restart();
+			while(pilot.isMoving()){
+				try {
+					Thread.sleep(100);
+				} catch (InterruptedException e) {
+				}
+			}
+			EventManager.pause();
 			return;
 		}
 		int remaining_center = this.options.cardinality()/2;
