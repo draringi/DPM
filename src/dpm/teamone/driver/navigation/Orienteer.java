@@ -320,9 +320,16 @@ public class Orienteer {
 	private int changeCount(int direction){
 		Pose pos = this.nav.getPose();
 		int offset[] = new int[3];
-		offset[X] = this.map.getGrid(pos.getX());
-		offset[Y] = this.map.getGrid(pos.getY());
+		
 		offset[THETA] = (facingToInt(pos.getHeading()) + direction) % 4;
+		if(direction == FORWARD){
+			Point p = getFront();
+			offset[X] = this.map.getGrid(p.getX());
+			offset[Y] = this.map.getGrid(p.getY());
+		} else {
+			offset[X] = this.map.getGrid(pos.getX());
+			offset[Y] = this.map.getGrid(pos.getY());
+		}
 		int changecount = 0;
 		for (int y = 0; y < this.height; y++) {
 			for (int x = 0; x < this.width; x++) {
@@ -375,18 +382,6 @@ public class Orienteer {
 	 *            Current travel direction relative to starting point
 	 */
 	public void move(boolean wall, Direction direction) {
-		if(!wall){
-			Point next = getFront();
-			nav.gotoPoint(next);
-			Delay.msDelay(400);
-			EventManager.restart();
-			while(nav.moving()){
-				Delay.msDelay(100);
-			}
-			EventManager.pause();
-			Delay.msDelay(10);
-			return;
-		}
 		int remaining_center = this.options.cardinality()/2;
 		int count[] = new int[2];
 		count[0] = Math.abs(changeCount(LEFT) - remaining_center);
@@ -397,12 +392,28 @@ public class Orienteer {
 		} else {
 			min = 0;
 		}
+		if(!wall){
+			int frontCount = Math.abs(changeCount(FORWARD) - remaining_center);
+			if(frontCount <= count[min]){
+				min = 2;
+			}
+		}
 		switch(min){
 		case 0:
 			this.nav.rotate(90);
 			break;
 		case 1:
 			this.nav.rotate(-90);
+			break;
+		case 2:
+			this.nav.gotoPoint(getFront());
+			Delay.msDelay(400);
+			EventManager.restart();
+			while(nav.moving()){
+				Delay.msDelay(100);
+			}
+			EventManager.pause();
+			Delay.msDelay(10);
 		}
 	}
 
