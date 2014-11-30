@@ -23,7 +23,7 @@ public class Orienteer {
 
 	/**
 	 * Adds 2 Odometer system co-ordinates together in a sane manner
-	 * 
+	 *
 	 * @param posOne
 	 * @param posTwo
 	 * @return
@@ -168,7 +168,7 @@ public class Orienteer {
 	 * @return
 	 */
 	public int getOffsetDirection(int initial, int offset) {
-		return (initial + offset) % 4;
+		return (initial + offset + 4) % 4;
 	}
 
 	/**
