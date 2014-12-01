@@ -177,7 +177,7 @@ public class NavigationController {
 		
 		int distance = us.poll();
 		float  minAngle = 0;
-		int minVal = 35;
+		int minVal = 40;
 		float currentAng = -180;
 		boolean check =false;
 		if(this.navigator.getPoseProvider().getPose().getHeading()!=-180){
@@ -186,12 +186,10 @@ public class NavigationController {
 		this.navigator.getPoseProvider().setPose(new Pose(p.getX(),p.getY(),-180));
 		boolean finished =false;
 		this.pilot.setRotateSpeed(30);
-		this.pilot.rotateLeft();
 		
 		while(this.navigator.getPoseProvider().getPose().getHeading()<-90){
+			this.pilot.rotate(5);
 			int temp=us.poll();
-			//LCD.drawString("Angle"+this.navigator.getPoseProvider().getPose().getHeading(), 0, 4);
-			//LCD.drawString("Distance"+temp, 0, 3);
 			if(temp<minVal){
 				minAngle = this.navigator.getPoseProvider().getPose().getHeading();
 				minVal = temp;
@@ -202,18 +200,14 @@ public class NavigationController {
 		if(!check){
 			this.pilot.setTravelSpeed(15);
 			this.pilot.setRotateSpeed(45);
-			this.pilot.travel(15);
-			this.turnTo(-180);
-			this.pilot.travel(15);
-			Pose t = this.navigator.getPoseProvider().getPose();
-			this.navigator.getPoseProvider().setPose(new Pose(t.getX(),t.getY(),-180));
-			
-			
+			float angle = this.getPose().angleTo(new Point(-30, -30));
+			this.turnTo(angle);
+			this.pilot.travel(5);
 			return findObject();
 			
 		}
 		this.pilot.stop();
-		this.turnTo(minAngle+2);;
+		this.turnTo(minAngle);;
 		return minVal;
 		
 	}

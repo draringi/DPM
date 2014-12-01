@@ -105,10 +105,10 @@ public class GridMap {
 	 * Converts double from the odometer system into grid id value
 	 */
 	public int getGrid(double val, boolean orienteering) {
-		val /= 30;
 		if (!orienteering) {
-			val = Math.ceil(val);
+			val += 15;
 		}
+		val /= 30.0;
 		return (int) Math.round(val);
 	}
 

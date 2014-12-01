@@ -36,9 +36,7 @@ public class DriverRobot {
 		map = MapFactory.getBetaMap(mapData[MAP_DATA_MAP]);
 		//map = MapFactory.lab5Map();
 		nav = new NavigationController(map);
-
-		// nav.setDropZone(mapData[MAP_DATA_DROP_X], mapData[MAP_DATA_DROP_Y],
-		// 1, 1);
+		nav.setDropZone(7, 7, 1, 1);
 		//nav.setPickUpZone(3, 1, 1, 1); // Lab 5 map
 		nav.setPickUpZone(2, 2, 0, 0); //Any 8x8 map
 		events = new EventManager(nav);
@@ -55,6 +53,7 @@ public class DriverRobot {
 		nav.travel(dist);
 		comms.grabObject();
 		// This is the end of the Beta Goal
+		EventManager.restart();
 		nav.driveToDrop();
 		comms.releaseObject();
 		Button.waitForAnyPress();
