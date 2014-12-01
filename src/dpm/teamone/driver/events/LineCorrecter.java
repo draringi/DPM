@@ -7,6 +7,7 @@ import lejos.nxt.Sound;
 import lejos.robotics.navigation.Pose;
 import lejos.robotics.subsumption.Behavior;
 import dpm.teamone.driver.navigation.Direction;
+import dpm.teamone.driver.navigation.Light;
 import dpm.teamone.driver.navigation.NavigationController;
 
 class LineCorrecter implements Behavior {
@@ -17,15 +18,13 @@ class LineCorrecter implements Behavior {
 	private static final float SENSOR_DIFF = (float) 11.1;
 	private static final float SENSOR_OFFSET = (float) 14.6;
 	private boolean leftPassed, rightPassed, leftFirst;
-	private final ColorSensor leftSensor, rightSensor;
+	private final Light leftSensor, rightSensor;
 	private final NavigationController nav;
 	private Point passPoint;
 
 	protected LineCorrecter(NavigationController nav) {
-		this.leftSensor = new ColorSensor(LEFT_LIGHT_PORT);
-		this.rightSensor = new ColorSensor(RIGHT_LIGHT_PORT);
-		this.leftSensor.setFloodlight(true);
-		this.rightSensor.setFloodlight(true);
+		this.leftSensor = new Light(LEFT_LIGHT_PORT);
+		this.rightSensor = new Light(RIGHT_LIGHT_PORT);
 		this.nav = nav;
 		this.leftPassed = false;
 		this.rightPassed = false;
@@ -116,8 +115,8 @@ class LineCorrecter implements Behavior {
 			return false;
 		}
 		boolean left, right, change;
-		left = (this.leftSensor.getRawLightValue() < LIGHT_LEVEL);
-		right = (this.rightSensor.getRawLightValue() < LIGHT_LEVEL);
+		left = (this.leftSensor.poll() < LIGHT_LEVEL);
+		right = (this.rightSensor.poll() < LIGHT_LEVEL);
 		change = (left && !this.leftPassed) || (right && !this.rightPassed);
 		if (!change) {
 			return false;

@@ -17,9 +17,9 @@ public class Orienteer {
 	 * @return
 	 */
 	public static Pose addPositions(Pose posOne, Pose posTwo) {
-		Pose result = new Pose();
+		Pose result = posOne;
 		result.setLocation(posOne.getLocation().add(posTwo.getLocation()));
-		result.setHeading(posOne.getHeading() + posTwo.getHeading());
+		result.rotateUpdate(posTwo.getHeading());
 		return result;
 	}
 
