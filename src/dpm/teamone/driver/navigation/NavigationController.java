@@ -169,28 +169,50 @@ public class NavigationController {
 
 	}
 
-	public void findObject() {
+	public int findObject(){
 		UltraSonic us = new UltraSonic();
-
-		int minAngle = 0;
-		int minVal = 190;
-		int currentAng = 200;
-		this.turnTo(180);
-		while (currentAng < 250) {
-			Sound.beep();
-			currentAng += 2;
-			this.turnTo(currentAng);
-			if (us.poll() < minVal) {
-
-				minAngle = currentAng;
-				minVal = us.poll();
+		
+		int distance = us.poll();
+		float  minAngle = 0;
+		int minVal = 35;
+		float currentAng = -180;
+		boolean check =false;
+		if(this.navigator.getPoseProvider().getPose().getHeading()!=-180){
+		this.turnTo(180);}
+		Pose p = this.navigator.getPoseProvider().getPose();
+		this.navigator.getPoseProvider().setPose(new Pose(p.getX(),p.getY(),-180));
+		boolean finished =false;
+		this.pilot.setRotateSpeed(30);
+		this.pilot.rotateLeft();
+		
+		while(this.navigator.getPoseProvider().getPose().getHeading()<-90){
+			int temp=us.poll();
+			LCD.drawString("Angle"+this.navigator.getPoseProvider().getPose().getHeading(), 0, 4);
+			LCD.drawString("Distance"+temp, 0, 3);
+			if(temp<minVal){
+				minAngle = this.navigator.getPoseProvider().getPose().getHeading();
+				minVal = temp;
+				check=true;
 			}
+		
 		}
-		this.turnTo(minAngle + 5);
-		this.pilot.travel(minVal);
-		this.turnTo(minAngle + 7);
-		this.pilot.travel(3);
-		this.turnTo(minAngle + 2);
+		if(!check){
+			this.pilot.setTravelSpeed(15);
+			this.pilot.setRotateSpeed(45);
+			this.pilot.travel(15);
+			this.turnTo(-180);
+			this.pilot.travel(15);
+			Pose t = this.navigator.getPoseProvider().getPose();
+			this.navigator.getPoseProvider().setPose(new Pose(t.getX(),t.getY(),-180));
+			
+			
+			return findObject();
+			
+		}
+		this.pilot.stop();
+		this.turnTo(minAngle+2);;
+		return minVal;
+		
 	}
 
 	/**
