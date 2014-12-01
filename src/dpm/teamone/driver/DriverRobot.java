@@ -56,6 +56,7 @@ public class DriverRobot {
 		EventManager.restart();
 		nav.driveToDrop();
 		comms.releaseObject();
+		EventManager.pause();
 		Button.waitForAnyPress();
 	}
 

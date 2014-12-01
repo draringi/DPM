@@ -34,7 +34,7 @@ public class EventManager extends Thread {
 		}
 	}
 
-	private static Object lock;
+	private static Object lock = new Object();
 
 	private static boolean running;
 
@@ -50,7 +50,6 @@ public class EventManager extends Thread {
 	public EventManager(NavigationController nav) {
 		Behavior behaviors[] = { new LineCorrecter(nav) };
 		this.arbitrator = new Arbitrator(behaviors);
-		lock = new Object();
 	}
 
 	/**

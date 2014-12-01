@@ -12,7 +12,7 @@ import lejos.util.Delay;
  */
 public class UltraSonic {
 
-	private static final int MAX = 90, LOOPS = 40;
+	private static final int MAX = 90, LOOPS = 25;
 
 	private final UltrasonicSensor us;
 

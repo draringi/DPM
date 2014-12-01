@@ -12,6 +12,7 @@ import lejos.robotics.navigation.Pose;
 import lejos.robotics.navigation.Waypoint;
 import lejos.robotics.pathfinding.Node;
 import lejos.robotics.pathfinding.Path;
+import lejos.util.Delay;
 import dpm.teamone.driver.events.EventManager;
 import dpm.teamone.driver.maps.GridMap;
 
@@ -188,7 +189,7 @@ public class NavigationController {
 		this.pilot.setRotateSpeed(30);
 		
 		while(this.navigator.getPoseProvider().getPose().getHeading()<-90){
-			this.pilot.rotate(5);
+			this.pilot.rotate(9);
 			int temp=us.poll();
 			if(temp<minVal){
 				minAngle = this.navigator.getPoseProvider().getPose().getHeading();
@@ -229,10 +230,7 @@ public class NavigationController {
 			RIGHT_MOTOR.flt(true);
 			this.navigator.rotateTo(this.getPose().angleTo(wp));
 			this.navigator.followPath();
-			try {
-				Thread.sleep(1000);
-			} catch (InterruptedException e) {
-			}
+			Delay.msDelay(500);
 			EventManager.restart();
 			done = this.navigator.waitForStop();
 		}
