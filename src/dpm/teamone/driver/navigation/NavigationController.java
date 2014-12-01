@@ -6,7 +6,6 @@ import java.util.List;
 import lejos.geom.Point;
 import lejos.nxt.Motor;
 import lejos.nxt.NXTRegulatedMotor;
-import lejos.nxt.Sound;
 import lejos.robotics.navigation.DifferentialPilot;
 import lejos.robotics.navigation.Navigator;
 import lejos.robotics.navigation.Pose;
@@ -169,6 +168,10 @@ public class NavigationController {
 
 	}
 
+	public void travel(float dist){
+		this.pilot.travel(dist);
+	}
+	
 	public int findObject(){
 		UltraSonic us = new UltraSonic();
 		
@@ -187,8 +190,8 @@ public class NavigationController {
 		
 		while(this.navigator.getPoseProvider().getPose().getHeading()<-90){
 			int temp=us.poll();
-			LCD.drawString("Angle"+this.navigator.getPoseProvider().getPose().getHeading(), 0, 4);
-			LCD.drawString("Distance"+temp, 0, 3);
+			//LCD.drawString("Angle"+this.navigator.getPoseProvider().getPose().getHeading(), 0, 4);
+			//LCD.drawString("Distance"+temp, 0, 3);
 			if(temp<minVal){
 				minAngle = this.navigator.getPoseProvider().getPose().getHeading();
 				minVal = temp;

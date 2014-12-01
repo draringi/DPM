@@ -351,8 +351,8 @@ public class Orienteer {
 		pos = this.nav.getPose();
 		this.getCorrectedOffset(pos, option[THETA]);
 		Pose start = new Pose();
-		start.setLocation((float) this.map.getPos(option[X]),
-				(float) this.map.getPos(option[Y]));
+		start.setLocation((float) this.map.getPos(option[X])-15,
+				(float) this.map.getPos(option[Y])-15);
 		start.setHeading(Direction.intToAngle(option[THETA]));
 		this.nav.setPose(addPositions(pos, start));
 		return start;

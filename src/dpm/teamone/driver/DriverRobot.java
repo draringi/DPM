@@ -33,29 +33,30 @@ public class DriverRobot {
 		mapData[MAP_DATA_MAP] = BETA_MAP;
 		comms.prepareTravel();
 		// map = MapFactory.getMap(mapData[MAP_DATA_MAP]);
-		// map = MapFactory.getBetaMap(mapData[MAP_DATA_MAP]);
-		map = MapFactory.lab5Map();
+		map = MapFactory.getBetaMap(mapData[MAP_DATA_MAP]);
+		//map = MapFactory.lab5Map();
 		nav = new NavigationController(map);
 
 		// nav.setDropZone(mapData[MAP_DATA_DROP_X], mapData[MAP_DATA_DROP_Y],
 		// 1, 1);
-		nav.setPickUpZone(3, 1, 1, 1); // Lab 5 map
-		// nav.setPickUpZone(2, 2, 0, 0); //Any 8x8 map
-		Delay.msDelay(10);
+		//nav.setPickUpZone(3, 1, 1, 1); // Lab 5 map
+		nav.setPickUpZone(2, 2, 0, 0); //Any 8x8 map
 		events = new EventManager(nav);
+		Delay.msDelay(10);
+		events.start();
 		EventManager.pause();
 		nav.localize();
-		events.start();
 		Delay.msDelay(10);
 		EventManager.restart();
-		// nav.driveToPickup();
+		nav.driveToPickup();
 		EventManager.pause();
-		// comms.prepareClaw();
-		// nav.findObject();
-		// comms.grabObject();
+		int dist = nav.findObject();
+		comms.prepareClaw();
+		nav.travel(dist);
+		comms.grabObject();
 		// This is the end of the Beta Goal
-		// nav.driveToDrop();
-		// comms.releaseObject();
+		nav.driveToDrop();
+		comms.releaseObject();
 		Button.waitForAnyPress();
 	}
 
