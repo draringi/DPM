@@ -166,7 +166,7 @@ public class Orienteer {
 		offset.setLocation(
 				(float) ((x * Math.cos(angle)) - (y * Math.sin(angle))),
 				(float) ((y * Math.cos(angle)) + (x * Math.sin(angle))));
-		// offset.rotateUpdate(Direction.intToAngle(orientation));
+		offset.rotateUpdate(Direction.intToAngle(orientation));
 	}
 
 	/**
