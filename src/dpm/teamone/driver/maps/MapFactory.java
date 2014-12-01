@@ -72,6 +72,27 @@ public class MapFactory {
 	public static GridMap blankMap() {
 		return new GridMap(4, 4);
 	}
+	private static GridMap mapOne() {
+		GridMap map = new GridMap(12, 12);
+		map.set(0, 6);
+		map.set(0, 9);
+		map.set(1, 3);
+		map.set(2, 2);
+		map.set(2, 11);
+		map.set(3, 5);
+		map.set(3, 10);
+		map.set(4, 4);
+		map.set(4, 7);
+		map.set(5, 0);
+		map.set(5, 2);
+		map.set(6, 3);
+		map.set(7, 7);
+		map.set(8, 0);
+		map.set(8, 0);
+		map.set(8, 0);
+		map.set(7, 7);
+		return map;
+	}
 
 	public static GridMap getBetaMap(int mapID) {
 		switch (mapID) {
