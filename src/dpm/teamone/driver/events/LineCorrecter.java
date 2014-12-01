@@ -1,7 +1,6 @@
 package dpm.teamone.driver.events;
 
 import lejos.geom.Point;
-import lejos.nxt.ColorSensor;
 import lejos.nxt.SensorPort;
 import lejos.nxt.Sound;
 import lejos.robotics.navigation.Pose;

@@ -4,7 +4,7 @@ import lejos.nxt.ColorSensor;
 import lejos.nxt.SensorPort;
 
 /**
- * Averaging filtering Ultrasonic reader
+ * Averaging filtering Light/Color reader
  * 
  * @author Michael Williams (260369438)
  * 
@@ -18,7 +18,7 @@ public class Light {
 	public Light(SensorPort port) {
 		// Change this to which ever port contains the US
 		this.sensor = new ColorSensor(port);
-		this.sensor.getFloodlight();
+		this.sensor.setFloodlight(true);
 	}
 
 	public int poll() {
