@@ -31,8 +31,8 @@ public class NavigationController {
 			RIGHT_MOTOR = Motor.B;
 	private static final double ROTATE_SPEED = 30;
 	private static final double TRACK_WIDTH = 19.0;
-	private static final double WHEEL_DIAMETER = 4.18;
-	private static final int ACCELERATION = 30;
+	private static final double WHEEL_DIAMETER = 4.15;
+	private static final int ACCELERATION = 25;
 	public int[] dropZone;
 	public GridMap map;
 	private final Navigator navigator;
