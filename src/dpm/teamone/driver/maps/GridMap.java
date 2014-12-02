@@ -26,6 +26,7 @@ public class GridMap {
 
 	public final int TILE_SIZE = 30;
 	private final int width, height;
+	private byte pickupX, pickupY;
 
 	/**
 	 * Create an empty map with the provided height and width
@@ -35,10 +36,12 @@ public class GridMap {
 	 * @param height
 	 *            Height of the new GridMap
 	 */
-	public GridMap(int width, int height) {
+	public GridMap(int width, int height, byte x, byte y) {
 		this.width = width;
 		this.height = height;
 		this.bitset = new BitSet(width * height);
+		this.pickupX = x;
+		this.pickupY = y;
 	}
 
 	public boolean blocked(int x, int y) {
@@ -206,6 +209,14 @@ public class GridMap {
 	 */
 	public boolean valid(int x, int y) {
 		return ((x >= 0) && (x < this.width) && (y >= 0) && (y < this.height));
+	}
+	
+	public int getPickupX(){
+		return this.pickupX;
+	}
+	
+	public int getPickupY(){
+		return this.pickupY;
 	}
 
 	/**

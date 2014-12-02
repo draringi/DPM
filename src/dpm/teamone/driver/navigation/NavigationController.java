@@ -165,7 +165,7 @@ public class NavigationController {
 	}
 
 	public void driveToPickup() {
-		this.driveToGrid(this.pickupZone[0], this.pickupZone[1]);
+		this.driveToGrid(this.map.getPickupX(), this.map.getPickupY());
 
 	}
 

@@ -10,7 +10,7 @@ package dpm.teamone.driver.maps;
 public class MapFactory {
 
 	private static GridMap beta1() {
-		GridMap map = new GridMap(8, 8);
+		GridMap map = new GridMap(8, 8, (byte)2, (byte)2);
 		map.set(0, 5);
 		map.set(1, 7);
 		map.set(2, 4);
@@ -30,7 +30,7 @@ public class MapFactory {
 	}
 
 	private static GridMap beta2() {
-		GridMap map = new GridMap(8, 8);
+		GridMap map = new GridMap(8, 8, (byte)2, (byte)2);
 		map.set(0, 5);
 		map.set(1, 6);
 		map.set(2, 0);
@@ -50,7 +50,7 @@ public class MapFactory {
 	}
 
 	private static GridMap beta3() {
-		GridMap map = new GridMap(8, 8);
+		GridMap map = new GridMap(8, 8, (byte)2, (byte)2);
 		map.set(0, 7);
 		map.set(2, 3);
 		map.set(2, 6);
@@ -70,11 +70,11 @@ public class MapFactory {
 	}
 
 	public static GridMap blankMap() {
-		return new GridMap(4, 4);
+		return new GridMap(4, 4, (byte)2, (byte)2);
 	}
 	
 	private static GridMap mapOne() {
-		GridMap map = new GridMap(12, 12);
+		GridMap map = new GridMap(12, 12, (byte) 2, (byte)1);
 		map.set(0, 6);
 		map.set(0, 9);
 		map.set(1, 3);
@@ -101,7 +101,7 @@ public class MapFactory {
 	}
 	
 	private static GridMap mapTwo() {
-		GridMap map = new GridMap(12, 12);
+		GridMap map = new GridMap(12, 12, (byte)2, (byte)2);
 		map.set(0, 4);
 		map.set(0, 5);
 		map.set(3, 2);
@@ -130,7 +130,7 @@ public class MapFactory {
 	}
 	
 	private static GridMap mapThree() {
-		GridMap map = new GridMap(12, 12);
+		GridMap map = new GridMap(12, 12, (byte)2, (byte)2);
 		map.set(0, 3);
 		map.set(0, 8);
 		map.set(2, 3);
@@ -156,7 +156,7 @@ public class MapFactory {
 	}
 	
 	private static GridMap mapFour() {
-		GridMap map = new GridMap(12, 12);
+		GridMap map = new GridMap(12, 12, (byte)2, (byte)2);
 		map.set(0, 2);
 		map.set(0, 3);
 		map.set(0, 4);
@@ -183,7 +183,7 @@ public class MapFactory {
 	}
 	
 	private static GridMap mapFive() {
-		GridMap map = new GridMap(12, 12);
+		GridMap map = new GridMap(12, 12, (byte)2, (byte)2);
 		map.set(0, 3);
 		map.set(0, 5);
 		map.set(0, 8);
@@ -210,7 +210,7 @@ public class MapFactory {
 	}
 	
 	private static GridMap mapSix() {
-		GridMap map = new GridMap(12, 12);
+		GridMap map = new GridMap(12, 12, (byte)2, (byte)2);
 		map.set(0, 10);
 		map.set(1, 5);
 		map.set(2, 3);
@@ -282,7 +282,7 @@ public class MapFactory {
 	 * @return Lab 5 style GridMap
 	 */
 	public static GridMap lab5Map() {
-		GridMap map = new GridMap(4, 4);
+		GridMap map = new GridMap(4, 4, (byte)3, (byte)1);
 		map.set(1, 0);
 		map.set(0, 3);
 		map.set(2, 2);
