@@ -51,6 +51,9 @@ public class DriverComms {
 			Arm.lower();
 			Arm.grab();
 			Arm.raise();
+		} else if (parser.equals("g")){
+			Arm.lower();
+			Arm.grab();
 		} else if (parser.equals("d")) {
 			Arm.lower();
 			Arm.release();

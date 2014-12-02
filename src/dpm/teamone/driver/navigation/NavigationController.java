@@ -129,7 +129,8 @@ public class NavigationController {
 	}
 
 	public void driveToDrop() {
-		this.driveToGrid(this.dropZone[0], this.dropZone[1]);
+		this.followPath(map.getPathDrop(this.getPose().getLocation(),
+				new Point((float) this.map.getPos(dropZone[0]), (float) this.map.getPos(dropZone[1]))));
 	}
 
 	/**
@@ -165,8 +166,7 @@ public class NavigationController {
 	}
 
 	public void driveToPickup() {
-		this.driveToGrid(this.map.getPickupX(), this.map.getPickupY());
-
+		this.followPath(map.getPathPickup(this.getPose().getLocation()));
 	}
 
 	public void travel(float dist){

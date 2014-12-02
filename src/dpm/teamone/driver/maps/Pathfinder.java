@@ -32,6 +32,34 @@ public class Pathfinder {
 			}
 		}
 	}
+	
+	public void generatePaths(int[] end, int xTarget, int yTarget){
+		while (this.cellList[xTarget][yTarget] == -1) {
+			for (int x = 0; x < this.width; x++) {
+				for (int y = 0; y < this.height; y++) {
+					if (this.cellList[x][y] != -1) {
+						int dist = this.cellList[x][y];
+						if (!this.map.blocked(x, y + 1)
+								&& (this.cellList[x][y + 1] == -1)) {
+							this.cellList[x][y + 1] = dist + 1;
+						}
+						if (!this.map.blocked(x, y - 1)
+								&& (this.cellList[x][y - 1] == -1)) {
+							this.cellList[x][y - 1] = dist + 1;
+						}
+						if (!this.map.blocked(x + 1, y)
+								&& (this.cellList[x + 1][y] == -1)) {
+							this.cellList[x + 1][y] = dist + 1;
+						}
+						if (!this.map.blocked(x - 1, y)
+								&& (this.cellList[x - 1][y] == -1)) {
+							this.cellList[x - 1][y] = dist + 1;
+						}
+					}
+				}
+			}
+		}
+	}
 
 	public void findPath(int[] start, int[] end) {
 		this.cellList[end[X]][end[Y]] = 0;

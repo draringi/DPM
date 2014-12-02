@@ -9,6 +9,7 @@ import lejos.geom.Rectangle;
 import lejos.robotics.mapping.LineMap;
 import lejos.robotics.navigation.Waypoint;
 import lejos.robotics.pathfinding.Path;
+import lejos.util.Delay;
 
 /**
  * The GridMap provides an easy way to create maps for the robot, working on a
@@ -26,7 +27,9 @@ public class GridMap {
 
 	public final int TILE_SIZE = 30;
 	private final int width, height;
-	private byte pickupX, pickupY;
+	private final byte pickupX, pickupY;
+	private Pathfinder pickupPaths, dropPaths;
+	private Thread pickupThread, dropThread;
 
 	/**
 	 * Create an empty map with the provided height and width
@@ -158,7 +161,43 @@ public class GridMap {
 		}
 		return path;
 	}
+	
+	public Path getPathPickup(Point start) {
+		int s[] = new int[2];
+		int e[] = new int[2];
+		s[0] = this.getGrid(start.x);
+		s[1] = this.getGrid(start.y);
+		e[0] = pickupX;
+		e[1] = pickupY;
+		while(pickupThread.isAlive()){
+			Delay.msDelay(100);
+		}
+		pickupPaths.findPath(s, e);
+		Path path = new Path();
+		while (pickupPaths.isPath()) {
+			path.add(pickupPaths.getNext());
+		}
+		return path;
+	}
 
+	public Path getPathDrop(Point start, Point end) {
+		int s[] = new int[2];
+		int e[] = new int[2];
+		s[0] = this.getGrid(start.x);
+		s[1] = this.getGrid(start.y);
+		e[0] = this.getGrid(end.x);
+		e[1] = this.getGrid(end.y);
+		while(dropThread.isAlive()){
+			Delay.msDelay(100);
+		}
+		dropPaths.findPath(s, e);
+		Path path = new Path();
+		while (dropPaths.isPath()) {
+			path.add(dropPaths.getNext());
+		}
+		return path;
+	}
+	
 	/**
 	 * Converts grid-id value into odometer system value
 	 * 
@@ -219,6 +258,32 @@ public class GridMap {
 		return this.pickupY;
 	}
 
+	public void GeneratePickupPaths(final int x, final int y){
+		pickupPaths = new Pathfinder(this);
+		pickupThread = new Thread() {
+			public void run(){
+				int end[] = new int[2];
+				end[0] = pickupX;
+				end[1] = pickupY;
+				pickupPaths.generatePaths(end, x, y);
+			}
+		};
+		pickupThread.start();
+	}
+	
+	public void GenerateDropPaths(final int x, final int y){
+		dropPaths = new Pathfinder(this);
+		dropThread = new Thread() {
+			public void run(){
+				int end[] = new int[2];
+				end[0] = x;
+				end[1] = y;
+				dropPaths.generatePaths(end, pickupX, pickupY);
+			}
+		};
+		dropThread.start();
+	}
+	
 	/**
 	 * Converts grid co-ordinates into odometer system co-ordinates
 	 */

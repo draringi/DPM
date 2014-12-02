@@ -91,6 +91,27 @@ public class TruckComms {
 			return;
 		}
 	}
+	
+	/**
+	 * Tells the truck brick to grap up what is in front of it
+	 */
+	public void grab() {
+		this.ensureConnection();
+		byte buffer[] = "g".getBytes();
+		this.connection.sendPacket(buffer, buffer.length);
+		try {
+			Thread.sleep(500);
+		} catch (Exception e) {
+		}
+		int result = this.connection.read(buffer, buffer.length);
+		if (result == 0) {
+			this.grab();
+		}
+		String parser = new String(buffer);
+		if (parser.equals("k")) {
+			return;
+		}
+	}
 
 	/**
 	 * Starts communication with the Truck Brick

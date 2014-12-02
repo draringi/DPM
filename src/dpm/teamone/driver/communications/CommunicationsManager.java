@@ -23,7 +23,7 @@ public class CommunicationsManager {
 	}
 
 	public void grabObject() {
-		this.truck.pickUp();
+		this.truck.grab();
 	}
 	
 	public void liftObject() {
