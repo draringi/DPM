@@ -25,6 +25,10 @@ public class CommunicationsManager {
 	public void grabObject() {
 		this.truck.pickUp();
 	}
+	
+	public void liftObject() {
+		this.truck.pickUp();
+	}
 
 	public void prepareClaw() {
 		this.truck.armClaw();
@@ -45,8 +49,7 @@ public class CommunicationsManager {
 	 *            array of data containing map number, block location and drop
 	 *            off location
 	 */
-	public void waitForMap(int[] mapData) {
-		this.cnc.setup();
-		this.cnc.getMapData(mapData);
+	public int[] waitForMap() {
+		return this.cnc.getMapData();
 	}
 }

@@ -12,7 +12,7 @@ import lejos.util.Delay;
  */
 public class UltraSonic {
 
-	private static final int MAX = 90, LOOPS = 25;
+	private static final int MAX = 90, LOOPS = 35;
 
 	private final UltrasonicSensor us;
 
@@ -30,13 +30,17 @@ public class UltraSonic {
 		}
 		return dist;
 	}
-
-	public int poll() {
+	
+	public int poll(int count) {
 		int i, sum = 0;
-		for (i = 0; i < LOOPS; i++) {
+		for (i = 0; i < count; i++) {
 			sum += this.getFiltered();
 		}
-		return sum / LOOPS;
+		return sum / count;
+	}
+
+	public int poll() {
+		return poll(LOOPS);
 	}
 
 }

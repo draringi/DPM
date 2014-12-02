@@ -72,7 +72,8 @@ public class MapFactory {
 	public static GridMap blankMap() {
 		return new GridMap(4, 4);
 	}
-	public static GridMap mapOne() {
+	
+	private static GridMap mapOne() {
 		GridMap map = new GridMap(12, 12);
 		map.set(0, 6);
 		map.set(0, 9);
@@ -98,7 +99,8 @@ public class MapFactory {
 		map.set(11, 1);
 		return map;
 	}
-	public static GridMap mapTwo() {
+	
+	private static GridMap mapTwo() {
 		GridMap map = new GridMap(12, 12);
 		map.set(0, 4);
 		map.set(0, 5);
@@ -126,7 +128,8 @@ public class MapFactory {
 		
 		return map;
 	}
-	public static GridMap mapThree() {
+	
+	private static GridMap mapThree() {
 		GridMap map = new GridMap(12, 12);
 		map.set(0, 3);
 		map.set(0, 8);
@@ -151,7 +154,8 @@ public class MapFactory {
 		map.set(11, 11);
 		return map;
 	}
-public static GridMap mapFour() {
+	
+	private static GridMap mapFour() {
 		GridMap map = new GridMap(12, 12);
 		map.set(0, 2);
 		map.set(0, 3);
@@ -177,7 +181,8 @@ public static GridMap mapFour() {
 		map.set(11, 10);
 		return map;
 	}
-	public static GridMap mapFive() {
+	
+	private static GridMap mapFive() {
 		GridMap map = new GridMap(12, 12);
 		map.set(0, 3);
 		map.set(0, 5);
@@ -203,7 +208,8 @@ public static GridMap mapFour() {
 		map.set(11, 9);
 		return map;
 	}
-	public static GridMap mapSix() {
+	
+	private static GridMap mapSix() {
 		GridMap map = new GridMap(12, 12);
 		map.set(0, 10);
 		map.set(1, 5);
@@ -229,6 +235,8 @@ public static GridMap mapFour() {
 		map.set(10, 10);
 		return map;
 	}
+	
+	
 	public static GridMap getBetaMap(int mapID) {
 		switch (mapID) {
 		case 1:
@@ -251,6 +259,18 @@ public static GridMap mapFour() {
 	 */
 	public static GridMap getMap(int mapID) {
 		switch (mapID) {
+		case 1:
+			return mapOne();
+		case 2:
+			return mapTwo();
+		case 3:
+			return mapThree();
+		case 4:
+			return mapFour();
+		case 5:
+			return mapFive();
+		case 6:
+			return mapSix();
 		default:
 			return null;
 		}

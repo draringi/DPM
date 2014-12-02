@@ -5,6 +5,7 @@ import lejos.nxt.SensorPort;
 import lejos.nxt.Sound;
 import lejos.robotics.navigation.Pose;
 import lejos.robotics.subsumption.Behavior;
+import lejos.util.Delay;
 import dpm.teamone.driver.navigation.Direction;
 import dpm.teamone.driver.navigation.Light;
 import dpm.teamone.driver.navigation.NavigationController;
@@ -89,10 +90,7 @@ class LineCorrecter implements Behavior {
 			this.rightPassed = false;
 			this.leftFirst = false;
 			this.passPoint = null;
-			try {
-				Thread.sleep(1000);
-			} catch (Exception e) {
-			}
+			Delay.msDelay(500);
 			return;
 		} else if (this.leftPassed) {
 			this.leftFirst = true;
@@ -105,7 +103,6 @@ class LineCorrecter implements Behavior {
 
 	@Override
 	public void suppress() {
-
 	}
 
 	@Override

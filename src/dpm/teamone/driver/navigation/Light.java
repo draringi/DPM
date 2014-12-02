@@ -2,6 +2,7 @@ package dpm.teamone.driver.navigation;
 
 import lejos.nxt.ColorSensor;
 import lejos.nxt.SensorPort;
+import lejos.util.Delay;
 
 /**
  * Averaging filtering Light/Color reader
@@ -11,7 +12,7 @@ import lejos.nxt.SensorPort;
  */
 public class Light {
 
-	private static final int LOOPS = 40;
+	private static final int LOOPS = 1;
 
 	private final ColorSensor sensor;
 
@@ -22,11 +23,13 @@ public class Light {
 	}
 
 	public int poll() {
-		int i, sum = 0;
-		for (i = 0; i < LOOPS; i++) {
-			sum += sensor.getRawLightValue();
-		}
-		return sum / LOOPS;
+		return sensor.getRawLightValue();
+		//int i, sum = 0;
+		//for (i = 0; i < LOOPS; i++) {
+			//sum += sensor.getRawLightValue();
+//			Delay.nsDelay(100);
+//		}
+	//	return sum / LOOPS;
 	}
 
 }

@@ -27,13 +27,13 @@ public class DriverRobot {
 		EventManager events;
 		NavigationController nav;
 		GridMap map;
+		Clock clock = new Clock(LAST_RUN);
 		CommunicationsManager comms = new CommunicationsManager();
-		int mapData[] = new int[MAP_DATA_LENGTH];
-		// beta.waitForMap(mapData);
-		mapData[MAP_DATA_MAP] = BETA_MAP;
+		int mapData[];
+		mapData = comms.waitForMap();
 		comms.prepareTravel();
-		// map = MapFactory.getMap(mapData[MAP_DATA_MAP]);
-		map = MapFactory.getBetaMap(mapData[MAP_DATA_MAP]);
+		map = MapFactory.getMap(mapData[MAP_DATA_MAP]);
+		//map = MapFactory.getBetaMap(mapData[MAP_DATA_MAP]);
 		//map = MapFactory.lab5Map();
 		nav = new NavigationController(map);
 		nav.setDropZone(7, 7, 1, 1);
@@ -43,24 +43,32 @@ public class DriverRobot {
 		Delay.msDelay(10);
 		events.start();
 		EventManager.pause();
+		clock.start();
 		nav.localize();
 		Delay.msDelay(10);
-		EventManager.restart();
-		nav.driveToPickup();
-		EventManager.pause();
-		int dist = nav.findObject();
-		comms.prepareClaw();
-		nav.travel(dist);
-		comms.grabObject();
-		// This is the end of the Beta Goal
-		EventManager.restart();
-		nav.driveToDrop();
-		comms.releaseObject();
+		while(!clock.timeUp()){
+			EventManager.restart();
+			nav.driveToPickup();
+			EventManager.pause();
+			int dist = nav.findObject();
+			nav.travel(dist/2);
+			dist = nav.findObject();
+			comms.prepareClaw();
+			nav.travel(dist);
+			comms.grabObject();
+			// This is the end of the Beta Goal
+			EventManager.restart();
+			nav.driveToDrop();
+			EventManager.pause();
+			nav.travel(-30);
+			comms.releaseObject();
+			System.gc();
+		}
 		EventManager.pause();
 		Button.waitForAnyPress();
 	}
-
-	private static final int BETA_MAP = 1;
+	
+	private static final int LAST_RUN = 360;
 
 	/**
 	 * Index of map data array for the location of the drop zone in the x-axis.

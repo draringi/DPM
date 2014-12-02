@@ -189,8 +189,8 @@ public class NavigationController {
 		this.pilot.setRotateSpeed(30);
 		
 		while(this.navigator.getPoseProvider().getPose().getHeading()<-90){
-			this.pilot.rotate(9);
-			int temp=us.poll();
+			this.pilot.rotate(5);
+			int temp=us.poll(10);
 			if(temp<minVal){
 				minAngle = this.navigator.getPoseProvider().getPose().getHeading();
 				minVal = temp;
@@ -203,12 +203,11 @@ public class NavigationController {
 			this.pilot.setRotateSpeed(45);
 			float angle = this.getPose().angleTo(new Point(-30, -30));
 			this.turnTo(angle);
-			this.pilot.travel(5);
+			this.pilot.travel(10);
 			return findObject();
-			
 		}
 		this.pilot.stop();
-		this.turnTo(minAngle);;
+		this.turnTo(minAngle-2);;
 		return minVal;
 		
 	}
