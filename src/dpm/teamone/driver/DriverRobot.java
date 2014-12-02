@@ -80,7 +80,6 @@ public class DriverRobot {
 			EventManager.pause();
 			nav.travel(-15);
 			comms.releaseObject();
-			System.gc();
 		}
 		Sound.buzz();
 		EventManager.pause();
