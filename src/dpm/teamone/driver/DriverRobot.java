@@ -56,6 +56,7 @@ public class DriverRobot {
 		Delay.msDelay(10);
 		while(!clock.timeUp()){
 			EventManager.restart();
+			EventManager.restart();
 			Sound.beep();
 			Pose loc = nav.getPose();
 			LCD.drawInt((int)loc.getX(), 0, 3);
@@ -73,6 +74,7 @@ public class DriverRobot {
 			comms.liftObject();
 			// This is the end of the Beta Goal
 			nav.driveToPickup();
+			EventManager.restart();
 			EventManager.restart();
 			nav.driveToDrop();
 			EventManager.pause();
