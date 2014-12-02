@@ -57,7 +57,6 @@ public class EventManager extends Thread {
 	 */
 	@Override
 	public void run() {
-		restart();
 		this.arbitrator.start();
 	}
 }

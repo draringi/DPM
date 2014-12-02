@@ -416,9 +416,11 @@ public class Orienteer {
 			this.nav.gotoPoint(this.getFront());
 			Delay.msDelay(400);
 			EventManager.restart();
+			EventManager.restart();
 			while (this.nav.moving()) {
 				Delay.msDelay(100);
 			}
+			EventManager.pause();
 			EventManager.pause();
 			Delay.msDelay(10);
 		}
