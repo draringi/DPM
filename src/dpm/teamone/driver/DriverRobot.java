@@ -78,7 +78,7 @@ public class DriverRobot {
 			EventManager.restart();
 			nav.driveToDrop();
 			EventManager.pause();
-			nav.travel(-30);
+			nav.travel(-15);
 			comms.releaseObject();
 			System.gc();
 		}

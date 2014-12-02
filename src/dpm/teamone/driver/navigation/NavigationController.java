@@ -19,10 +19,10 @@ import dpm.teamone.driver.maps.GridMap;
 /**
  * The NavigationController provides a easy to use wrapper for the LeJos
  * Navigation API It handles Movement, Localization and Pathfinding
- * 
+ *
  * @author Mehdi Benguerrah
  * @author Michael Williams
- * 
+ *
  */
 public class NavigationController {
 
@@ -30,7 +30,7 @@ public class NavigationController {
 	private static NXTRegulatedMotor LEFT_MOTOR = Motor.A,
 			RIGHT_MOTOR = Motor.B;
 	private static final double ROTATE_SPEED = 30;
-	private static final double TRACK_WIDTH = 19.2;
+	private static final double TRACK_WIDTH = 18.6;
 	private static final double WHEEL_DIAMETER = 4.0;
 	private static final int ACCELERATION = 25;
 	public int[] dropZone;
