@@ -16,6 +16,8 @@ public class ArmControl {
 	 * @param args
 	 */
 	public static void main(String[] args) {
+		Arm.release();
+		Arm.grab();
 		DriverComms communications = new DriverComms();
 		while (true) {
 			communications.waitForSignal();

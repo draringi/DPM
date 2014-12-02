@@ -1,5 +1,6 @@
 package dpm.teamone.armcontrol;
 
+import lejos.util.Delay;
 import lejos.nxt.Motor;
 import lejos.nxt.NXTRegulatedMotor;
 import lejos.nxt.Sound;
@@ -17,15 +18,9 @@ public class Arm {
 	 */
 	public static void grab() {
 		if (!grabbing) {
-			claw.setSpeed(0.2f);
 			claw.rotateTo(GRAB_ANGLE, true);
 			grabbing = true;
-			try {
-				Thread.sleep(500);
-			} catch (Exception e) {
-				Sound.beep();
-
-			}
+			Delay.msDelay(600);
 		}
 	}
 

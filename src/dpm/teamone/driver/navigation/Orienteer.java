@@ -159,13 +159,13 @@ public class Orienteer {
 	 * @param orientation
 	 */
 	public void getCorrectedOffset(Pose offset, int orientation) {
-
-		float x = offset.getX();
-		float y = offset.getY();
+		float x = offset.getX() + 15;
+		float y = offset.getY() + 15;
 		double angle = orientationToRads(orientation);
 		offset.setLocation(
 				(float) ((x * Math.cos(angle)) - (y * Math.sin(angle))),
-				(float) ((y * Math.cos(angle)) + (x * Math.sin(angle))));
+				(float) ((y * Math.cos(angle)) + (x * Math.sin(angle)))
+		);
 	}
 
 	/**
@@ -350,8 +350,8 @@ public class Orienteer {
 		pos = this.nav.getPose();
 		this.getCorrectedOffset(pos, option[THETA]);
 		Pose start = new Pose();
-		start.setLocation((float) this.map.getPos(option[X])-15,
-				(float) this.map.getPos(option[Y])-15);
+		start.setLocation((float) this.map.getPos(option[X]),
+				(float) this.map.getPos(option[Y]));
 		start.setHeading(Direction.intToAngle(option[THETA]));
 		this.nav.setPose(addPositions(pos, start));
 		return start;

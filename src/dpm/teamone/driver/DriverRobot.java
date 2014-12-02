@@ -1,7 +1,10 @@
 package dpm.teamone.driver;
 
 import lejos.nxt.Button;
+import lejos.nxt.Sound;
+import lejos.nxt.LCD;
 import lejos.util.Delay;
+import lejos.robotics.navigation.Pose;
 import dpm.teamone.driver.communications.CommunicationsManager;
 import dpm.teamone.driver.events.EventManager;
 import dpm.teamone.driver.maps.GridMap;
@@ -27,17 +30,23 @@ public class DriverRobot {
 		EventManager events;
 		NavigationController nav;
 		GridMap map;
+		Sound.beep();
+		Sound.buzz();
+		Sound.beep();
 		Clock clock = new Clock(LAST_RUN);
 		CommunicationsManager comms = new CommunicationsManager();
 		int mapData[];
 		mapData = comms.waitForMap();
-		comms.prepareTravel();
 		map = MapFactory.getMap(mapData[MAP_DATA_MAP]);
 		//map = MapFactory.getBetaMap(mapData[MAP_DATA_MAP]);
 		//map = MapFactory.lab5Map();
 		nav = new NavigationController(map);
 		nav.setDropZone(mapData[MAP_DATA_DROP_X], mapData[MAP_DATA_DROP_Y], 1, 1);
 		map.GenerateDropPaths(mapData[MAP_DATA_DROP_X], mapData[MAP_DATA_DROP_Y]);
+		map.GeneratePickupPaths(11, 11);
+		comms.grabObject();
+		comms.prepareClaw();
+		comms.prepareTravel();
 		events = new EventManager(nav);
 		Delay.msDelay(10);
 		events.start();
@@ -47,6 +56,10 @@ public class DriverRobot {
 		Delay.msDelay(10);
 		while(!clock.timeUp()){
 			EventManager.restart();
+			Sound.beep();
+			Pose loc = nav.getPose();
+			LCD.drawInt((int)loc.getX(), 0, 3);
+			LCD.drawInt((int)loc.getY(), 0, 4);
 			nav.driveToPickup();
 			EventManager.pause();
 			int dist = nav.findObject();
@@ -59,6 +72,7 @@ public class DriverRobot {
 			nav.travel(-5);
 			comms.liftObject();
 			// This is the end of the Beta Goal
+			nav.driveToPickup();
 			EventManager.restart();
 			nav.driveToDrop();
 			EventManager.pause();
@@ -66,6 +80,7 @@ public class DriverRobot {
 			comms.releaseObject();
 			System.gc();
 		}
+		Sound.buzz();
 		EventManager.pause();
 		Button.waitForAnyPress();
 	}

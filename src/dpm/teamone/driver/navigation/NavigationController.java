@@ -26,12 +26,13 @@ import dpm.teamone.driver.maps.GridMap;
  */
 public class NavigationController {
 
-	private static final double FORWARD_SPEED = 10;
+	private static final double FORWARD_SPEED = 11;
 	private static NXTRegulatedMotor LEFT_MOTOR = Motor.A,
 			RIGHT_MOTOR = Motor.B;
-	private static final double ROTATE_SPEED = 20;
+	private static final double ROTATE_SPEED = 30;
 	private static final double TRACK_WIDTH = 19.2;
 	private static final double WHEEL_DIAMETER = 4.0;
+	private static final int ACCELERATION = 25;
 	public int[] dropZone;
 	public GridMap map;
 	private final Navigator navigator;
@@ -51,6 +52,7 @@ public class NavigationController {
 	public NavigationController(GridMap map) {
 		this.pilot = new DifferentialPilot(WHEEL_DIAMETER, WHEEL_DIAMETER,
 				TRACK_WIDTH, LEFT_MOTOR, RIGHT_MOTOR, false);
+		//this.pilot.setAcceleration(ACCELERATION);
 		this.navigator = new Navigator(this.pilot);
 		this.map = map;
 		this.pilot.setTravelSpeed(FORWARD_SPEED);
@@ -187,10 +189,10 @@ public class NavigationController {
 		this.navigator.getPoseProvider().setPose(new Pose(p.getX(),p.getY(),-180));
 		boolean finished =false;
 		this.pilot.setRotateSpeed(30);
-		
+		this.pilot.rotateLeft();
+
 		while(this.navigator.getPoseProvider().getPose().getHeading()<-90){
-			this.pilot.rotate(5);
-			int temp=us.poll(10);
+			int temp=us.poll(3);
 			if(temp<minVal){
 				minAngle = this.navigator.getPoseProvider().getPose().getHeading();
 				minVal = temp;
@@ -207,8 +209,8 @@ public class NavigationController {
 			return findObject();
 		}
 		this.pilot.stop();
-		this.turnTo(minAngle-2);;
-		return minVal;
+		this.turnTo(minAngle+5);;
+		return (int) (minVal*0.9);
 		
 	}
 
@@ -228,6 +230,8 @@ public class NavigationController {
 			LEFT_MOTOR.flt(true);
 			RIGHT_MOTOR.flt(true);
 			this.navigator.rotateTo(this.getPose().angleTo(wp));
+			LEFT_MOTOR.flt(true);
+                        RIGHT_MOTOR.flt(true);
 			this.navigator.followPath();
 			Delay.msDelay(500);
 			EventManager.restart();

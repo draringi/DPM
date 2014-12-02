@@ -4,6 +4,8 @@ import java.util.Queue;
 
 import lejos.robotics.navigation.Waypoint;
 
+import lejos.nxt.Sound;
+import lejos.nxt.LCD;
 /**
  * Pathfinding class, taking advantage of knowing the map to avoid having to
  * read from the ultrasonic to dodge walls.
@@ -33,61 +35,47 @@ public class Pathfinder {
 		}
 	}
 	
+	class Pair{
+		int x, y;
+		public Pair(int x, int y){
+			this.x = x;
+			this.y = y;
+		}
+	}
+
 	public void generatePaths(int[] end, int xTarget, int yTarget){
-		while (this.cellList[xTarget][yTarget] == -1) {
-			for (int x = 0; x < this.width; x++) {
-				for (int y = 0; y < this.height; y++) {
-					if (this.cellList[x][y] != -1) {
-						int dist = this.cellList[x][y];
-						if (!this.map.blocked(x, y + 1)
-								&& (this.cellList[x][y + 1] == -1)) {
-							this.cellList[x][y + 1] = dist + 1;
-						}
-						if (!this.map.blocked(x, y - 1)
-								&& (this.cellList[x][y - 1] == -1)) {
-							this.cellList[x][y - 1] = dist + 1;
-						}
-						if (!this.map.blocked(x + 1, y)
-								&& (this.cellList[x + 1][y] == -1)) {
-							this.cellList[x + 1][y] = dist + 1;
-						}
-						if (!this.map.blocked(x - 1, y)
-								&& (this.cellList[x - 1][y] == -1)) {
-							this.cellList[x - 1][y] = dist + 1;
-						}
-					}
-				}
+		Queue<Pair> studyList = new Queue<Pair>();
+		studyList.push(new Pair(end[0], end[1]));
+		this.cellList[end[0]][end[1]] = 0;
+		while (!studyList.empty()) {
+			Pair pair = (Pair) studyList.pop();
+			int dist = this.cellList[pair.x][pair.y];
+			if(dist == -1){
+				studyList.push(pair);
+				Sound.buzz();
+				continue;
 			}
+			if (!this.map.blocked(pair.x, pair.y + 1)&& (this.cellList[pair.x][pair.y + 1] == -1)) {
+				this.cellList[pair.x][pair.y + 1] = dist + 1;
+				studyList.push(new Pair(pair.x, pair.y+1));
+			}
+			if (!this.map.blocked(pair.x, pair.y - 1)&& (this.cellList[pair.x][pair.y - 1] == -1)) {
+				this.cellList[pair.x][pair.y - 1] = dist + 1;
+				studyList.push(new Pair(pair.x, pair.y-1));
+			}
+			if (!this.map.blocked(pair.x + 1, pair.y)&& (this.cellList[pair.x + 1][pair.y] == -1)) {
+				this.cellList[pair.x + 1][pair.y] = dist + 1;
+				studyList.push(new Pair(pair.x+1, pair.y));
+			}
+			if (!this.map.blocked(pair.x - 1, pair.y)&& (this.cellList[pair.x - 1][pair.y] == -1)) {
+				this.cellList[pair.x - 1][pair.y] = dist + 1;
+				studyList.push(new Pair(pair.x - 1, pair.y));
+			}
+			Sound.beep();
 		}
 	}
 
 	public void findPath(int[] start, int[] end) {
-		this.cellList[end[X]][end[Y]] = 0;
-		while (this.cellList[start[X]][start[Y]] == -1) {
-			for (int x = 0; x < this.width; x++) {
-				for (int y = 0; y < this.height; y++) {
-					if (this.cellList[x][y] != -1) {
-						int dist = this.cellList[x][y];
-						if (!this.map.blocked(x, y + 1)
-								&& (this.cellList[x][y + 1] == -1)) {
-							this.cellList[x][y + 1] = dist + 1;
-						}
-						if (!this.map.blocked(x, y - 1)
-								&& (this.cellList[x][y - 1] == -1)) {
-							this.cellList[x][y - 1] = dist + 1;
-						}
-						if (!this.map.blocked(x + 1, y)
-								&& (this.cellList[x + 1][y] == -1)) {
-							this.cellList[x + 1][y] = dist + 1;
-						}
-						if (!this.map.blocked(x - 1, y)
-								&& (this.cellList[x - 1][y] == -1)) {
-							this.cellList[x - 1][y] = dist + 1;
-						}
-					}
-				}
-			}
-		}
 		int x = start[X];
 		int y = start[Y];
 		while ((x != end[X]) || (y != end[Y])) {
