@@ -10,10 +10,15 @@ import dpm.teamone.driver.navigation.NavigationController;
  * crossed.
  * 
  * @author Michael Williams
+ * @see lejos.robotics.subsumption.Arbitrator
  * 
  */
 public class EventManager extends Thread {
 
+	/**
+	 * Returns current set status of the Event Subsystem.
+	 * @return Status. True if running, false otherwise.
+	 */
 	public static boolean isRunning() {
 		boolean result;
 		synchronized (lock) {
@@ -22,20 +27,32 @@ public class EventManager extends Thread {
 		return result;
 	}
 
+	/**
+	 * Pauses the Event Subsystem
+	 */
 	public static void pause() {
 		synchronized (lock) {
 			running = false;
 		}
 	}
 
+	/**
+	 * (Re)starts the Event Subsystem
+	 */
 	public static void restart() {
 		synchronized (lock) {
 			running = true;
 		}
 	}
 
+	/**
+	 * Internal lock for the Event Subsystem status
+	 */
 	private static Object lock = new Object();
 
+	/**
+	 * Status of the Event Subsystem. When true, allowed to run as usual. When false, the system is paused.
+	 */
 	private static boolean running;
 
 	private final Arbitrator arbitrator;

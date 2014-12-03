@@ -16,10 +16,20 @@ public enum Direction {
 
 	WEST(3, "West");
 
+	/**
+	 * Converts from angle to basic integer enums without returning a Direction object.
+	 * @param angle Heading in degrees.
+	 * @return Integer representation of direction.
+	 */
 	public static int angleToInt(float angle) {
 		return toInt(fromAngle(angle));
 	}
 
+	/**
+	 * Creates Direction object from angle
+	 * @param angle Heading in degrees.
+	 * @return Direction object corresponding to the cardinal direction of given angle.
+	 */
 	public static Direction fromAngle(float angle) {
 		// Sanitize any bad angles. This section should be skipped, but exists
 		// for necessities sake/
@@ -48,10 +58,20 @@ public enum Direction {
 		return dir;
 	}
 
+	/**
+	 * Converts from basic integer enums to angle without returning a Direction object.
+	 * @param val Integer representation of direction.
+	 * @return Corresponding angle in degrees.
+	 */
 	public static float intToAngle(int val) {
 		return toDirection(val).toAngle();
 	}
 
+	/**
+	 * Converts from basic integer enums to Direction Object.
+	 * @param i Integer value of Direction.
+	 * @return Direction associated with integer.
+	 */
 	public static Direction toDirection(int i) {
 		Direction result = NORTH;
 		i = i % 4;
@@ -72,11 +92,34 @@ public enum Direction {
 		return result;
 	}
 
+	/**
+	 * @param dir Direction
+	 * @return Integer representation.
+	 */
 	public static int toInt(Direction dir) {
 		return dir.val;
 	}
 
+	/**
+	 * Cardinal name of direction in English.
+	 */
 	private String name;
+
+	/**
+	 * Integer representation of direction.
+	 */
+	private int val;
+
+	/**
+	 * @param i 
+	 * @param name
+	 * @see #name
+	 * @see #val
+	 */
+	Direction(int i, String name) {
+		this.val = i;
+		this.name = name;
+	}
 
 	/**
 	 * Adds Cardinal directions together, to correct for offsets
@@ -85,18 +128,13 @@ public enum Direction {
 	 *            Direction offset to add
 	 * @return Corrected Direction
 	 */
-
-	private int val;
-
-	Direction(int i, String name) {
-		this.val = i;
-		this.name = name;
-	}
-
 	public Direction add(Direction dir) {
 		return toDirection(this.val + dir.val);
 	}
 
+	/**
+	 * @return Angle of direction in degrees.
+	 */
 	public float toAngle() {
 		switch (this) {
 		case NORTH:
@@ -111,6 +149,9 @@ public enum Direction {
 		}
 	}
 
+	/**
+	 * Name of Direction, conforming to Java API standards.
+	 */
 	@Override
 	public String toString() {
 		return this.name;

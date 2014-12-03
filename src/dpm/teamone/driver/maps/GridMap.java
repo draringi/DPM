@@ -2,14 +2,13 @@ package dpm.teamone.driver.maps;
 
 import java.util.ArrayList;
 import java.util.BitSet;
-import lejos.nxt.LCD;
+
 import lejos.geom.Line;
 import lejos.geom.Point;
 import lejos.geom.Rectangle;
 import lejos.robotics.mapping.LineMap;
 import lejos.robotics.navigation.Waypoint;
 import lejos.robotics.pathfinding.Path;
-import lejos.util.Delay;
 
 /**
  * The GridMap provides an easy way to create maps for the robot, working on a
@@ -21,13 +20,35 @@ import lejos.util.Delay;
  */
 public class GridMap {
 
+	/**
+	 * Internal representation of the 
+	 */
 	private final BitSet bitset;
 
+	/**
+	 * Linemap needed by some Lejos Libraries. Provided in case any need are used. 
+	 */
 	private LineMap linemap;
 
+	/**
+	 * Size of each tile.
+	 * Value: {@value}
+	 */
 	public final int TILE_SIZE = 30;
+	
+	/**
+	 * Dimensions of the map.
+	 */
 	private final int width, height;
+	
+	/**
+	 * Co-ordinates of the pickup zone.
+	 */
 	private final byte pickupX, pickupY;
+	
+	/**
+	 * Pathfinding table generated after map creation for common destinations.
+	 */
 	private Pathfinder pickupPaths, dropPaths;
 
 	/**
@@ -46,6 +67,12 @@ public class GridMap {
 		this.pickupY = y;
 	}
 
+	/**
+	 * 
+	 * @param x x-axis location
+	 * @param y y-axis location
+	 * @return If location is blocked.
+	 */
 	public boolean blocked(int x, int y) {
 		if (!(this.valid(x, y))) {
 			return true;
@@ -53,12 +80,39 @@ public class GridMap {
 		return this.bitset.get(this.getIndex(x, y));
 	}
 
+	/**
+	 * Converts grid co-ordinates to a Point which can be used by navigation
+	 * @param x x-axis location
+	 * @param y y-axis location
+	 * @return Point on the floor as measured in cm
+	 * @see dpm.teamone.driver.navigation
+	 */
 	public Point convertToPoint(int x, int y) {
 		return new Point((float) this.getPos(x), (float) this.getPos(y));
 	}
 
+	/**
+	 * Converts grid co-ordinates to a Waypoint which can be used by navigation
+	 * @param x x-axis location
+	 * @param y y-axis location
+	 * @return Waypoint on the floor as measured in cm
+	 * @see dpm.teamone.driver.navigation
+	 */
 	public Waypoint convertToWaypoint(int x, int y) {
 		return new Waypoint(this.convertToPoint(x, y));
+	}
+
+	/**
+	 * Generates pathfinding table to the requested drop zone
+	 * @param x Drop Zone x location
+	 * @param y Drop Zone y location
+	 */
+	public void GenerateDropPaths(final int x, final int y) {
+		this.dropPaths = new Pathfinder(this);
+		int end[] = new int[2];
+		end[0] = x;
+		end[1] = y;
+		this.dropPaths.generatePaths(end, this.pickupX, this.pickupY);
 	}
 
 	/**
@@ -102,12 +156,33 @@ public class GridMap {
 		return new LineMap(lines.toArray(new Line[lines.size()]), rect);
 	}
 
+	/**
+	 * Generates pathfinding table to the pickup zone
+	 * @param x Unused
+	 * @param y Unused
+	 */
+	public void GeneratePickupPaths(final int x, final int y) {
+		this.pickupPaths = new Pathfinder(this);
+		int end[] = new int[2];
+		end[0] = this.pickupX;
+		end[1] = this.pickupY;
+		this.pickupPaths.generatePaths(end, x, y);
+	}
+
+	/**
+	 * Converts cm value to grid id.
+	 * @param val Location from 0 line in cm
+	 * @return Grid ID.
+	 */
 	public int getGrid(double val) {
 		return this.getGrid(val, false);
 	}
 
 	/**
-	 * Converts double from the odometer system into grid id value
+	 * Converts double from the odometer system into grid id value.
+	 * @param val Location from 0 line in cm
+	 * @param orienteering True if offset should not be used. False for standard operation.
+	 * @return Grid ID.
 	 */
 	public int getGrid(double val, boolean orienteering) {
 		if (!orienteering) {
@@ -145,6 +220,12 @@ public class GridMap {
 		return this.linemap;
 	}
 
+	/**
+	 * Generates pathtable and finds shortest path.
+	 * @param start Starting point.
+	 * @param end Destination point.
+	 * @return Shortest Path.
+	 */
 	public Path getPath(Point start, Point end) {
 		Pathfinder finder = new Pathfinder(this);
 		int s[] = new int[2];
@@ -160,22 +241,13 @@ public class GridMap {
 		}
 		return path;
 	}
-	
-	public Path getPathPickup(Point start) {
-		int s[] = new int[2];
-		int e[] = new int[2];
-		s[0] = this.getGrid(start.x);
-		s[1] = this.getGrid(start.y);
-		e[0] = pickupX;
-		e[1] = pickupY;
-		pickupPaths.findPath(s, e);
-		Path path = new Path();
-		while (pickupPaths.isPath()) {
-			path.add(pickupPaths.getNext());
-		}
-		return path;
-	}
 
+	/**
+	 * Gets the Shortest path to the drop zone using pre-generated pathfinding table.
+	 * @param start
+	 * @param end Unused
+	 * @return Shortest path to the drop zone
+	 */
 	public Path getPathDrop(Point start, Point end) {
 		int s[] = new int[2];
 		int e[] = new int[2];
@@ -183,14 +255,49 @@ public class GridMap {
 		s[1] = this.getGrid(start.y);
 		e[0] = this.getGrid(end.x);
 		e[1] = this.getGrid(end.y);
-		dropPaths.findPath(s, e);
+		this.dropPaths.findPath(s, e);
 		Path path = new Path();
-		while (dropPaths.isPath()) {
-			path.add(dropPaths.getNext());
+		while (this.dropPaths.isPath()) {
+			path.add(this.dropPaths.getNext());
 		}
 		return path;
 	}
-	
+
+	/**
+	 * Gets the Shortest path to the pickup zone using pre-generated pathfinding table.
+	 * @param start
+	 * @param end Unused
+	 * @return Shortest path to the pickup zone
+	 */
+	public Path getPathPickup(Point start) {
+		int s[] = new int[2];
+		int e[] = new int[2];
+		s[0] = this.getGrid(start.x);
+		s[1] = this.getGrid(start.y);
+		e[0] = this.pickupX;
+		e[1] = this.pickupY;
+		this.pickupPaths.findPath(s, e);
+		Path path = new Path();
+		while (this.pickupPaths.isPath()) {
+			path.add(this.pickupPaths.getNext());
+		}
+		return path;
+	}
+
+	/**
+	 * @return X location of the pickup zone.
+	 */
+	public int getPickupX() {
+		return this.pickupX;
+	}
+
+	/**
+	 * @return Y location of the pickup zone.
+	 */
+	public int getPickupY() {
+		return this.pickupY;
+	}
+
 	/**
 	 * Converts grid-id value into odometer system value
 	 * 
@@ -231,7 +338,6 @@ public class GridMap {
 	 * @param y
 	 *            y-axis location
 	 */
-
 	protected void set(int x, int y) {
 		this.bitset.set(this.getIndex(x, y));
 	}
@@ -242,39 +348,4 @@ public class GridMap {
 	public boolean valid(int x, int y) {
 		return ((x >= 0) && (x < this.width) && (y >= 0) && (y < this.height));
 	}
-	
-	public int getPickupX(){
-		return this.pickupX;
-	}
-	
-	public int getPickupY(){
-		return this.pickupY;
-	}
-
-	public void GeneratePickupPaths(final int x, final int y){
-		pickupPaths = new Pathfinder(this);
-		int end[] = new int[2];
-		end[0] = pickupX;
-		end[1] = pickupY;
-		pickupPaths.generatePaths(end, x, y);
-		LCD.clear(0);
-	}
-	
-	public void GenerateDropPaths(final int x, final int y){
-		dropPaths = new Pathfinder(this);
-		int end[] = new int[2];
-		end[0] = x;
-		end[1] = y;
-		dropPaths.generatePaths(end, pickupX, pickupY);
-	}
-	
-	/**
-	 * Converts grid co-ordinates into odometer system co-ordinates
-	 */
-	// public double [] getPos(int [] val){
-	// double [] pos = new double [2];
-	// pos[DriverRobot.] = getPos(val[DriverRobot.POS_X]);
-	// pos[DriverRobot.POS_Y] = getPos(val[DriverRobot.POS_Y]);
-	// return pos;
-	// }
 }

@@ -10,6 +10,11 @@ import dpm.teamone.driver.events.LineRecord;
 import dpm.teamone.driver.maps.MapFactory;
 import dpm.teamone.driver.navigation.NavigationController;
 
+/**
+ * Simple test program with logging functionality for the LineCorrection class.
+ * @author Michael Williams
+ * @see dpm.teamone.driver.events.LineCorrection
+ */
 public class correction_test {
 
 	public static void main(String[] args) {

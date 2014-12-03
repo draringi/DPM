@@ -8,7 +8,14 @@ import lejos.util.Delay;
 import dpm.teamone.driver.events.EventManager;
 import dpm.teamone.driver.maps.GridMap;
 
+/**
+ * Smart Localization system, which tries to run in log(n) time,
+ * where n is the number of potential starting positions.
+ * @author Michael Williams
+ *
+ */
 public class Orienteer {
+	
 	/**
 	 * Adds 2 Odometer system co-ordinates together in a sane manner
 	 *
@@ -164,8 +171,7 @@ public class Orienteer {
 		double angle = orientationToRads(orientation);
 		offset.setLocation(
 				(float) ((x * Math.cos(angle)) - (y * Math.sin(angle))),
-				(float) ((y * Math.cos(angle)) + (x * Math.sin(angle)))
-		);
+				(float) ((y * Math.cos(angle)) + (x * Math.sin(angle))));
 	}
 
 	/**
@@ -329,7 +335,7 @@ public class Orienteer {
 							if (!this
 									.validOption(option, correctedOffset, wall)) {
 								this.options
-										.clear(this.getOptionIndex(x, y, d));
+								.clear(this.getOptionIndex(x, y, d));
 							}
 						}
 					}

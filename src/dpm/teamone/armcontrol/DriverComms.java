@@ -8,7 +8,7 @@ import lejos.nxt.comm.RS485Connection;
  * The DriverComms handles communications with the Drive Brick.
  * 
  * @author Michael Williams
- * 
+ * @see dpm.teamone.driver.communications.TruckComms
  */
 public class DriverComms {
 
@@ -19,27 +19,9 @@ public class DriverComms {
 	}
 
 	/**
-	 * Tells the Drive Brick that is has successfully dropped the block
+	 * Waits for signal over the wire, and follows requested instruction, before sending the confirmation signal.
+	 * @see dpm.teamone.driver.communications.TruckComms
 	 */
-	public void signalDropped() {
-	}
-
-	/**
-	 * Tells the Drive Brick that is has successfully picked-up the block
-	 */
-	public void signalPickedUp() {
-	}
-
-	/**
-	 * Tells the Drive Brick to correct its orientation to allow better ability
-	 * to pick up a block
-	 * 
-	 * @param deg
-	 *            Degrees to turn (In a clockwise direction)
-	 */
-	public void signalRotate(int deg) {
-	}
-
 	public void waitForSignal() {
 		byte buffer[] = new byte[1];
 		int res = this.connection.read(buffer, buffer.length, true);
@@ -51,7 +33,7 @@ public class DriverComms {
 			Arm.lower();
 			Arm.grab();
 			Arm.raise();
-		} else if (parser.equals("g")){
+		} else if (parser.equals("g")) {
 			Arm.lower();
 			Arm.grab();
 		} else if (parser.equals("d")) {

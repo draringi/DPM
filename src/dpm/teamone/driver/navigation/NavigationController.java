@@ -52,7 +52,7 @@ public class NavigationController {
 	public NavigationController(GridMap map) {
 		this.pilot = new DifferentialPilot(WHEEL_DIAMETER, WHEEL_DIAMETER,
 				TRACK_WIDTH, LEFT_MOTOR, RIGHT_MOTOR, false);
-		//this.pilot.setAcceleration(ACCELERATION);
+		// this.pilot.setAcceleration(ACCELERATION);
 		this.navigator = new Navigator(this.pilot);
 		this.map = map;
 		this.pilot.setTravelSpeed(FORWARD_SPEED);
@@ -131,8 +131,9 @@ public class NavigationController {
 	}
 
 	public void driveToDrop() {
-		this.followPath(map.getPathDrop(this.getPose().getLocation(),
-				new Point((float) this.map.getPos(dropZone[0]), (float) this.map.getPos(dropZone[1]))));
+		this.followPath(this.map.getPathDrop(this.getPose().getLocation(),
+				new Point((float) this.map.getPos(this.dropZone[0]),
+						(float) this.map.getPos(this.dropZone[1]))));
 	}
 
 	/**
@@ -168,50 +169,50 @@ public class NavigationController {
 	}
 
 	public void driveToPickup() {
-		this.followPath(map.getPathPickup(this.getPose().getLocation()));
+		this.followPath(this.map.getPathPickup(this.getPose().getLocation()));
 	}
 
-	public void travel(float dist){
-		this.pilot.travel(dist);
-	}
-	
-	public int findObject(){
+	public int findObject() {
 		UltraSonic us = new UltraSonic();
-		
+
 		int distance = us.poll();
-		float  minAngle = 0;
+		float minAngle = 0;
 		int minVal = 40;
 		float currentAng = -180;
-		boolean check =false;
-		if(this.navigator.getPoseProvider().getPose().getHeading()!=-180){
-		this.turnTo(180);}
+		boolean check = false;
+		if (this.navigator.getPoseProvider().getPose().getHeading() != -180) {
+			this.turnTo(180);
+		}
 		Pose p = this.navigator.getPoseProvider().getPose();
-		this.navigator.getPoseProvider().setPose(new Pose(p.getX(),p.getY(),-180));
-		boolean finished =false;
+		this.navigator.getPoseProvider().setPose(
+				new Pose(p.getX(), p.getY(), -180));
+		boolean finished = false;
 		this.pilot.setRotateSpeed(30);
 		this.pilot.rotateLeft();
 
-		while(this.navigator.getPoseProvider().getPose().getHeading()<-90){
-			int temp=us.poll(3);
-			if(temp<minVal){
-				minAngle = this.navigator.getPoseProvider().getPose().getHeading();
+		while (this.navigator.getPoseProvider().getPose().getHeading() < -90) {
+			int temp = us.poll(3);
+			if (temp < minVal) {
+				minAngle = this.navigator.getPoseProvider().getPose()
+						.getHeading();
 				minVal = temp;
-				check=true;
+				check = true;
 			}
-		
+
 		}
-		if(!check){
+		if (!check) {
 			this.pilot.setTravelSpeed(15);
 			this.pilot.setRotateSpeed(45);
 			float angle = this.getPose().angleTo(new Point(-30, -30));
 			this.turnTo(angle);
 			this.pilot.travel(10);
-			return findObject();
+			return this.findObject();
 		}
 		this.pilot.stop();
-		this.turnTo(minAngle+5);;
-		return (int) (minVal*0.9);
-		
+		this.turnTo(minAngle + 5);
+		;
+		return (int) (minVal * 0.9);
+
 	}
 
 	/**
@@ -231,7 +232,7 @@ public class NavigationController {
 			RIGHT_MOTOR.flt(true);
 			this.navigator.rotateTo(this.getPose().angleTo(wp));
 			LEFT_MOTOR.flt(true);
-                        RIGHT_MOTOR.flt(true);
+			RIGHT_MOTOR.flt(true);
 			this.navigator.followPath();
 			Delay.msDelay(500);
 			EventManager.restart();
@@ -406,6 +407,10 @@ public class NavigationController {
 	public void stop() {
 		this.pilot.stop();
 
+	}
+
+	public void travel(float dist) {
+		this.pilot.travel(dist);
 	}
 
 	/**

@@ -22,22 +22,37 @@ public class CommunicationsManager {
 		this.truck.setup();
 	}
 
+	/**
+	 * Tells the other brick to close the claw (Grab).
+	 */
 	public void grabObject() {
 		this.truck.grab();
 	}
 
+	/**
+	 * Tells the other brick to raise the arm (Lift).
+	 */
 	public void liftObject() {
 		this.truck.pickUp();
 	}
 
+	/**
+	 * Tells the other brick to prepare for object grabbing (Arm the claw).
+	 */
 	public void prepareClaw() {
 		this.truck.armClaw();
 	}
 
+	/**
+	 * Tells the other brick to raise and close the claw for moving (Travel).
+	 */
 	public void prepareTravel() {
 		this.truck.travel();
 	}
 
+	/**
+	 * Tells the other brick to place the object on the ground (Release).
+	 */
 	public void releaseObject() {
 		this.truck.drop();
 	}
