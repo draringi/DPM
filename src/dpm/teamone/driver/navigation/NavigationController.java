@@ -22,6 +22,7 @@ import dpm.teamone.driver.maps.GridMap;
  *
  * @author Mehdi Benguerrah
  * @author Michael Williams
+ * @author Alex Yin (Calibration data)
  *
  */
 public class NavigationController {
@@ -61,6 +62,13 @@ public class NavigationController {
 		this.dropZone = new int[4];
 	}
 
+	/**
+	 * Cuts path length.
+	 * @param p Path to cut
+	 * @param count Number of nodes to return
+	 * @return New Path containing the 1st "count" nodes.
+	 * @deprecated
+	 */
 	private ArrayList<Node> adjustPath(ArrayList<Node> p, int count) {
 		ArrayList<Node> temp = new ArrayList<Node>();
 		for (int i = 0; i < (count - 1); i++) {
@@ -70,6 +78,16 @@ public class NavigationController {
 		return temp;
 	}
 
+	/**
+	 * 
+	 * @param x1
+	 * @param y1
+	 * @param x2
+	 * @param y2
+	 * @param path
+	 * @param count
+	 * @deprecated
+	 */
 	private void calculatePaths(int x1, int y1, int x2, int y2,
 			ArrayList<Node> path, int count) {
 
@@ -113,6 +131,13 @@ public class NavigationController {
 		path.remove(path.size() - 1);
 	}
 
+	/**
+	 * 
+	 * @param n
+	 * @param nodes
+	 * @return
+	 * @deprecated
+	 */
 	private boolean containsNode(Node n, ArrayList<Node> nodes) {
 
 		boolean contains = false;
@@ -126,10 +151,9 @@ public class NavigationController {
 		return contains;
 	}
 
-	public void correctPath() {
-		this.navigator.followPath();
-	}
-
+	/**
+	 * Drives to drop-off zone, using pre-generated Path Table.
+	 */
 	public void driveToDrop() {
 		this.followPath(this.map.getPathDrop(this.getPose().getLocation(),
 				new Point((float) this.map.getPos(this.dropZone[0]),
@@ -168,25 +192,31 @@ public class NavigationController {
 		this.turnTo(direction);
 	}
 
+	/**
+	 * Drives to Pickup Zone, using pre-generated Path Table.
+	 */
 	public void driveToPickup() {
 		this.followPath(this.map.getPathPickup(this.getPose().getLocation()));
 	}
 
+	/**
+	 * Locates nearest object in the pickup zone.
+	 * Once found, robot turns to face it.
+	 * @return Distance to nearest object
+	 */
 	public int findObject() {
 		UltraSonic us = new UltraSonic();
 
-		int distance = us.poll();
 		float minAngle = 0;
 		int minVal = 40;
 		float currentAng = -180;
 		boolean check = false;
-		if (this.navigator.getPoseProvider().getPose().getHeading() != -180) {
+		if (this.navigator.getPoseProvider().getPose().getHeading() != currentAng) {
 			this.turnTo(180);
 		}
 		Pose p = this.navigator.getPoseProvider().getPose();
 		this.navigator.getPoseProvider().setPose(
 				new Pose(p.getX(), p.getY(), -180));
-		boolean finished = false;
 		this.pilot.setRotateSpeed(30);
 		this.pilot.rotateLeft();
 
@@ -240,11 +270,10 @@ public class NavigationController {
 		}
 	}
 
-	public void forward() {
-		this.pilot.forward();
-
-	}
-
+	/**
+	 * Provides the map used by the navigator to tell where it is.
+	 * @return Map in Use.
+	 */
 	public GridMap getMap() {
 		return this.map;
 	}
@@ -257,6 +286,7 @@ public class NavigationController {
 	 * @param y
 	 *            Location in the y-axis
 	 * @return shortest path to destination
+	 * @deprecated
 	 */
 	public Path getPath(int x, int y) {
 		int currentX = this.map.getGrid(this.getPose().getX()); // X index
@@ -267,6 +297,15 @@ public class NavigationController {
 		return this.getShortestPath();
 	}
 
+	/**
+	 * Test function for the old Pathfinding Algorithm
+	 * @param v
+	 * @param w
+	 * @param x
+	 * @param y
+	 * @return
+	 * @deprecated
+	 */
 	public Path getPath_TEST(int v, int w, int x, int y) {
 		int currentX = v;// X index
 		int currentY = w; // Y index
@@ -276,8 +315,11 @@ public class NavigationController {
 		return this.getShortestPath();
 	}
 
+	/**
+	 * Direct Access to the underlying wheels
+	 * @return
+	 */
 	public DifferentialPilot getPilot() {
-
 		return this.pilot;
 	}
 
@@ -288,6 +330,11 @@ public class NavigationController {
 		return this.navigator.getPoseProvider().getPose();
 	}
 
+	/**
+	 * Old recursive Pathfinding Algorithm.
+	 * @return
+	 * @deprecated
+	 */
 	private Path getShortestPath() {
 		int shortestPath = 1000;
 		int index = 0;
@@ -309,11 +356,23 @@ public class NavigationController {
 		return path;
 	}
 
+	/**
+	 * Drives directly to the provided point
+	 * @param next Point to drive to.
+	 */
 	public void gotoPoint(Point next) {
 		Waypoint wp = new Waypoint(next);
 		this.navigator.goTo(wp);
 	}
 
+	/**
+	 * Helper function to determine if the index is valid to add to a path.
+	 * @param x
+	 * @param y
+	 * @param path
+	 * @return
+	 * @deprecated
+	 */
 	private boolean isIndexValid(int x, int y, ArrayList<Node> path) {
 		boolean isValid = true;
 		if (this.map.blocked(x, y)) {
@@ -326,6 +385,9 @@ public class NavigationController {
 
 	}
 
+	/**
+	 * Accessor to the underlying Localization Algorithm.
+	 */
 	public void localize() {
 		LCDinfo lcd = new LCDinfo();
 		Orienteer localizer = new Orienteer(this.map, this);
@@ -337,18 +399,35 @@ public class NavigationController {
 		lcd.setStartPos(x, y, dir);
 	}
 
+	/**
+	 * @return true if robot is moving, false otherwise.
+	 */
 	public boolean moving() {
 		return this.pilot.isMoving();
 	}
 
+	/**
+	 * Rotates the robot a certain amount in a provided direction.
+	 * Positive is counter-clockwise, negative is clockwise.
+	 * @param angle Signed angle in degrees.
+	 */
 	public void rotate(double angle) {
 		this.pilot.rotate(angle);
 	}
 
+	/**
+	 * Rotates the robot a certain amount in a provided direction.
+	 * Positive is counter-clockwise, negative is clockwise.
+	 * @param angle Signed angle in degrees.
+	 */
 	public void rotate(int angle) {
 		this.pilot.rotate(angle);
 	}
 
+	/**
+	 * Updates the angle as reported by the odometer.
+	 * @param ang Signed angle in degrees.
+	 */
 	public void setAngle(int ang) {
 		Pose p = this.getPose();
 		p.setHeading(ang);
@@ -404,11 +483,18 @@ public class NavigationController {
 		this.navigator.getPoseProvider().setPose(p);
 	}
 
+	/**
+	 * Stops the robot's current movement. 
+	 */
 	public void stop() {
 		this.pilot.stop();
-
 	}
 
+	/**
+	 * Makes the robot to travel a provided distance.
+	 * Positive is forwards, negative is backwards.
+	 * @param dist Signed distance in cm.
+	 */
 	public void travel(float dist) {
 		this.pilot.travel(dist);
 	}
