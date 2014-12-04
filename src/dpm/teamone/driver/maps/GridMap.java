@@ -21,31 +21,31 @@ import lejos.robotics.pathfinding.Path;
 public class GridMap {
 
 	/**
-	 * Internal representation of the 
+	 * Internal representation of the
 	 */
 	private final BitSet bitset;
 
 	/**
-	 * Linemap needed by some Lejos Libraries. Provided in case any need are used. 
+	 * Linemap needed by some Lejos Libraries. Provided in case any need are
+	 * used.
 	 */
 	private LineMap linemap;
 
 	/**
-	 * Size of each tile.
-	 * Value: {@value}
+	 * Size of each tile. Value: {@value}
 	 */
 	public final int TILE_SIZE = 30;
-	
+
 	/**
 	 * Dimensions of the map.
 	 */
 	private final int width, height;
-	
+
 	/**
 	 * Co-ordinates of the pickup zone.
 	 */
 	private final byte pickupX, pickupY;
-	
+
 	/**
 	 * Pathfinding table generated after map creation for common destinations.
 	 */
@@ -69,8 +69,10 @@ public class GridMap {
 
 	/**
 	 * 
-	 * @param x x-axis location
-	 * @param y y-axis location
+	 * @param x
+	 *            x-axis location
+	 * @param y
+	 *            y-axis location
 	 * @return If location is blocked.
 	 */
 	public boolean blocked(int x, int y) {
@@ -82,8 +84,11 @@ public class GridMap {
 
 	/**
 	 * Converts grid co-ordinates to a Point which can be used by navigation
-	 * @param x x-axis location
-	 * @param y y-axis location
+	 * 
+	 * @param x
+	 *            x-axis location
+	 * @param y
+	 *            y-axis location
 	 * @return Point on the floor as measured in cm
 	 * @see dpm.teamone.driver.navigation
 	 */
@@ -93,8 +98,11 @@ public class GridMap {
 
 	/**
 	 * Converts grid co-ordinates to a Waypoint which can be used by navigation
-	 * @param x x-axis location
-	 * @param y y-axis location
+	 * 
+	 * @param x
+	 *            x-axis location
+	 * @param y
+	 *            y-axis location
 	 * @return Waypoint on the floor as measured in cm
 	 * @see dpm.teamone.driver.navigation
 	 */
@@ -104,8 +112,11 @@ public class GridMap {
 
 	/**
 	 * Generates pathfinding table to the requested drop zone
-	 * @param x Drop Zone x location
-	 * @param y Drop Zone y location
+	 * 
+	 * @param x
+	 *            Drop Zone x location
+	 * @param y
+	 *            Drop Zone y location
 	 */
 	public void GenerateDropPaths(final int x, final int y) {
 		this.dropPaths = new Pathfinder(this);
@@ -158,8 +169,11 @@ public class GridMap {
 
 	/**
 	 * Generates pathfinding table to the pickup zone
-	 * @param x Unused
-	 * @param y Unused
+	 * 
+	 * @param x
+	 *            Unused
+	 * @param y
+	 *            Unused
 	 */
 	public void GeneratePickupPaths(final int x, final int y) {
 		this.pickupPaths = new Pathfinder(this);
@@ -171,7 +185,9 @@ public class GridMap {
 
 	/**
 	 * Converts cm value to grid id.
-	 * @param val Location from 0 line in cm
+	 * 
+	 * @param val
+	 *            Location from 0 line in cm
 	 * @return Grid ID.
 	 */
 	public int getGrid(double val) {
@@ -180,8 +196,12 @@ public class GridMap {
 
 	/**
 	 * Converts double from the odometer system into grid id value.
-	 * @param val Location from 0 line in cm
-	 * @param orienteering True if offset should not be used. False for standard operation.
+	 * 
+	 * @param val
+	 *            Location from 0 line in cm
+	 * @param orienteering
+	 *            True if offset should not be used. False for standard
+	 *            operation.
 	 * @return Grid ID.
 	 */
 	public int getGrid(double val, boolean orienteering) {
@@ -222,8 +242,11 @@ public class GridMap {
 
 	/**
 	 * Generates pathtable and finds shortest path.
-	 * @param start Starting point.
-	 * @param end Destination point.
+	 * 
+	 * @param start
+	 *            Starting point.
+	 * @param end
+	 *            Destination point.
 	 * @return Shortest Path.
 	 */
 	public Path getPath(Point start, Point end) {
@@ -243,9 +266,12 @@ public class GridMap {
 	}
 
 	/**
-	 * Gets the Shortest path to the drop zone using pre-generated pathfinding table.
+	 * Gets the Shortest path to the drop zone using pre-generated pathfinding
+	 * table.
+	 * 
 	 * @param start
-	 * @param end Unused
+	 * @param end
+	 *            Unused
 	 * @return Shortest path to the drop zone
 	 */
 	public Path getPathDrop(Point start, Point end) {
@@ -264,9 +290,12 @@ public class GridMap {
 	}
 
 	/**
-	 * Gets the Shortest path to the pickup zone using pre-generated pathfinding table.
+	 * Gets the Shortest path to the pickup zone using pre-generated pathfinding
+	 * table.
+	 * 
 	 * @param start
-	 * @param end Unused
+	 * @param end
+	 *            Unused
 	 * @return Shortest path to the pickup zone
 	 */
 	public Path getPathPickup(Point start) {

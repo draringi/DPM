@@ -5,6 +5,7 @@ import dpm.teamone.driver.navigation.Direction;
 
 /**
  * Record used by the {@link LineLogger}
+ * 
  * @author Michael Williams
  * @see LineCorrection
  */
@@ -17,14 +18,23 @@ public class LineRecord {
 
 	/**
 	 * Creates new Line Record.
-	 * @param status Updated location.
-	 * @param dist Distance between the two sensors seeing the line
-	 * @param leftFirst If the left sensor saw the line first or not.
-	 * @param believed What it thought its angle was.
-	 * @param offset How far off it was.
-	 * @param real What its real angle was.
-	 * @param dir Direction the Robot was traveling in. 
-	 * @param prev Previous believed Location.
+	 * 
+	 * @param status
+	 *            Updated location.
+	 * @param dist
+	 *            Distance between the two sensors seeing the line
+	 * @param leftFirst
+	 *            If the left sensor saw the line first or not.
+	 * @param believed
+	 *            What it thought its angle was.
+	 * @param offset
+	 *            How far off it was.
+	 * @param real
+	 *            What its real angle was.
+	 * @param dir
+	 *            Direction the Robot was traveling in.
+	 * @param prev
+	 *            Previous believed Location.
 	 */
 	public LineRecord(Pose status, float dist, boolean leftFirst,
 			float believed, float offset, float real, Direction dir,

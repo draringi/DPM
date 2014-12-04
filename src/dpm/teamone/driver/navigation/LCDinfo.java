@@ -5,14 +5,15 @@ import dpm.teamone.driver.DriverRobot;
 
 /**
  * Simple Access to the LCD, to show localization data.
+ * 
  * @author Michael Williams
  *
  */
 public class LCDinfo {
 
 	/**
-	 * Creates the object,
-	 * clearing the screen and setting the string "Localizing..." to the 1st line.
+	 * Creates the object, clearing the screen and setting the string
+	 * "Localizing..." to the 1st line.
 	 */
 	protected LCDinfo() {
 		LCD.clear();
@@ -21,7 +22,9 @@ public class LCDinfo {
 
 	/**
 	 * Sets the starting position as determined by localization.
-	 * @param pos Starting Position as Location Array.
+	 * 
+	 * @param pos
+	 *            Starting Position as Location Array.
 	 */
 	protected void setStartPos(int pos[]) {
 		Direction dir = Direction.toDirection(pos[DriverRobot.POS_THETA]);
@@ -30,9 +33,13 @@ public class LCDinfo {
 
 	/**
 	 * Sets the starting position as determined by localization.
-	 * @param x Starting Location in the x-axis. 
-	 * @param y Starting Location in the y-axis.
-	 * @param dir Starting Direction.
+	 * 
+	 * @param x
+	 *            Starting Location in the x-axis.
+	 * @param y
+	 *            Starting Location in the y-axis.
+	 * @param dir
+	 *            Starting Direction.
 	 */
 	protected void setStartPos(int x, int y, Direction dir) {
 		LCD.clear();

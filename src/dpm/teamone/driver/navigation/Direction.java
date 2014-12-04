@@ -17,8 +17,11 @@ public enum Direction {
 	WEST(3, "West");
 
 	/**
-	 * Converts from angle to basic integer enums without returning a Direction object.
-	 * @param angle Heading in degrees.
+	 * Converts from angle to basic integer enums without returning a Direction
+	 * object.
+	 * 
+	 * @param angle
+	 *            Heading in degrees.
 	 * @return Integer representation of direction.
 	 */
 	public static int angleToInt(float angle) {
@@ -27,8 +30,11 @@ public enum Direction {
 
 	/**
 	 * Creates Direction object from angle
-	 * @param angle Heading in degrees.
-	 * @return Direction object corresponding to the cardinal direction of given angle.
+	 * 
+	 * @param angle
+	 *            Heading in degrees.
+	 * @return Direction object corresponding to the cardinal direction of given
+	 *         angle.
 	 */
 	public static Direction fromAngle(float angle) {
 		// Sanitize any bad angles. This section should be skipped, but exists
@@ -59,8 +65,11 @@ public enum Direction {
 	}
 
 	/**
-	 * Converts from basic integer enums to angle without returning a Direction object.
-	 * @param val Integer representation of direction.
+	 * Converts from basic integer enums to angle without returning a Direction
+	 * object.
+	 * 
+	 * @param val
+	 *            Integer representation of direction.
 	 * @return Corresponding angle in degrees.
 	 */
 	public static float intToAngle(int val) {
@@ -69,7 +78,9 @@ public enum Direction {
 
 	/**
 	 * Converts from basic integer enums to Direction Object.
-	 * @param i Integer value of Direction.
+	 * 
+	 * @param i
+	 *            Integer value of Direction.
 	 * @return Direction associated with integer.
 	 */
 	public static Direction toDirection(int i) {
@@ -93,7 +104,8 @@ public enum Direction {
 	}
 
 	/**
-	 * @param dir Direction
+	 * @param dir
+	 *            Direction
 	 * @return Integer representation.
 	 */
 	public static int toInt(Direction dir) {
@@ -111,7 +123,7 @@ public enum Direction {
 	private int val;
 
 	/**
-	 * @param i 
+	 * @param i
 	 * @param name
 	 * @see #name
 	 * @see #val

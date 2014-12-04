@@ -7,8 +7,7 @@ import lejos.robotics.navigation.Waypoint;
 
 /**
  * Pathfinding class, taking advantage of knowing the map to avoid having to
- * read from the ultrasonic to dodge walls.
- * Based off of A*.
+ * read from the ultrasonic to dodge walls. Based off of A*.
  * 
  * @author Michael Williams (260369438)
  * @author Leonardo Siracusa (260585931)
@@ -33,7 +32,8 @@ public class Pathfinder {
 
 	/**
 	 * 
-	 * @param map Map to find the paths for.
+	 * @param map
+	 *            Map to find the paths for.
 	 */
 	public Pathfinder(GridMap map) {
 		this.map = map;
@@ -50,13 +50,16 @@ public class Pathfinder {
 	}
 
 	/**
-	 * finds the shortest path from start to end.
-	 * If table hasn't been generated, it generates it.
-	 * @param start Starting grid
-	 * @param end Final grid (only used if path not already generated)
+	 * finds the shortest path from start to end. If table hasn't been
+	 * generated, it generates it.
+	 * 
+	 * @param start
+	 *            Starting grid
+	 * @param end
+	 *            Final grid (only used if path not already generated)
 	 */
 	public void findPath(int[] start, int[] end) {
-		if(this.cellList[start[X]][start[Y]]==-1){
+		if (this.cellList[start[X]][start[Y]] == -1) {
 			this.generatePaths(end, start[X], start[Y]);
 		}
 		int x = start[X];
@@ -89,9 +92,13 @@ public class Pathfinder {
 
 	/**
 	 * Generates Pathfinding table for a given destination.
-	 * @param end Final destination.
-	 * @param xTarget Unused. Remains for API conformance.
-	 * @param yTarget Unused. Remains for API conformance.
+	 * 
+	 * @param end
+	 *            Final destination.
+	 * @param xTarget
+	 *            Unused. Remains for API conformance.
+	 * @param yTarget
+	 *            Unused. Remains for API conformance.
 	 */
 	public void generatePaths(int[] end, int xTarget, int yTarget) {
 		Queue<Pair> studyList = new Queue<Pair>();
@@ -131,6 +138,7 @@ public class Pathfinder {
 
 	/**
 	 * Gets next waypoint in a path.
+	 * 
 	 * @return next Waypoint in a path.
 	 */
 	public Waypoint getNext() {
@@ -139,18 +147,24 @@ public class Pathfinder {
 
 	/**
 	 * Gets status of path.
-	 * @return True if more of a path remains. False if path had been extracted, or no path has been generated.
+	 * 
+	 * @return True if more of a path remains. False if path had been extracted,
+	 *         or no path has been generated.
 	 */
 	public boolean isPath() {
 		return !this.path.isEmpty();
 	}
 
 	/**
-	 * Determines if a grid location is the next step in the path.
-	 * This only makes sense if called on adjacent tiles.
-	 * @param x X-axis location.
-	 * @param y Y-axis location.
-	 * @param dist Current Distance from destination. 
+	 * Determines if a grid location is the next step in the path. This only
+	 * makes sense if called on adjacent tiles.
+	 * 
+	 * @param x
+	 *            X-axis location.
+	 * @param y
+	 *            Y-axis location.
+	 * @param dist
+	 *            Current Distance from destination.
 	 * @return True if next step in path, false otherwise.
 	 */
 	private boolean nextStep(int x, int y, int dist) {

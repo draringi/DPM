@@ -98,37 +98,32 @@ public class DriverRobot {
 
 	/**
 	 * Index of map data array for the location of the drop zone in the y-axis.
-	 * Has a value of {@value}.
+	 * Has a value of {@value} .
 	 */
 	public static final int MAP_DATA_DROP_Y = 2;
 
 	/**
-	 * Length of a map data array.
-	 * Has a value of {@value}.
+	 * Length of a map data array. Has a value of {@value} .
 	 */
 	public static final int MAP_DATA_LENGTH = 3;
 
 	/**
-	 * Index of map data array for the map number.
-	 * Has a value of {@value}.
+	 * Index of map data array for the map number. Has a value of {@value} .
 	 */
 	public static final int MAP_DATA_MAP = 0;
 
 	/**
-	 * Value in location array for the heading.
-	 * Has a value of {@value}.
+	 * Value in location array for the heading. Has a value of {@value} .
 	 */
 	public static final int POS_THETA = 2;
 
 	/**
-	 * Value in location array for the x-value.
-	 * Has a value of {@value}.
+	 * Value in location array for the x-value. Has a value of {@value} .
 	 */
 	public static final int POS_X = 0;
 
 	/**
-	 * Value in location array for the y-value.
-	 * Has a value of {@value}.
+	 * Value in location array for the y-value. Has a value of {@value} .
 	 */
 	public static final int POS_Y = 1;
 

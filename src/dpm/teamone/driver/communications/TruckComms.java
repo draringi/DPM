@@ -11,12 +11,19 @@ import lejos.nxt.comm.RS485Connection;
  * 
  * <h3>Code definitions</h3>
  * <dl>
- * <dt>a</dt><dd>Arm the claw</dd>
- * <dt>g</dt><dd>Close the claw to grab the object</dd>
- * <dt>d</dt><dd>Lower the arm, open the claw, and then raise the arm</dd>
- * <dt>p</dt><dd>Ensure the arm is lowered, then ensure it is closed, and then raise it.</dd>
- * <dt>t</dt><dd>Raise the arm, and then close the claw, ready for traveling around the map.</dd>
- * <dt>k</dt><dd>Confirm message received and request processed</dd>
+ * <dt>a</dt>
+ * <dd>Arm the claw</dd>
+ * <dt>g</dt>
+ * <dd>Close the claw to grab the object</dd>
+ * <dt>d</dt>
+ * <dd>Lower the arm, open the claw, and then raise the arm</dd>
+ * <dt>p</dt>
+ * <dd>Ensure the arm is lowered, then ensure it is closed, and then raise it.</dd>
+ * <dt>t</dt>
+ * <dd>Raise the arm, and then close the claw, ready for traveling around the
+ * map.</dd>
+ * <dt>k</dt>
+ * <dd>Confirm message received and request processed</dd>
  * </dl>
  * 
  * @author Michael Williams

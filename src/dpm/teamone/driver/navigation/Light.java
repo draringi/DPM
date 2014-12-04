@@ -4,9 +4,8 @@ import lejos.nxt.ColorSensor;
 import lejos.nxt.SensorPort;
 
 /**
- * Averaging filtering Light/Color reader.
- * Unfortunately issues mean no actual filtering happened,
- * but this API allows filtering without changing API calls.
+ * Averaging filtering Light/Color reader. Unfortunately issues mean no actual
+ * filtering happened, but this API allows filtering without changing API calls.
  * 
  * @author Michael Williams (260369438)
  * 
@@ -21,7 +20,8 @@ public class Light {
 	private final ColorSensor sensor;
 
 	/**
-	 * @param port Sensor Port that sensor is on.
+	 * @param port
+	 *            Sensor Port that sensor is on.
 	 */
 	public Light(SensorPort port) {
 		// Change this to which ever port contains the US

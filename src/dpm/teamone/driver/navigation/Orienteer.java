@@ -9,13 +9,14 @@ import dpm.teamone.driver.events.EventManager;
 import dpm.teamone.driver.maps.GridMap;
 
 /**
- * Smart Localization system, which tries to run in log(n) time,
- * where n is the number of potential starting positions.
+ * Smart Localization system, which tries to run in log(n) time, where n is the
+ * number of potential starting positions.
+ * 
  * @author Michael Williams
  *
  */
 public class Orienteer {
-	
+
 	/**
 	 * Adds 2 Odometer system co-ordinates together in a sane manner
 	 *
@@ -32,7 +33,9 @@ public class Orienteer {
 
 	/**
 	 * Helper function to convert to radians for use in the Java trig functions
-	 * @param angle Angle in Degrees
+	 * 
+	 * @param angle
+	 *            Angle in Degrees
 	 * @return Angle in Radians
 	 */
 	public static double degreesToRads(float angle) {
@@ -40,8 +43,10 @@ public class Orienteer {
 	}
 
 	/**
-	 * Helper function that takes angle, and returns basic facing enum 
-	 * @param angle Angle in Degrees
+	 * Helper function that takes angle, and returns basic facing enum
+	 * 
+	 * @param angle
+	 *            Angle in Degrees
 	 * @return Integer value representing a direction
 	 */
 	public static int facingToInt(float angle) {
@@ -50,8 +55,11 @@ public class Orienteer {
 	}
 
 	/**
-	 * Helpter function that converts {@Link Direction} Integer values to radians.
-	 * @param orientation Integer representation of a Direction
+	 * Helpter function that converts {@Link Direction} Integer values to
+	 * radians.
+	 * 
+	 * @param orientation
+	 *            Integer representation of a Direction
 	 * @return Angle in Radians
 	 */
 	public static double orientationToRads(int orientation) {
@@ -59,20 +67,22 @@ public class Orienteer {
 	}
 
 	/**
-	 * Basic helper enum for direction facing, which adds well with Direction integers.
-	 * They are negative for this reason, as these are counterclock-wise, and Direction ints are clockwise in nature.
-	 * Value: {@value} 
+	 * Basic helper enum for direction facing, which adds well with Direction
+	 * integers. They are negative for this reason, as these are
+	 * counterclock-wise, and Direction ints are clockwise in nature. Value:
+	 * {@value}
 	 */
 	public static final int FORWARD = 0, LEFT = -1, BACKWARDS = -2, RIGHT = -3;
 
 	/**
 	 * Integer representations of Directions.
+	 * 
 	 * @see Direction
 	 */
 	public static final int NORTH = 0, EAST = 1, SOUTH = 2, WEST = 3;
 
 	/**
-	 * Max Distance in cm to consider a wall. Value: {@value}cm.
+	 * Max Distance in cm to consider a wall. Value: {@value} cm.
 	 */
 	public static final int THRESHOLD = 25;
 
@@ -98,8 +108,10 @@ public class Orienteer {
 	/**
 	 * Default constructor
 	 * 
-	 * @param map Map to be used
-	 * @param nav Navigation Controller
+	 * @param map
+	 *            Map to be used
+	 * @param nav
+	 *            Navigation Controller
 	 */
 	public Orienteer(GridMap map, NavigationController nav) {
 		this.map = map;
@@ -126,9 +138,11 @@ public class Orienteer {
 	}
 
 	/**
-	 * Function to count how many remaining options would have a wall if we traveled
-	 * in a given direction. 
-	 * @param direction Direction to travel.
+	 * Function to count how many remaining options would have a wall if we
+	 * traveled in a given direction.
+	 * 
+	 * @param direction
+	 *            Direction to travel.
 	 * @return Number of remaining options that would have a wall.
 	 */
 	private int changeCount(int direction) {
@@ -223,7 +237,7 @@ public class Orienteer {
 	}
 
 	/**
-	 * @return  Point containing grid co-ords of the grid in front of the robot. 
+	 * @return Point containing grid co-ords of the grid in front of the robot.
 	 */
 	private Point getFront() {
 		int x, y;
@@ -273,8 +287,11 @@ public class Orienteer {
 
 	/**
 	 * Adds a grid ID and an Offset
-	 * @param grid Grid ID
-	 * @param offset Offset in cm
+	 * 
+	 * @param grid
+	 *            Grid ID
+	 * @param offset
+	 *            Offset in cm
 	 * @return Updated grid ID
 	 */
 	public int getOffsetDist(int grid, double offset) {
@@ -283,8 +300,11 @@ public class Orienteer {
 
 	/**
 	 * Adds a grid ID and an Offset
-	 * @param grid Grid ID
-	 * @param offset Offset in grids
+	 * 
+	 * @param grid
+	 *            Grid ID
+	 * @param offset
+	 *            Offset in grids
 	 * @return Updated grid ID
 	 */
 	public int getOffsetDist(int grid, int offset) {
@@ -374,7 +394,7 @@ public class Orienteer {
 							if (!this
 									.validOption(option, correctedOffset, wall)) {
 								this.options
-								.clear(this.getOptionIndex(x, y, d));
+										.clear(this.getOptionIndex(x, y, d));
 							}
 						}
 					}

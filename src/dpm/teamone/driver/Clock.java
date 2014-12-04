@@ -14,7 +14,8 @@ public class Clock {
 
 	/**
 	 * 
-	 * @param timeLimit Last run start time in seconds
+	 * @param timeLimit
+	 *            Last run start time in seconds
 	 */
 	public Clock(int timeLimit) {
 		this.timeLimit = timeLimit;
@@ -30,7 +31,10 @@ public class Clock {
 
 	/**
 	 * Checks if time is up.
-	 * @return True if time passed since start was is greater than timeLimit, false otherwise. If start hasn't been called, always returns false.
+	 * 
+	 * @return True if time passed since start was is greater than timeLimit,
+	 *         false otherwise. If start hasn't been called, always returns
+	 *         false.
 	 */
 	public boolean timeUp() {
 		return ((this.timeEnd > 0) && (System.currentTimeMillis() > this.timeEnd));

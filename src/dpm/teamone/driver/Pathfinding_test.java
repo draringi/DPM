@@ -8,6 +8,7 @@ import dpm.teamone.driver.maps.Pathfinder;
 
 /**
  * Simple Application for testing the Pathfinder class.
+ * 
  * @author Michael Williams
  * @see dpm.teamone.driver.maps.Pathfinder
  */

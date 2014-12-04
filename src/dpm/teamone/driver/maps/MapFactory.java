@@ -85,10 +85,11 @@ public class MapFactory {
 		return new GridMap(4, 4, (byte) 2, (byte) 2);
 	}
 
-
 	/**
 	 * Returns requested map for Beta Demo
-	 * @param mapID Map wanted
+	 * 
+	 * @param mapID
+	 *            Map wanted
 	 * @return Map requested.
 	 */
 	public static GridMap getBetaMap(int mapID) {

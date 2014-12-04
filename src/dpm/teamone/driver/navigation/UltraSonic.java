@@ -13,14 +13,12 @@ import lejos.util.Delay;
 public class UltraSonic {
 
 	/**
-	 * Maximum accepted reading from the sensor.
-	 * Value: {@value}
+	 * Maximum accepted reading from the sensor. Value: {@value}
 	 */
 	private static final int MAX = 90;
-	
+
 	/**
-	 * Default number of readings to take.
-	 * Value: {@value} 
+	 * Default number of readings to take. Value: {@value}
 	 */
 	private static final int LOOPS = 35;
 
@@ -33,6 +31,7 @@ public class UltraSonic {
 
 	/**
 	 * Filtering for individual pings.
+	 * 
 	 * @return Filtered data.
 	 */
 	private int getFiltered() {
@@ -47,6 +46,7 @@ public class UltraSonic {
 
 	/**
 	 * Averaging filtering of Ultra-sonic readings.
+	 * 
 	 * @return Filtered Ultra-sonic data
 	 */
 	public int poll() {
@@ -55,7 +55,9 @@ public class UltraSonic {
 
 	/**
 	 * Averaging filtering of Ultra-sonic readings.
-	 * @param count Number of readings to take
+	 * 
+	 * @param count
+	 *            Number of readings to take
 	 * @return Filtered Ultra-sonic data
 	 */
 	public int poll(int count) {

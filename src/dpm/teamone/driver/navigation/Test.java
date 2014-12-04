@@ -29,7 +29,7 @@ public class Test {
 				&& (buttonChoice != Button.ID_RIGHT));
 
 		if (buttonChoice == Button.ID_LEFT) {
-			GridMap grid = new GridMap(4, 4, (byte) 3,(byte) 3);
+			GridMap grid = new GridMap(4, 4, (byte) 3, (byte) 3);
 			NavigationController nav = new NavigationController(grid);
 			Pose initialLocation = new Pose(0, 0, 90); // Replace by
 			// localisation after

@@ -28,7 +28,9 @@ public class ControlComms {
 	}
 
 	/**
-	 * Waits for user input to set the map, and then the x and y location of the drop off zone.
+	 * Waits for user input to set the map, and then the x and y location of the
+	 * drop off zone.
+	 * 
 	 * @return Map data array
 	 */
 	protected int[] getMapData() {

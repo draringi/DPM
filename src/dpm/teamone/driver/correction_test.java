@@ -12,6 +12,7 @@ import dpm.teamone.driver.navigation.NavigationController;
 
 /**
  * Simple test program with logging functionality for the LineCorrection class.
+ * 
  * @author Michael Williams
  * @see dpm.teamone.driver.events.LineCorrection
  */

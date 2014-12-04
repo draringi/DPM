@@ -19,7 +19,9 @@ public class DriverComms {
 	}
 
 	/**
-	 * Waits for signal over the wire, and follows requested instruction, before sending the confirmation signal.
+	 * Waits for signal over the wire, and follows requested instruction, before
+	 * sending the confirmation signal.
+	 * 
 	 * @see dpm.teamone.driver.communications.TruckComms
 	 */
 	public void waitForSignal() {

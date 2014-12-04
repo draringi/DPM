@@ -7,6 +7,6 @@
  * @author Michael Williams (Head of Software Development and Design)
  * @author Steven Voyer (Head of Hardware Development and Design)
  * @author Alex Yin (Head of Testing)
- * @author Mehdi Benguerrah (Software Developer) 
+ * @author Mehdi Benguerrah (Software Developer)
  */
 package dpm.teamone;

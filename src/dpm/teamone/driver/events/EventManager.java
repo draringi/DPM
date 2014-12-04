@@ -17,6 +17,7 @@ public class EventManager extends Thread {
 
 	/**
 	 * Returns current set status of the Event Subsystem.
+	 * 
 	 * @return Status. True if running, false otherwise.
 	 */
 	public static boolean isRunning() {
@@ -51,7 +52,8 @@ public class EventManager extends Thread {
 	private static Object lock = new Object();
 
 	/**
-	 * Status of the Event Subsystem. When true, allowed to run as usual. When false, the system is paused.
+	 * Status of the Event Subsystem. When true, allowed to run as usual. When
+	 * false, the system is paused.
 	 */
 	private static boolean running;
 

@@ -11,62 +11,63 @@ import dpm.teamone.driver.navigation.Light;
 import dpm.teamone.driver.navigation.NavigationController;
 
 /**
- * The Line Corrector checks both light sensors for the grid lines, and uses those to correct both its heading,
- * and its location in the x and y directions.  
+ * The Line Corrector checks both light sensors for the grid lines, and uses
+ * those to correct both its heading, and its location in the x and y
+ * directions.
+ * 
  * @author Michael Williams
  * @see EventManager
  */
 class LineCorrecter implements Behavior {
 
 	/**
-	 * Minimum light level required for the system to consider what is under a sensor as being a black line.
-	 * Value: {@value} 
+	 * Minimum light level required for the system to consider what is under a
+	 * sensor as being a black line. Value: {@value}
 	 */
 	private static final int LIGHT_LEVEL = 500;
-	
+
 	/**
 	 * Sensor ports associated with Light Sensor.
 	 */
 	private static final SensorPort RIGHT_LIGHT_PORT = SensorPort.S2,
 			LEFT_LIGHT_PORT = SensorPort.S3;
-	
+
 	/**
-	 * Distance between the two light/colour sensors.
-	 * Value {@value}
+	 * Distance between the two light/colour sensors. Value {@value}
 	 */
 	private static final float SENSOR_DIFF = (float) 11.1;
-	
+
 	/**
 	 * Offset of the light/colour sensors
 	 */
 	private static final float SENSOR_OFFSET = (float) 14.6;
-	
+
 	/**
 	 * Stores if the given light sensor has seen a light.
 	 */
 	private boolean leftPassed, rightPassed;
 	/**
-	 * Stores which light sensor saw a line first.
-	 * True: Left.
-	 * False: Right.
+	 * Stores which light sensor saw a line first. True: Left. False: Right.
 	 */
 	private boolean leftFirst;
-	
+
 	/**
 	 * The filtered light sensors.
 	 */
 	private final Light leftSensor, rightSensor;
 	private final NavigationController nav;
-	
+
 	/**
-	 * The point at which the first sensor saw the line.
-	 * If both sensors have seen a line, and this is null, then both sensors saw the line at the same time.
+	 * The point at which the first sensor saw the line. If both sensors have
+	 * seen a line, and this is null, then both sensors saw the line at the same
+	 * time.
 	 */
 	private Point passPoint;
 
 	/**
 	 * 
-	 * @param nav Navigation Controller
+	 * @param nav
+	 *            Navigation Controller
 	 */
 	protected LineCorrecter(NavigationController nav) {
 		this.leftSensor = new Light(LEFT_LIGHT_PORT);
@@ -79,9 +80,11 @@ class LineCorrecter implements Behavior {
 	}
 
 	/**
-	 * Action taken when a Line is seen.
-	 * If only one is seen, then which sensor saw it is recorded, as is the current location.
-	 * If both have been seen, the heading is corrected, and then using the new heading, either the x or y location is updated.
+	 * Action taken when a Line is seen. If only one is seen, then which sensor
+	 * saw it is recorded, as is the current location. If both have been seen,
+	 * the heading is corrected, and then using the new heading, either the x or
+	 * y location is updated.
+	 * 
 	 * @see lejos.robotics.subsumption.Behavior#action()
 	 */
 	@Override
@@ -155,11 +158,13 @@ class LineCorrecter implements Behavior {
 
 	@Override
 	public void suppress() {
-		// Ideally this stops the action, but there is pretty no time when this is called to my knowledge in our program.
+		// Ideally this stops the action, but there is pretty no time when this
+		// is called to my knowledge in our program.
 	}
 
 	/**
 	 * Checks for new lines, and triggers if there is one.
+	 * 
 	 * @return true if a new line is seen, false otherwise.
 	 * @see lejos.robotics.subsumption.Behavior#takeControl()
 	 */

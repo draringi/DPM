@@ -64,11 +64,15 @@ public class NavigationController {
 
 	/**
 	 * Cuts path length.
-	 * @param p Path to cut
-	 * @param count Number of nodes to return
+	 * 
+	 * @param p
+	 *            Path to cut
+	 * @param count
+	 *            Number of nodes to return
 	 * @return New Path containing the 1st "count" nodes.
 	 * @deprecated
 	 */
+	@Deprecated
 	private ArrayList<Node> adjustPath(ArrayList<Node> p, int count) {
 		ArrayList<Node> temp = new ArrayList<Node>();
 		for (int i = 0; i < (count - 1); i++) {
@@ -88,6 +92,7 @@ public class NavigationController {
 	 * @param count
 	 * @deprecated
 	 */
+	@Deprecated
 	private void calculatePaths(int x1, int y1, int x2, int y2,
 			ArrayList<Node> path, int count) {
 
@@ -138,6 +143,7 @@ public class NavigationController {
 	 * @return
 	 * @deprecated
 	 */
+	@Deprecated
 	private boolean containsNode(Node n, ArrayList<Node> nodes) {
 
 		boolean contains = false;
@@ -200,8 +206,9 @@ public class NavigationController {
 	}
 
 	/**
-	 * Locates nearest object in the pickup zone.
-	 * Once found, robot turns to face it.
+	 * Locates nearest object in the pickup zone. Once found, robot turns to
+	 * face it.
+	 * 
 	 * @return Distance to nearest object
 	 */
 	public int findObject() {
@@ -272,6 +279,7 @@ public class NavigationController {
 
 	/**
 	 * Provides the map used by the navigator to tell where it is.
+	 * 
 	 * @return Map in Use.
 	 */
 	public GridMap getMap() {
@@ -288,6 +296,7 @@ public class NavigationController {
 	 * @return shortest path to destination
 	 * @deprecated
 	 */
+	@Deprecated
 	public Path getPath(int x, int y) {
 		int currentX = this.map.getGrid(this.getPose().getX()); // X index
 		int currentY = this.map.getGrid(this.getPose().getY()); // Y index
@@ -299,6 +308,7 @@ public class NavigationController {
 
 	/**
 	 * Test function for the old Pathfinding Algorithm
+	 * 
 	 * @param v
 	 * @param w
 	 * @param x
@@ -306,6 +316,7 @@ public class NavigationController {
 	 * @return
 	 * @deprecated
 	 */
+	@Deprecated
 	public Path getPath_TEST(int v, int w, int x, int y) {
 		int currentX = v;// X index
 		int currentY = w; // Y index
@@ -317,6 +328,7 @@ public class NavigationController {
 
 	/**
 	 * Direct Access to the underlying wheels
+	 * 
 	 * @return
 	 */
 	public DifferentialPilot getPilot() {
@@ -332,9 +344,11 @@ public class NavigationController {
 
 	/**
 	 * Old recursive Pathfinding Algorithm.
+	 * 
 	 * @return
 	 * @deprecated
 	 */
+	@Deprecated
 	private Path getShortestPath() {
 		int shortestPath = 1000;
 		int index = 0;
@@ -358,7 +372,9 @@ public class NavigationController {
 
 	/**
 	 * Drives directly to the provided point
-	 * @param next Point to drive to.
+	 * 
+	 * @param next
+	 *            Point to drive to.
 	 */
 	public void gotoPoint(Point next) {
 		Waypoint wp = new Waypoint(next);
@@ -367,12 +383,14 @@ public class NavigationController {
 
 	/**
 	 * Helper function to determine if the index is valid to add to a path.
+	 * 
 	 * @param x
 	 * @param y
 	 * @param path
 	 * @return
 	 * @deprecated
 	 */
+	@Deprecated
 	private boolean isIndexValid(int x, int y, ArrayList<Node> path) {
 		boolean isValid = true;
 		if (this.map.blocked(x, y)) {
@@ -407,18 +425,22 @@ public class NavigationController {
 	}
 
 	/**
-	 * Rotates the robot a certain amount in a provided direction.
-	 * Positive is counter-clockwise, negative is clockwise.
-	 * @param angle Signed angle in degrees.
+	 * Rotates the robot a certain amount in a provided direction. Positive is
+	 * counter-clockwise, negative is clockwise.
+	 * 
+	 * @param angle
+	 *            Signed angle in degrees.
 	 */
 	public void rotate(double angle) {
 		this.pilot.rotate(angle);
 	}
 
 	/**
-	 * Rotates the robot a certain amount in a provided direction.
-	 * Positive is counter-clockwise, negative is clockwise.
-	 * @param angle Signed angle in degrees.
+	 * Rotates the robot a certain amount in a provided direction. Positive is
+	 * counter-clockwise, negative is clockwise.
+	 * 
+	 * @param angle
+	 *            Signed angle in degrees.
 	 */
 	public void rotate(int angle) {
 		this.pilot.rotate(angle);
@@ -426,7 +448,9 @@ public class NavigationController {
 
 	/**
 	 * Updates the angle as reported by the odometer.
-	 * @param ang Signed angle in degrees.
+	 * 
+	 * @param ang
+	 *            Signed angle in degrees.
 	 */
 	public void setAngle(int ang) {
 		Pose p = this.getPose();
@@ -484,16 +508,18 @@ public class NavigationController {
 	}
 
 	/**
-	 * Stops the robot's current movement. 
+	 * Stops the robot's current movement.
 	 */
 	public void stop() {
 		this.pilot.stop();
 	}
 
 	/**
-	 * Makes the robot to travel a provided distance.
-	 * Positive is forwards, negative is backwards.
-	 * @param dist Signed distance in cm.
+	 * Makes the robot to travel a provided distance. Positive is forwards,
+	 * negative is backwards.
+	 * 
+	 * @param dist
+	 *            Signed distance in cm.
 	 */
 	public void travel(float dist) {
 		this.pilot.travel(dist);
