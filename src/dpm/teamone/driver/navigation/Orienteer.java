@@ -55,7 +55,7 @@ public class Orienteer {
 	}
 
 	/**
-	 * Helpter function that converts {@Link Direction} Integer values to
+	 * Helpter function that converts {@link dpm.teamone.driver.navigation.Direction} Integer values to
 	 * radians.
 	 * 
 	 * @param orientation
